@@ -21,14 +21,6 @@ namespace Settings
         public pgeSound()
         {
             InitializeComponent();
-            tbContent.Inlines.Add("Hallo");
-            tbContent.Inlines.Add(" Welt");
-            tbContent.Inlines.Add(new Bold(new Run("!")));
-            Span colorInline = new(new Run("Ich bin hoffentlich farbig"));
-            colorInline.Background = Brushes.Red;
-            colorInline.Foreground = Brushes.Blue;
-            tbContent.Inlines.Add(colorInline);
-            
         }
     }
 }
