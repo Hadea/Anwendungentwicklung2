@@ -1,0 +1,37 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+
+namespace WPFEinfuehrung
+{
+    /// <summary>
+    /// Interaction logic for MainWindow.xaml
+    /// </summary>
+    public partial class MainWindow : Window
+    {
+        int clickCounter;
+
+        public MainWindow()
+        {
+            InitializeComponent();
+            clickCounter = 0;
+        }
+
+        private void btnGreeting_Click(object sender, RoutedEventArgs e)
+        {
+            clickCounter++;
+            lblGreeting.Content = $"Button wurde {clickCounter, 3} mal geklickt :D";
+        }
+    }
+}

@@ -1,0 +1,14 @@
+﻿<Window x:Class="WPFEinfuehrung.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPFEinfuehrung"
+        mc:Ignorable="d"
+        Title="XAML Einführung" Height="450" Width="800">
+    <Grid>
+        <Label x:Name="lblGreeting" Content="__Hallo Welt!__" HorizontalAlignment="Left" Margin="201,189,0,0" VerticalAlignment="Top"/>
+        <Button x:Name="btnGreeting" Content="Button" HorizontalAlignment="Left" Margin="291,189,0,0" VerticalAlignment="Top" Click="btnGreeting_Click"/>
+
+    </Grid>
+</Window>
