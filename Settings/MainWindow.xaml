@@ -1,0 +1,51 @@
+﻿<Window x:Class="Settings.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Settings"
+        mc:Ignorable="d"
+        Title="MainWindow"
+        Height="450"
+        Width="800"
+        Background="#ff202020"
+        Foreground="White">
+    <Window.Resources>
+        <Style TargetType="TextBox">
+            <Setter Property="Padding" Value="20,5,10,5"/>
+            <Setter Property="Background" Value="#ff202020"/>
+            <Setter Property="Foreground" Value="Gray"/>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="220"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <ScrollViewer>
+            <StackPanel Orientation="Vertical">
+                <Button Content="StartSeite"/>
+                <TextBox Text="Einstellung suchen" />
+                <Label Content="System" FontWeight="Bold"/>
+                <Button x:Name="btnDisplay" Content="Anzeige" Click="btnDisplay_Click" />
+                <Button x:Name="btnSound" Content="Sound" />
+                <Button x:Name="btnMessages" Content="Benachrichtigunen und Aktionen" />
+                <Button x:Name="btnMessageAssistant" Content="Benachrichtigungsassistent" />
+                <Button x:Name="btnEnergySaver" Content="Netzbetrieb und Energiesparen" />
+                <Button x:Name="btnBattery" Content="Akku" />
+                <Button x:Name="btnMemory" Content="Speicher" />
+                <Button x:Name="btnTablet" Content="Tablet" />
+                <Button x:Name="btnMultitasking" Content="Multitasking" />
+                <Button x:Name="btnProjection" Content="Projezieren auf diesen PC" />
+                <Button x:Name="btnSharedAccess" Content="Gemeinsame Nutzung" />
+                <Button x:Name="btnClipBoard" Content="Zwischenablage" />
+                <Button x:Name="btnRemoteDesktop" Content="Remotedesktop" />
+                <Button x:Name="btnInfo" Content="Info" />
+            </StackPanel>
+        </ScrollViewer>
+        <Frame x:Name="frmContent"
+               Grid.Row="0"
+               Grid.Column="1"
+               NavigationUIVisibility="Hidden" Padding="5"/>
+    </Grid>
+</Window>
