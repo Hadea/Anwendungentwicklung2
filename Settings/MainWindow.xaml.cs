@@ -29,5 +29,10 @@ namespace Settings
         {
             frmContent.Navigate(new pgeDisplay());
         }
+
+        private void btnSound_Click(object sender, RoutedEventArgs e)
+        {
+            frmContent.Navigate(new pgeSound());
+        }
     }
 }

@@ -28,7 +28,7 @@
                 <TextBox Text="Einstellung suchen" />
                 <Label Content="System" FontWeight="Bold"/>
                 <Button x:Name="btnDisplay" Content="Anzeige" Click="btnDisplay_Click" />
-                <Button x:Name="btnSound" Content="Sound" />
+                <Button x:Name="btnSound" Content="Sound" Click="btnSound_Click" />
                 <Button x:Name="btnMessages" Content="Benachrichtigunen und Aktionen" />
                 <Button x:Name="btnMessageAssistant" Content="Benachrichtigungsassistent" />
                 <Button x:Name="btnEnergySaver" Content="Netzbetrieb und Energiesparen" />
