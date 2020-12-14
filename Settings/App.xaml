@@ -24,6 +24,8 @@
             <Setter Property="Background" Value="#ff202020"/>
             <Setter Property="Foreground" Value="White"/>
         </Style>
-
+        <Style TargetType="TextBlock">
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
     </Application.Resources>
 </Application>

@@ -11,9 +11,6 @@
         <Style TargetType="Label">
             <Setter Property="Foreground" Value="White"/>
         </Style>
-        <Style TargetType="TextBlock">
-            <Setter Property="Foreground" Value="White"/>
-        </Style>
     </Page.Resources>
     <StackPanel Orientation="Vertical">
         <Label Content="Anzeige" FontSize="20"/>
@@ -52,8 +49,8 @@
         </StackPanel>
         <Label Content="Helligkeit und Farbe" FontSize="16"/>
         <Label Content="Nachtmodus"/>
-        <CheckBox/>
-        <Label Content="Farbprofil"/>
+        <CheckBox x:Name="cbNightMode" Click="cbNightMode_Click"/>
+        <Label x:Name="lblColorProfile" Content="Farbprofil"/>
         <ComboBox>
             <ComboBoxItem Content="Samsung C49G9xT" />
         </ComboBox>

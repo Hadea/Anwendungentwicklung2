@@ -22,5 +22,10 @@ namespace Settings
         {
             InitializeComponent();
         }
+
+        private void cbNightMode_Click(object sender, RoutedEventArgs e)
+        {
+            lblColorProfile.Content = (cbNightMode.IsChecked.Value ? "Ist an" : "ist aus");
+        }
     }
 }
