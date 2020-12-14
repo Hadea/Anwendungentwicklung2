@@ -6,9 +6,51 @@
         xmlns:local="clr-namespace:WPFEinfuehrung"
         mc:Ignorable="d"
         Title="XAML Einführung" Height="450" Width="800">
-    <Grid>
-        <Label x:Name="lblGreeting" Content="__Hallo Welt!__" HorizontalAlignment="Left" Margin="201,189,0,0" VerticalAlignment="Top"/>
-        <Button x:Name="btnGreeting" Content="Button" HorizontalAlignment="Left" Margin="291,189,0,0" VerticalAlignment="Top" Click="btnGreeting_Click"/>
+<!--#region Meine Coderegion-->
+    <ScrollViewer HorizontalScrollBarVisibility="Visible"
+                  VerticalScrollBarVisibility="Visible">
+        <Grid>
+            <!--dieses Grid enthält die bestandteile des Fensters -->
+            <Grid.ColumnDefinitions>
+                <!-- Definition von Spalten -->
+                <ColumnDefinition Width="200" />
+                <!-- erste spalte ist 200 pixel breit -->
+                <ColumnDefinition Width="auto" />
+                <!-- auto verbraucht nur so viel platz wie nötig -->
+                <ColumnDefinition Width="*" />
+                <!-- * nimmt sich sämtlichen verbleibenden platz -->
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="100" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <ScrollViewer Grid.Row="2"
+                          Grid.Column="0"
+                          Grid.ColumnSpan="3"
+                          VerticalScrollBarVisibility="Visible"
+                          HorizontalScrollBarVisibility="Visible"
+                          Width="500">
 
-    </Grid>
+                <TextBlock x:Name="lblGreeting"
+                       TextWrapping="Wrap"
+                           Width="500">
+                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+                </TextBlock>
+            </ScrollViewer>
+            <Button x:Name="btnGreeting"
+                Content="_Button"
+                Width="150"
+                    Height="30"
+                    
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Click="btnGreeting_Click"
+                Grid.Column="1"
+                Grid.Row="1"/>
+        </Grid>
+    </ScrollViewer>
+<!--#endregion-->
 </Window>
+    
+    

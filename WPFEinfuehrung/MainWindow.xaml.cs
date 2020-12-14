@@ -31,7 +31,7 @@ namespace WPFEinfuehrung
         private void btnGreeting_Click(object sender, RoutedEventArgs e)
         {
             clickCounter++;
-            lblGreeting.Content = $"Button wurde {clickCounter, 3} mal geklickt :D";
+            lblGreeting.Text = $"Button wurde {clickCounter, 3} mal geklickt :D";
         }
     }
 }
