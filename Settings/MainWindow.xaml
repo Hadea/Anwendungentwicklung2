@@ -22,7 +22,7 @@
             <ColumnDefinition Width="220"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <ScrollViewer>
+        <ScrollViewer Grid.Column="0">
             <StackPanel Orientation="Vertical">
                 <Button Content="StartSeite"/>
                 <TextBox Text="Einstellung suchen" />
@@ -46,6 +46,7 @@
         <Frame x:Name="frmContent"
                Grid.Row="0"
                Grid.Column="1"
-               NavigationUIVisibility="Hidden" Padding="5"/>
+               NavigationUIVisibility="Hidden"
+               Padding="5"/>
     </Grid>
 </Window>

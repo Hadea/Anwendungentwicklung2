@@ -7,11 +7,6 @@
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="pgeAnzeige">
-    <Page.Resources>
-        <Style TargetType="Label">
-            <Setter Property="Foreground" Value="White"/>
-        </Style>
-    </Page.Resources>
     <StackPanel Orientation="Vertical">
         <Label Content="Anzeige" FontSize="20"/>
         <Label Content="Bildschirme neu anordnen" FontSize="16"/>
@@ -43,7 +38,8 @@
                    Background="#ff303030"
                    BorderThickness="2"/>
         </Grid>
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+        <StackPanel Orientation="Horizontal"
+                    HorizontalAlignment="Right">
             <Button Content="Identifizieren"/>
             <Button Content="Erkennen" />
         </StackPanel>

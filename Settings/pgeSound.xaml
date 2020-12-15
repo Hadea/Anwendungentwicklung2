@@ -16,7 +16,7 @@
             <ComboBoxItem Content="Kopfhörer" />
             <ComboBoxItem Content="Lautsprecher" />
         </ComboBox>
-        <TextBlock>
+        <TextBlock TextWrapping="Wrap">
             Bestimmte Apps können für die Verwendung anderer Audiogeröte als dem hier ausgewählten Gerät
             konfiguriert werden. Passen Sie die App-Lautstärke und die Geräte un den erweiterten Soundoptionen an.
         </TextBlock>
