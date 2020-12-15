@@ -31,14 +31,7 @@ namespace Controls
 
         private void pbValidation_KeyUp(object sender, KeyEventArgs e)
         {
-            if (pbValidation.Password == "Hallo")
-            {
-                lblPassValidation.Content = "Hat geklappt!";
-            }
-            else
-            {
-                lblPassValidation.Content = "Falsch!";
-            }
+            lblPassValidation.Content = pbValidation.Password == "Hallo" ? "Hat geklappt!":"Falsch!";
         }
     }
 }

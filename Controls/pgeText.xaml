@@ -19,7 +19,7 @@
             <Label x:Name="lblEditEvent"
                    Content="Original"/>
         </StackPanel>
-        <StackPanel>
+        <StackPanel Orientation="Horizontal">
             <PasswordBox x:Name="pbValidation" Width="300" MaxLength="10" PasswordChar="#" KeyUp="pbValidation_KeyUp" />
             <Label x:Name="lblPassValidation" Content="Falsch" />
         </StackPanel>
