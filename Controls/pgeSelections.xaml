@@ -1,0 +1,58 @@
+﻿<Page x:Class="Controls.pgeSelections"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Controls"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="pgeSelections">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="150"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="100"/>
+            <RowDefinition Height="100"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Vertical"
+                    Grid.Row="0"
+                    Grid.Column="0">
+            <Label Content="Mehrfachauswahl" />
+            <CheckBox Content="Option A" Checked="addOne" Unchecked="subOne" Click="CheckBox_Click"/>
+            <CheckBox Content="Option B" Checked="addOne" Unchecked="subOne" Click="CheckBox_Click"/>
+            <CheckBox Content="Option C" Checked="addOne" Unchecked="subOne" Click="CheckBox_Click"/>
+            <CheckBox Content="Option D" Checked="addOne" Unchecked="subOne" Click="CheckBox_Click"/>
+        </StackPanel>
+        <StackPanel Grid.Row="0"
+               Grid.Column="1">
+
+            <Label Content="0" x:Name="lblActiveoptions"/>
+            <Label Content="0" x:Name="lblSelectionCount"/>
+        </StackPanel>
+        <StackPanel Grid.Row="1" Grid.Column="0">
+            <Label Content="Einfachauswahl" />
+            <RadioButton Content="Option A" GroupName="SingleSelection" Checked="RadioButton_Checked"/>
+            <RadioButton Content="Option B" GroupName="SingleSelection" Checked="RadioButton_Checked"/>
+            <RadioButton Content="Option C" GroupName="SingleSelection" Checked="RadioButton_Checked"/>
+            <RadioButton Content="Option D" GroupName="SingleSelection" Checked="RadioButton_Checked"/>
+        </StackPanel>
+        <Label x:Name="lblSingleSelectionValue"
+               Grid.Row="1"
+               Grid.Column="1"
+               Content="Nix"/>
+        <StackPanel Grid.Row="2" Grid.Column="0">
+            <Label Content="zwei Einfachauswahlen" />
+            <Label Foreground="Red" Content="durcheinander!" />
+            <RadioButton Content="GroupA Button1" GroupName="GroupA" />
+            <RadioButton Content="GroupB Button1" GroupName="GroupB" />
+            <RadioButton Content="GroupA Button2" GroupName="GroupA" />
+            <RadioButton Content="GroupB Button2" GroupName="GroupB" />
+            <RadioButton Content="GroupA Button3" GroupName="GroupA" />
+            <RadioButton Content="GroupB Button3" GroupName="GroupB" />
+        </StackPanel>
+    </Grid>
+</Page>

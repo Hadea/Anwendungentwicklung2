@@ -12,8 +12,9 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <StackPanel Grid.Column="0" >
-            <Button Content="Textelemente"
-                    Click="btnText_Click" />
+            <Button Content="Textelemente" Click="btnText_Click" />
+            <Button Content="Bilder" Click="btnImage_Click" />
+            <Button Content="Selektionen" Click="btnSelections_Click" />
         </StackPanel>
         <Frame x:Name="frmContent"
                Grid.Column="1" />

@@ -29,5 +29,15 @@ namespace Controls
         {
             frmContent.Navigate(new pgeText());
         }
+
+        private void btnImage_Click(object sender, RoutedEventArgs e)
+        {
+            frmContent.Navigate(new pgeImage());
+        }
+
+        private void btnSelections_Click(object sender, RoutedEventArgs e)
+        {
+            frmContent.Navigate(new pgeSelections());
+        }
     }
 }
