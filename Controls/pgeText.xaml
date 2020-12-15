@@ -1,0 +1,34 @@
+﻿<Page x:Class="Controls.pgeText"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Controls"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="pgeText">
+
+    <StackPanel>
+        <Label Content="Hallo Welt!" /> <!-- Ideal für einzelne Worte -->
+        <TextBox Text="Vorausgefüllte Box zum editieren" />
+        <TextBox Text="Vorausgefüllte Box zum editieren" IsReadOnly="True" />
+        <StackPanel Orientation="Horizontal">
+            <TextBox x:Name="tbEditEvent"
+                     KeyUp="tbEditEvent_KeyUp"
+                     Width="300" />
+            <Label x:Name="lblEditEvent"
+                   Content="Original"/>
+        </StackPanel>
+        <StackPanel>
+            <PasswordBox x:Name="pbValidation" Width="300" MaxLength="10" PasswordChar="#" KeyUp="pbValidation_KeyUp" />
+            <Label x:Name="lblPassValidation" Content="Falsch" />
+        </StackPanel>
+        <TextBlock Text="Dies ist ein etwas längerer Text welcher, wenn erlaubt, auch umbrechen kann. Dies wird übr WordWrap eingestellt."/>
+        <TextBlock>
+            Dies ist ein <Bold>Demo</Bold> Text für einen <Italic>formatierten</Italic>
+            TextBlock<LineBreak />
+            <Span Foreground="Green">Grün</Span>
+            <Span Background="DarkBlue" Foreground="Beige">Dunkelblauer Hintergrund</Span>
+        </TextBlock>
+    </StackPanel>
+</Page>

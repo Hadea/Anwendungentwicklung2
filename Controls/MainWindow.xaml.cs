@@ -24,5 +24,10 @@ namespace Controls
         {
             InitializeComponent();
         }
+
+        private void btnText_Click(object sender, RoutedEventArgs e)
+        {
+            frmContent.Navigate(new pgeText());
+        }
     }
 }
