@@ -7,10 +7,15 @@
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="pgeImage">
-
+    <!-- DesignHeight und DesignWidth sind einstellungen welche nur für den Editor gelten
+        Die Page wird immer als unterobjekt benutzt und passt sich daher an die grösse an -->
     <StackPanel>
+        <!--die inhalte werden untereinander im StackPanel angelegt, anhand ihrer höhe-->
         <Button Width="200" Click="btnVisibility_Click">
+            <!-- Der button darf nur ein Objekt in Content haben, dies darf aber auch
+                ein stackpanel sein -->
             <StackPanel Orientation="Horizontal">
+                <!-- Diesmal werden die Unterelemente nebeneinander anhand ihrer breite angezeigt -->
                 <Image x:Name="imgVisibility"
                        HorizontalAlignment="Left"
                        VerticalAlignment="Top"
@@ -18,6 +23,10 @@
                        Width="50"
                        Height="50"
                        Stretch="Uniform"/>
+                <!-- Die Visibility kennt 3 einstellungen
+                    - Visible = Sichtbar
+                    - Hidden =  Transparent, verbaucht aber noch Platz
+                    - Collapsed = Das Image verbraucht keinen Platz mehr-->
                 <Label Content="Sichtbarkeit durchschalten" />
             </StackPanel>
         </Button>
@@ -30,6 +39,23 @@
                    Height="150"
                    Source="/Geralt_ProfilePic.jpg"
                    Stretch="Fill"/>
+                <!-- Beim image gibt die Source an welches Bild geladen werden soll
+                    sollte Width und Heigt nicht angegeben sein ist das Image so gross
+                    wie die Auflösung des Bildes.
+                    Stretch stellt ein wie sich das bild verhalten soll wenn die Grösse
+                    des Bildes und die grösse des Image nicht übereinstimmen
+                        - Uniform = breite und höhe im verhältnis so anpassen das das
+                                    gesamte bild sichtbar ist dabei kann ein teil des
+                                    Image leer bleiben
+                        - UniformToFill = breite und höhe im verhältnis so anpassen
+                                    das das Image vollständig befüllt ist, dabei können
+                                    teile des Bildes abgeschnitten werden
+                        - Fill = breite und höhe werden angepasst, das seitenverhältnis
+                                 des Originalbildes wird dabei ignoriert. Das bild kann
+                                 dadurch verzerrt werden
+                        - None = Bild wird in originalgrösse in das Image eingefügt und
+                                 abgeschnitten wenn das Image zu klein ist
+                -->
         </StackPanel>
     </StackPanel>
 </Page>

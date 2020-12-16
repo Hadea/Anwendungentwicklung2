@@ -7,16 +7,24 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
+        <!--Dieses Grid teilt unseren bereich in zwei teile, links 220 Pixel und rechts der rest-->
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="220"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <StackPanel Grid.Column="0" >
+            <!-- Linke seite bekommt ein stackpanel welches die enthaltenen Komponenten untereinander
+                sortiert anhand ihrer höhe-->
             <Button Content="Textelemente" Click="btnText_Click" />
+            <!-- Jeder der button löst duch das Click event eine methode aus welche
+                den Frame mit einer neuen Page befüllt-->
             <Button Content="Bilder" Click="btnImage_Click" />
             <Button Content="Selektionen" Click="btnSelections_Click" />
         </StackPanel>
+        
         <Frame x:Name="frmContent"
                Grid.Column="1" />
+        <!-- Der Frame wird unsere Page-Klassen als inhalt bekommen, er nutzt den kompletten
+             platz der rechten seite des Grid aus-->
     </Grid>
 </Window>

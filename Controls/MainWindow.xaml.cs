@@ -1,17 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+﻿using System.Windows;
 
 namespace Controls
 {
@@ -22,22 +9,45 @@ namespace Controls
     {
         public MainWindow()
         {
-            InitializeComponent();
+            InitializeComponent(); // lädt die XAML zu dieser Klasse
         }
-
+        /// <summary>
+        /// Loads pgeText into the Frame
+        /// </summary>
+        /// <param name="sender">unused</param>
+        /// <param name="e">unused</param>
         private void btnText_Click(object sender, RoutedEventArgs e)
         {
             frmContent.Navigate(new pgeText());
+            // füllt den Frame mit einer neuen Page
+            // der alte inhalt wird in diesem fall dabei Zerstört, da es keine weitere
+            // variable (referenz) gibt die auf das Objekt zeigt
         }
 
+        /// <summary>
+        /// Loads pgeImage into the Frame
+        /// </summary>
+        /// <param name="sender">unused</param>
+        /// <param name="e">unused</param>
         private void btnImage_Click(object sender, RoutedEventArgs e)
         {
             frmContent.Navigate(new pgeImage());
+            // füllt den Frame mit einer neuen Page
+            // der alte inhalt wird in diesem fall dabei Zerstört, da es keine weitere
+            // variable (referenz) gibt die auf das Objekt zeigt
         }
 
+        /// <summary>
+        /// Loads pgeSelections into the Frame
+        /// </summary>
+        /// <param name="sender">unused</param>
+        /// <param name="e">unused</param>
         private void btnSelections_Click(object sender, RoutedEventArgs e)
         {
             frmContent.Navigate(new pgeSelections());
+            // füllt den Frame mit einer neuen Page
+            // der alte inhalt wird in diesem fall dabei Zerstört, da es keine weitere
+            // variable (referenz) gibt die auf das Objekt zeigt
         }
     }
 }

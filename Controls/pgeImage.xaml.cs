@@ -20,19 +20,31 @@ namespace Controls
     {
         public pgeImage()
         {
-            InitializeComponent();
+            InitializeComponent();// lädt die XAML datei zu dieser Klasse
         }
 
+        /// <summary>
+        /// Cycles visibility of the Image
+        /// </summary>
+        /// <param name="sender">unused</param>
+        /// <param name="e">unused</param>
         private void btnVisibility_Click(object sender, RoutedEventArgs e)
         {
+            // die drei möglichen sichtbarkeitseinstellungen werden
+            // der reihe nach durchgeschaltet bei jedem Klick auf den button
             imgVisibility.Visibility = (imgVisibility.Visibility) switch
             {
-                Visibility.Visible => Visibility.Hidden,
-                Visibility.Hidden => Visibility.Collapsed,
-                _ => Visibility.Visible
+                Visibility.Visible => Visibility.Hidden, // falls vorher Visible drin stand soll nun auf Hidden gesetzt werden
+                Visibility.Hidden => Visibility.Collapsed, // falls vorher Hidden drin stand soll nun auf Collapsed gesetzt werden
+                _ => Visibility.Visible // in jedem anderen fall (gibt nur noch Collapsed) wird auf Visible gesetzt
             };
         }
 
+        /// <summary>
+        /// Cycles scaling of the Image
+        /// </summary>
+        /// <param name="sender">unused</param>
+        /// <param name="e">unused</param>
         private void btnScaling_Click(object sender, RoutedEventArgs e)
         {
             imgScaling.Stretch = (imgScaling.Stretch) switch

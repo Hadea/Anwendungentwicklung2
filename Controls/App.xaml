@@ -4,6 +4,6 @@
              xmlns:local="clr-namespace:Controls"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+         <!-- Ressourcen und einstellungen für die gesamte Anwendung -->
     </Application.Resources>
 </Application>
