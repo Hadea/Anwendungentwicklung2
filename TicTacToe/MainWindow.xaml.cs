@@ -1,17 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace TicTacToe
 {
@@ -21,11 +9,18 @@ namespace TicTacToe
     public partial class MainWindow : Window
     {
         GameLogic logic;
-        Button[,] buttonArray;
+        Button[,] buttonArray; // enthält alle buttons damit wir schnell auf sie zugreifen können und auch foreach funktioniert
+
+        /// <summary>
+        /// Standard Construktor, prepares a new game.
+        /// </summary>
         public MainWindow()
         {
-            InitializeComponent();
-            logic = new();
+            InitializeComponent();// läd die XAML datei und erstellt die hinterlegten komponenten. Code immer erst danach einfügen.
+            logic = new(); // Die Spiellogik wird erstellt
+
+            // alle buttons welche als Spielfeld verwendet werden werden zusätzlich noch in einem Array
+            // abgelegt damit wir sie bequem mit schleifen und koordinaten ansprechen können
             buttonArray = new Button[3, 3];
             buttonArray[0, 0] = btnField11;
             buttonArray[0, 1] = btnField21;
@@ -36,62 +31,81 @@ namespace TicTacToe
             buttonArray[2, 0] = btnField13;
             buttonArray[2, 1] = btnField23;
             buttonArray[2, 2] = btnField33;
+            lblMessage.Content = $"Spieler {(logic.GetCurrentPlayer() ? "X" : "O")} ist am Zug";
         }
 
+        /// <summary>
+        /// Resets the logic and the playing field
+        /// </summary>
+        /// <param name="sender">Reset Button reference, currently unused</param>
+        /// <param name="e">Arguments, currently unused</param>
         private void btnReset_Click(object sender, RoutedEventArgs e)
         {
-            logic.Reset();
+            logic.Reset();// logik wird wieder auf den anfangszustand gesetzt
+
+            // alle button werden reaktiviert und der text entfernt
             foreach (var item in buttonArray)
             {
                 item.Content = "";
                 item.IsEnabled = true;
             }
+
+            lblMessage.Content = $"Spieler {(logic.GetCurrentPlayer() ? "X" : "O")} ist am Zug";
         }
 
+        /// <summary>
+        /// Reads the playing field and adjusts the buttons accordingly
+        /// </summary>
         private void redrawField()
         {
-            var board = logic.GetBoard();
-            buttonArray[0, 0].Content = board[0, 0] switch { FieldState.X => "X", FieldState.O => "O", _ => "" };
-            buttonArray[1, 0].Content = board[1, 0] switch { FieldState.X => "X", FieldState.O => "O", _ => "" };
-            buttonArray[2, 0].Content = board[2, 0] switch { FieldState.X => "X", FieldState.O => "O", _ => "" };
-            buttonArray[0, 1].Content = board[0, 1] switch { FieldState.X => "X", FieldState.O => "O", _ => "" };
-            buttonArray[1, 1].Content = board[1, 1] switch { FieldState.X => "X", FieldState.O => "O", _ => "" };
-            buttonArray[2, 1].Content = board[2, 1] switch { FieldState.X => "X", FieldState.O => "O", _ => "" };
-            buttonArray[0, 2].Content = board[0, 2] switch { FieldState.X => "X", FieldState.O => "O", _ => "" };
-            buttonArray[1, 2].Content = board[1, 2] switch { FieldState.X => "X", FieldState.O => "O", _ => "" };
-            buttonArray[2, 2].Content = board[2, 2] switch { FieldState.X => "X", FieldState.O => "O", _ => "" };
+            var board = logic.GetBoard();// Board aus der Logik lesen
+
+            // Alle button durchgehen und entsprechend des Boards mit X, O oder leerem text füllen
+            for (int y = 0; y < buttonArray.GetLength(0); y++)
+            {
+                for (int x = 0; x < buttonArray.GetLength(1); x++)
+                {
+                    buttonArray[y, x].Content = board[y, x] switch { FieldState.X => "X", FieldState.O => "O", _ => "" };
+                }
+            }
         }
 
+        /// <summary>
+        /// GUI logic for a turn
+        /// </summary>
+        /// <param name="Result">Result of Turn()</param>
+        /// <returns>If a button should be active</returns>
         private bool evaluateTurn(TurnResult Result)
         {
-            switch (Result)
+            switch (Result) // wertet den Parameter Result aus
             {
-                case TurnResult.Valid:
-                    redrawField();
+                case TurnResult.Valid: // wenn der zug gültig war
+                    redrawField(); // spielfeld aktualisieren
+                    return false; // rückgabe das der Button inaktiv werden soll
+                case TurnResult.Win: // wenn der zug zum sieg geführt hat
+                    redrawField(); // spielfeld aktualisieren
+                    lblMessage.Content = $"Sieg! Spieler {(logic.GetCurrentPlayer() ? "X" : "O")} hat gewonnen"; // nachricht ausgeben das der aktuelle spieler gewonnen hat
+
+                    // alle button deaktivieren, da das Spiel vorbei ist
+                    foreach (var item in buttonArray)
+                    {
+                        item.IsEnabled = false;
+                    }
                     return false;
-                case TurnResult.Invalid:
+                case TurnResult.Tie: // wenn der zug zu einem unentschieden geführt hat
+                    redrawField(); // spielfeld aktualisieren
+                    lblMessage.Content = "Unentschieden!"; // Spieler benachrichtigen
+                    return false; // rückgabe das der button der zum unentschieden geführt hat deaktiviert werden soll
+                default: // wenn der zug ungültig war (sollte nicht auftreten)
                     lblMessage.Content = "Das war nix";
-                    break;
-                case TurnResult.Win:
-                    redrawField();
-                    lblMessage.Content = $"Sieg! Spieler {(logic.GetCurrentPlayer() ? "X" : "O")} hat gewonnen";
-                    foreach (var item in buttonArray)
-                    {
-                        item.IsEnabled = false;
-                    }
-                    return false;
-                case TurnResult.Tie:
-                    redrawField();
-                    lblMessage.Content = "Unentschieden!";
-                    foreach (var item in buttonArray)
-                    {
-                        item.IsEnabled = false;
-                    }
-                    return false;
+                    return true; // button darf aktiv bleiben
             }
-            return true;
         }
 
+        // Methoden für die 9 Spielfeld-Buttons
+        // Jeder button löst mit seinen koordinaten einen Zug aus, und reicht das
+        // ergebnis des zuges an das evaluateTurn weiter
+        // evaluateTurn gibt als Rückgabe ob der button sich deaktivieren soll oder nicht
         private void btnField11_Click(object sender, RoutedEventArgs e) => (sender as Button).IsEnabled = evaluateTurn(logic.Turn(new PointB(0, 0)));
         private void btnField21_Click(object sender, RoutedEventArgs e) => (sender as Button).IsEnabled = evaluateTurn(logic.Turn(new PointB(1, 0)));
         private void btnField31_Click(object sender, RoutedEventArgs e) => (sender as Button).IsEnabled = evaluateTurn(logic.Turn(new PointB(2, 0)));
