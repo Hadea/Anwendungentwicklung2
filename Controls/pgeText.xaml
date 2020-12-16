@@ -9,26 +9,38 @@
       Title="pgeText">
 
     <StackPanel>
-        <Label Content="Hallo Welt!" /> <!-- Ideal für einzelne Worte -->
+        <Label Content="Hallo Welt!" />
+        <!-- Ideal für einzelne Worte -->
         <TextBox Text="Vorausgefüllte Box zum editieren" />
+        <!-- Feld zum editieren von kurzen texten -->
         <TextBox Text="Vorausgefüllte Box zum editieren" IsReadOnly="True" />
+        <!-- Feld zum editieren von kurzen texten, das editieren ist gerade nicht erlaubt -->
         <StackPanel Orientation="Horizontal">
             <TextBox x:Name="tbEditEvent"
                      KeyUp="tbEditEvent_KeyUp"
                      Width="300" />
+            <!-- Jedes mal nachdem eine Taste losgelassen wird startet das Event KeyUp
+                dadurch können wir auf einen fall reagieren wo gerade eine taste getippt wurde-->
             <Label x:Name="lblEditEvent"
                    Content="Original"/>
         </StackPanel>
         <StackPanel Orientation="Horizontal">
             <PasswordBox x:Name="pbValidation" Width="300" MaxLength="10" PasswordChar="#" KeyUp="pbValidation_KeyUp" />
+            <!-- Funktioniert wie eine TextBox nur das die eingegebenen Zeichen nicht sichtbar sind
+                wir können einen eigenen ersatz für das eigegebene Zeichen mit PasswordChar
+                wählen falls uns die sternchen nicht gefallen.-->
             <Label x:Name="lblPassValidation" Content="Falsch" />
         </StackPanel>
         <TextBlock Text="Dies ist ein etwas längerer Text welcher, wenn erlaubt, auch umbrechen kann. Dies wird übr WordWrap eingestellt."/>
+        <!-- Textblock ist für kürzere Texte praktisch welche auch umbrechen können -->
         <TextBlock>
             Dies ist ein <Bold>Demo</Bold> Text für einen <Italic>formatierten</Italic>
             TextBlock<LineBreak />
             <Span Foreground="Green">Grün</Span>
             <Span Background="DarkBlue" Foreground="Beige">Dunkelblauer Hintergrund</Span>
         </TextBlock>
+        <!-- Der Inhalt des Textblocks kann auch ähnlich zu HTML Formatiert werden, der
+             funktioniert ähnlich wie der StringBuilder und speichert die einzelnen
+             Abschnitte des Textes in eigenen Einträgen einer Liste-->
     </StackPanel>
 </Page>
