@@ -8,8 +8,8 @@ namespace TicTacToe
     /// </summary>
     public partial class MainWindow : Window
     {
-        GameLogic logic;
-        Button[,] buttonArray; // enthält alle buttons damit wir schnell auf sie zugreifen können und auch foreach funktioniert
+        readonly GameLogic logic;
+        readonly Button[,] buttonArray; // enthält alle buttons damit wir schnell auf sie zugreifen können und auch foreach funktioniert
 
         /// <summary>
         /// Standard Construktor, prepares a new game.
