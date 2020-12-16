@@ -1,17 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+﻿using System.Windows;
 
 namespace Settings
 {
@@ -22,17 +9,27 @@ namespace Settings
     {
         public MainWindow()
         {
-            InitializeComponent();
+            InitializeComponent();// lädt die XAML zu dieser Klasse
         }
 
+        /// <summary>
+        /// Loads display settings into the content frame.
+        /// </summary>
+        /// <param name="sender">unused</param>
+        /// <param name="e">unused</param>
         private void btnDisplay_Click(object sender, RoutedEventArgs e)
         {
-            frmContent.Navigate(new pgeDisplay());
+            frmContent.Navigate(new pgeDisplay());// läd eine Seite in den Frame
         }
 
+        /// <summary>
+        /// loads sound settings into the content frame
+        /// </summary>
+        /// <param name="sender">unused</param>
+        /// <param name="e">unused</param>
         private void btnSound_Click(object sender, RoutedEventArgs e)
         {
-            frmContent.Navigate(new pgeSound());
+            frmContent.Navigate(new pgeSound());// läd eine Seite in den Frame
         }
     }
 }

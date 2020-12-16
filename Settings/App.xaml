@@ -4,27 +4,51 @@
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns:local="clr-namespace:Settings"
              StartupUri="MainWindow.xaml">
+    <!-- Namespace System aus der DLL mscorlib wurde hinzugefügt und ist unter dem kürzel sys
+        verfügbar. Den Namespace nutzen wir um die System-Standardparameter zu verändern-->
     <Application.Resources>
+        <!--Alle Einstellungen und Ressourcen welche für die gesamte Applikation gelten-->
         <sys:Double x:Key="{x:Static SystemParameters.VerticalScrollBarWidthKey}" >3</sys:Double>
+        <!-- setzt die Breite der Scroll-Balken für alle Elemente-->
         <Style TargetType="Button">
+            <!-- Enthält Einstellungen welche für alle Buttons innerhalb der Anwendung gelten -->
             <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <!-- Setter setzen eine Eigenschaft oder ein Event auf einen Wert -->
             <Setter Property="Padding" Value="20,5"/>
-            <Setter Property="Background" Value="#ff202020"/>
+            <!--Padding und Margin können mit einem, zwei oder vier werten befüllt werden
+                wenn nur eine zahl eingegeben wird gilt dieser abstand für alle richtungen
+                wenn zwei eigegeben werden ist die erste horizontal und die zweite vertikal
+                wenn vier eingegeben werden ist die reihenfolge: links oben rechts unten -->
             <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Background" Value="#ff202020"/>
+            <!-- Anstelle von Farben aus dem Enum können auch direkt Farbcodes eingegeben
+                werden, das Format lässt unterschiedliche schreibweisen zu (ähnlich CSS)
+                #ff202020 gibt die Farbkanäle in 1Byte grösse in HEX an. Die Reihenfolge
+                    dabei ist Sichtbarkeit, Rot, Grün, Blau. In unserem fall ein 100%
+                    deckendes Grau.
+                #5555 gibt die Farbkanäle gekürzt an. sichtbarkeit, Rot, Grün, Blau.
+                    Entspricht der Schreibweise #50505050
+                #112233 gibt die Farbkanäle ohne transparenz an. Reihenfolge ist Rot, grün,
+                    Blau. Die Deckkraft wird babei auf Maximum gestellt.
+                #050 gibt die farbkanäle in gekürzter Hex form an, dabei wird quasi nur
+                    die vordere Zahl des Bytes gesetzt. Format ist Rot Grün Blau.
+                    entspricht der Schreibweise #005000 -->
             <Setter Property="BorderThickness" Value="0"/>
-
         </Style>
         <Style TargetType="Label">
+            <!--Einstellungen für alle Label der gesamten Anwendung-->
             <Setter Property="Padding" Value="10,5"/>
             <Setter Property="Background" Value="#ff202020"/>
             <Setter Property="Foreground" Value="White"/>
         </Style>
         <Style TargetType="ComboBoxItem">
+            <!--Einstellungen für alle ComboBoxItems der gesamten Anwendung-->
             <Setter Property="Padding" Value="10,5"/>
             <Setter Property="Background" Value="#ff202020"/>
             <Setter Property="Foreground" Value="White"/>
         </Style>
         <Style TargetType="TextBlock">
+            <!--Einstellungen für alle TextBlocks-->
             <Setter Property="Foreground" Value="White"/>
         </Style>
     </Application.Resources>

@@ -11,7 +11,12 @@
         Background="#ff202020"
         Foreground="White">
     <Window.Resources>
+        <!-- Einstellungen und ressourcen für dieses Window,
+            sollten einstellungen in der App bereits gesetzt sein werden sie hier
+            für dieses Fenster überschrieben. Das Letzte gilt: App -> Window -> Control
+        -->
         <Style TargetType="TextBox">
+            <!-- Alle TextBoxen in diesem Fenster bekommen diese Standardwerte zugewiesen -->
             <Setter Property="Padding" Value="20,5,10,5"/>
             <Setter Property="Background" Value="#ff202020"/>
             <Setter Property="Foreground" Value="Gray"/>
@@ -27,8 +32,11 @@
                 <Button Content="StartSeite"/>
                 <TextBox Text="Einstellung suchen" />
                 <Label Content="System" FontWeight="Bold"/>
+                <!-- Die folgenden Button laden jeweils eine andere Page in den Frame -->
                 <Button x:Name="btnDisplay" Content="Anzeige" Click="btnDisplay_Click" />
                 <Button x:Name="btnSound" Content="Sound" Click="btnSound_Click" />
+                <!-- Die folgenden button sind bereits erstellt, haben aber noch keine
+                    Methode an Click gebunden und machen somit ersteinmal nichts -->
                 <Button x:Name="btnMessages" Content="Benachrichtigunen und Aktionen" />
                 <Button x:Name="btnMessageAssistant" Content="Benachrichtigungsassistent" />
                 <Button x:Name="btnEnergySaver" Content="Netzbetrieb und Energiesparen" />
