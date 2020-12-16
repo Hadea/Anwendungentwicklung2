@@ -7,7 +7,8 @@
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="pgeSelections">
-
+    <!--Der gesamte inhalt der Seite ist in einem Grid einsortiert damit die Abstände zwischen
+        den auswahlmöglichkeiten und dem ergebnis einheitlich sind-->
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="150"/>
@@ -22,23 +23,31 @@
                     Grid.Row="0"
                     Grid.Column="0">
             <Label Content="Mehrfachauswahl" />
+            <!-- Zeigt dem nutzer eine Box wo ein haken eingefügt und entfernt werden kann
+                hier reagieren wir auf das setzen des Hakens, das entfernen und auch generell auf
+                einen klick auf die Box. Auf die weise werden immer zwei Methoden ausgelöst
+                entweder Checked und Click oder Unchecked und Click-->
             <CheckBox Content="Option A" Checked="addOne" Unchecked="subOne" Click="CheckBox_Click"/>
             <CheckBox Content="Option B" Checked="addOne" Unchecked="subOne" Click="CheckBox_Click"/>
             <CheckBox Content="Option C" Checked="addOne" Unchecked="subOne" Click="CheckBox_Click"/>
             <CheckBox Content="Option D" Checked="addOne" Unchecked="subOne" Click="CheckBox_Click"/>
         </StackPanel>
-        <StackPanel Grid.Row="0"
-               Grid.Column="1">
-
+        <StackPanel Grid.Row="0" Grid.Column="1">
             <Label Content="0" x:Name="lblActiveoptions"/>
+            <!--Zeigt die anzahl der gesetzten haken an-->
             <Label Content="0" x:Name="lblSelectionCount"/>
+            <!--Zeigt die anzahl der Klicks an-->
         </StackPanel>
         <StackPanel Grid.Row="1" Grid.Column="0">
             <Label Content="Einfachauswahl" />
-            <RadioButton Content="Option A" GroupName="SingleSelection" Checked="RadioButton_Checked"/>
-            <RadioButton Content="Option B" GroupName="SingleSelection" Checked="RadioButton_Checked"/>
-            <RadioButton Content="Option C" GroupName="SingleSelection" Checked="RadioButton_Checked"/>
-            <RadioButton Content="Option D" GroupName="SingleSelection" Checked="RadioButton_Checked"/>
+            <!-- Radiobutton können durch den nutzer nur gesetzt werden, das entfernen
+                der Markierung geschieht durch das setzen eines anderen Radiobutton in
+                der gleichen Gruppe. Auf diese weise ist sichergestellt das es nur einen
+                gesetzten geben kann.-->
+            <RadioButton Content="Option A" GroupName="SingleSelection" Checked="radioButton_Checked"/>
+            <RadioButton Content="Option B" GroupName="SingleSelection" Checked="radioButton_Checked"/>
+            <RadioButton Content="Option C" GroupName="SingleSelection" Checked="radioButton_Checked"/>
+            <RadioButton Content="Option D" GroupName="SingleSelection" Checked="radioButton_Checked"/>
         </StackPanel>
         <Label x:Name="lblSingleSelectionValue"
                Grid.Row="1"
@@ -47,6 +56,10 @@
         <StackPanel Grid.Row="2" Grid.Column="0">
             <Label Content="zwei Einfachauswahlen" />
             <Label Foreground="Red" Content="durcheinander!" />
+            <!-- Um die Gruppierung noch zu verdeutlichen sind diesmal zwei gruppen vermischt
+                auf dem bildschirm. Der RadioButton orientiert sich nur an der Gruppe,
+                position und reihenfolge auf dem bildschirm haben dabei keinen einfluss
+                auf die funktionalität-->
             <RadioButton Content="GroupA Button1" GroupName="GroupA" />
             <RadioButton Content="GroupB Button1" GroupName="GroupB" />
             <RadioButton Content="GroupA Button2" GroupName="GroupA" />
