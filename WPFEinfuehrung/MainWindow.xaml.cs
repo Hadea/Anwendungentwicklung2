@@ -1,17 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+﻿using System.Windows;
 
 namespace WPFEinfuehrung
 {
@@ -24,13 +11,23 @@ namespace WPFEinfuehrung
 
         public MainWindow()
         {
-            InitializeComponent();
+            InitializeComponent(); // lädt die XAML datei welche zu dieser Klasse gehört
             clickCounter = 0;
         }
 
+        /// <summary>
+        /// Counts Clicks and displays the current count in a label
+        /// </summary>
+        /// <param name="sender">unused</param>
+        /// <param name="e">unused</param>
         private void btnGreeting_Click(object sender, RoutedEventArgs e)
         {
             clickCounter++;
+
+            // $ aktiviert den modus das variablen mitten im string wie platzhalter
+            // verwendet werden können (clickCounter). die 3 besagt das immer mindestens
+            // 3 zeichen eingefügt werden. Sollte clickCounter weniger buchstaben verwenden
+            // wird dieser rechtsbündig geschrieben und links mit leerzeichen aufgefüllt
             lblGreeting.Text = $"Button wurde {clickCounter, 3} mal geklickt :D";
         }
     }

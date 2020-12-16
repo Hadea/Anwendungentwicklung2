@@ -7,10 +7,16 @@
         mc:Ignorable="d"
         Title="XAML Einführung" Height="450" Width="800">
 <!--#region Meine Coderegion-->
+    <!-- regionen sind auch in XAML möglich -->
     <ScrollViewer HorizontalScrollBarVisibility="Visible"
                   VerticalScrollBarVisibility="Visible">
+        <!-- Falls der inhalt des Scrollviewers (hier das Grid) zu gross wird zeigt er Scrollbars
+            wir haben die scrollbars permanent sichtbar gemacht, auch wenn sie nicht benötigt werden-->
         <Grid>
-            <!--dieses Grid enthält die bestandteile des Fensters -->
+            <!--dieses Grid enthält die bestandteile des Fensters,
+                wir können mit dem Grid unseren bereich in mehrere spalten und
+                Zeilen aufteilen. Diese unterteilung ist optional, standardmässig haben
+                wir eine column und eine row (0,0) mit maximaler grösse * -->
             <Grid.ColumnDefinitions>
                 <!-- Definition von Spalten -->
                 <ColumnDefinition Width="200" />
@@ -18,31 +24,47 @@
                 <ColumnDefinition Width="auto" />
                 <!-- auto verbraucht nur so viel platz wie nötig -->
                 <ColumnDefinition Width="*" />
-                <!-- * nimmt sich sämtlichen verbleibenden platz -->
+                <!-- * nimmt sich sämtlichen verbleibenden platz
+                    sollten mehrere spalten einen * enthalten teilen sie sich diesen zu gleichen teilen auf-->
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
+                <!-- Definiton von spalten-->
                 <RowDefinition Height="100" />
+                <!-- erste spalte mit 100 Pixel höhe-->
                 <RowDefinition Height="auto" />
+                <!-- zweite ist so klein wie möglich-->
                 <RowDefinition Height="*" />
+                <!-- dritte ist so gross wie möglich -->
             </Grid.RowDefinitions>
+            <!--Nach den Spalten- und Zeilen-Definitionen kommen dann die Objekte welche
+                im Grid angezeigt werden sollen. Jedes direkte unterelement sollte
+                dafür Grid.Row und Grid.Column füllen. Die standardwerte sind 0,0
+                sodass alle elemente ersteinmal oben links einsortiert werden-->
+            
+            <!--Ein Grid darf auch andere Kontainer enthalten, also grid in grid in grid ist erlaubt-->
+
             <ScrollViewer Grid.Row="2"
                           Grid.Column="0"
                           Grid.ColumnSpan="3"
                           VerticalScrollBarVisibility="Visible"
                           HorizontalScrollBarVisibility="Visible"
                           Width="500">
-
+                <!--Der Scrollviewer zeigt scrollbalken an, welche aktiv werden wenn der inhalt grösser ist als der scrollviewer-->
+                <!-- ColumnSpan besagt das dieses Element eine breite von 3 Grid-Zellen hat (standard 1) -->
                 <TextBlock x:Name="lblGreeting"
                        TextWrapping="Wrap"
                            Width="500">
                     Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
                 </TextBlock>
             </ScrollViewer>
+            <!-- Der unterstrich im Content vom Button besagt das der Buchstabe danach
+                über das Tastenkürzel angesprochen werden kann. "_Button" führt dazu das
+                man mit Alt+B diesen button auch auslösen kann ohne die Maus zu verwenden
+                Es wird dabei gleich behandelt und auch Click gestartet -->
             <Button x:Name="btnGreeting"
                 Content="_Button"
                 Width="150"
-                    Height="30"
-                    
+                Height="30"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Click="btnGreeting_Click"

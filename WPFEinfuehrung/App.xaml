@@ -2,8 +2,8 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:WPFEinfuehrung"
-             StartupUri="MainWindow.xaml">
+             StartupUri="MainWindow.xaml"><!-- StartupUri legt fest welches Fenster zuerst geladen wird -->
     <Application.Resources>
-         
+         <!-- Hier kommen globale ressourcen und einstellungen rein die für die gesamte App gelten -->
     </Application.Resources>
 </Application>
