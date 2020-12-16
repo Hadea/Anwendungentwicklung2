@@ -1,5 +1,10 @@
-﻿using System.Windows;
+﻿using Microsoft.Win32;
+using System;
+using System.IO;
+using System.Media;
+using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace TicTacToe
 {
@@ -10,6 +15,9 @@ namespace TicTacToe
     {
         readonly GameLogic logic;
         readonly Button[,] buttonArray; // enthält alle buttons damit wir schnell auf sie zugreifen können und auch foreach funktioniert
+
+        SoundPlayer soundFX;
+        MediaPlayer soundMusic;
 
         /// <summary>
         /// Standard Construktor, prepares a new game.
@@ -32,6 +40,9 @@ namespace TicTacToe
             buttonArray[2, 1] = btnField23;
             buttonArray[2, 2] = btnField33;
             lblMessage.Content = $"Spieler {(logic.GetCurrentPlayer() ? "X" : "O")} ist am Zug";
+            soundMusic = new();
+            soundMusic.Open(new Uri( Directory.GetParent(Environment.CommandLine) + @"\ShaolinDub-HarpDubz.mp3", UriKind.Absolute));
+
         }
 
         /// <summary>
@@ -116,5 +127,18 @@ namespace TicTacToe
         private void btnField23_Click(object sender, RoutedEventArgs e) => (sender as Button).IsEnabled = evaluateTurn(logic.Turn(new PointB(1, 2)));
         private void btnField33_Click(object sender, RoutedEventArgs e) => (sender as Button).IsEnabled = evaluateTurn(logic.Turn(new PointB(2, 2)));
 
+        private void cbPlay_Click(object sender, RoutedEventArgs e)
+        {
+            var cb = (sender as CheckBox);
+            if (cb.IsChecked.Value)
+            {
+                soundMusic.Play();
+            }
+            else
+            {
+                soundMusic.Pause();
+            }
+
+        }
     }
 }

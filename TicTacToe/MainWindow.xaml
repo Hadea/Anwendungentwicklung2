@@ -43,8 +43,14 @@
         <Label Content="Willkommen zu Tic Tac Toe"
                FontSize="25"
                x:Name="lblMessage" />
-        <Button Content="Reset"
-                Width="40"
-                Click="btnReset_Click" />
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="100" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="100" />
+            </Grid.ColumnDefinitions>
+            <Button Content="Reset" Grid.Column="0" Width="40" Click="btnReset_Click" />
+            <CheckBox x:Name="cbPlay" Content="Music" Grid.Column="2" Click="cbPlay_Click"/>
+        </Grid>
     </StackPanel>
 </Window>
