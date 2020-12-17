@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Update="SoundSets\SoundSet0\mhakKick02F.wav">
+    <None Update="SoundSets\SoundSet0\mhak Kick 02 F.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="SoundSets\SoundSet0\mhak kick 106 F.wav">
