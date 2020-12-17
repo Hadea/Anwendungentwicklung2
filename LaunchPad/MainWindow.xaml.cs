@@ -40,7 +40,7 @@ namespace LaunchPad
                 int soundCounter = 0;
                 string[] soundSet = null;
                 string fileName;
-                while ( (fileName = reader.ReadLine()) != null )
+                while ((fileName = reader.ReadLine()) != null)
                 {
                     if (soundCounter == 0)
                     {
@@ -59,15 +59,47 @@ namespace LaunchPad
 
             loadSoundSet(0);
 
-            mediaPlayers[0].MediaEnded += (o, e) => btnPlay0.Background = Brushes.LightGray;
-            mediaPlayers[1].MediaEnded += (o, e) => btnPlay1.Background = Brushes.LightGray;
-            mediaPlayers[2].MediaEnded += (o, e) => btnPlay2.Background = Brushes.LightGray;
-            mediaPlayers[3].MediaEnded += (o, e) => btnPlay3.Background = Brushes.LightGray;
-            mediaPlayers[4].MediaEnded += (o, e) => btnPlay4.Background = Brushes.LightGray;
-            mediaPlayers[5].MediaEnded += (o, e) => btnPlay5.Background = Brushes.LightGray;
-            mediaPlayers[6].MediaEnded += (o, e) => btnPlay6.Background = Brushes.LightGray;
-            mediaPlayers[7].MediaEnded += (o, e) => btnPlay7.Background = Brushes.LightGray;
-            mediaPlayers[8].MediaEnded += (o, e) => btnPlay8.Background = Brushes.LightGray;
+            for (int counter = 0; counter < soundSets.Count; counter++)
+            {
+                var temp = new RadioButton
+                {
+                    Content = "Set " + counter,
+                    GroupName = "soundSetGroup",
+                    Name = "Set" + counter
+                };
+                temp.Click += rbSoundSet_Click;
+                temp.IsChecked = counter == 0;
+                radioContainer.Children.Add(temp);
+            }
+
+            Grid contentGrid = Content as Grid;
+            int buttonCounter = 0;
+            List<Button> buttons = new List<Button>(9);
+            for (int rows = 2; rows < 5; rows++)
+            {
+                for (int cols = 0; cols < 3; cols++)
+                {
+                    var temp = new Button
+                    {
+                        Name = "btnPlay" + buttonCounter++,
+                        Style = FindResource("PadButtons") as Style
+                    };
+                    Grid.SetRow(temp,rows);
+                    Grid.SetColumn(temp,cols);
+                    contentGrid.Children.Add(temp);
+                    buttons.Add(temp);
+                }
+            }
+
+            mediaPlayers[0].MediaEnded += (o, e) => buttons[0].Background = Brushes.LightGray;
+            mediaPlayers[1].MediaEnded += (o, e) => buttons[1].Background = Brushes.LightGray;
+            mediaPlayers[2].MediaEnded += (o, e) => buttons[2].Background = Brushes.LightGray;
+            mediaPlayers[3].MediaEnded += (o, e) => buttons[3].Background = Brushes.LightGray;
+            mediaPlayers[4].MediaEnded += (o, e) => buttons[4].Background = Brushes.LightGray;
+            mediaPlayers[5].MediaEnded += (o, e) => buttons[5].Background = Brushes.LightGray;
+            mediaPlayers[6].MediaEnded += (o, e) => buttons[6].Background = Brushes.LightGray;
+            mediaPlayers[7].MediaEnded += (o, e) => buttons[7].Background = Brushes.LightGray;
+            mediaPlayers[8].MediaEnded += (o, e) => buttons[8].Background = Brushes.LightGray;
         }
 
         private void loadSoundSet(int SetId)
@@ -79,7 +111,7 @@ namespace LaunchPad
 
             for (int counter = 0; counter < (this.Content as Grid).Children.Count; counter++)
             {
-                if (((this.Content as Grid).Children[counter] as Button) != null  && ((this.Content as Grid).Children[counter] as Button).Name.Contains("btnPlay"))
+                if (((this.Content as Grid).Children[counter] as Button) != null && ((this.Content as Grid).Children[counter] as Button).Name.Contains("btnPlay"))
                 {
                     ((this.Content as Grid).Children[counter] as Button).Background = Brushes.LightGray;
                 }
@@ -130,14 +162,9 @@ namespace LaunchPad
             }
         }
 
-        private void rbSoundSet0_Click(object sender, RoutedEventArgs e)
+        private void rbSoundSet_Click(object sender, RoutedEventArgs e)
         {
-            loadSoundSet(0);
-        }
-
-        private void rbSoundSet1_Click(object sender, RoutedEventArgs e)
-        {
-            loadSoundSet(1);
+            loadSoundSet(int.Parse((sender as RadioButton).Name[3..]));
         }
 
         private void btnStop_Click(object sender, RoutedEventArgs e)
