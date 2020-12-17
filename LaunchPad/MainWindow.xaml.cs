@@ -22,16 +22,16 @@ namespace LaunchPad
     /// </summary>
     public partial class MainWindow : Window
     {
-        MediaPlayer[] soundPlayers;
-        List<string[]> soundSets;
+        readonly MediaPlayer[] mediaPlayers;
+        readonly List<string[]> soundSets;
 
         public MainWindow()
         {
             InitializeComponent();
-            soundPlayers = new MediaPlayer[9];
-            for (int counter = 0; counter < soundPlayers.Length; counter++)
+            mediaPlayers = new MediaPlayer[9];
+            for (int counter = 0; counter < mediaPlayers.Length; counter++)
             {
-                soundPlayers[counter] = new MediaPlayer();
+                mediaPlayers[counter] = new MediaPlayer();
             }
 
             soundSets = new List<string[]>();
@@ -61,56 +61,77 @@ namespace LaunchPad
             secondSet[8] = "/SoundSets/SoundSet1/String-TurtleBeach.wav";
             soundSets.Add(secondSet);
             loadSoundSet(0);
+
+            mediaPlayers[0].MediaEnded += (o, e) => btnPlay0.Background = Brushes.DarkRed;
+            mediaPlayers[1].MediaEnded += (o, e) => btnPlay1.Background = Brushes.DarkRed;
+            mediaPlayers[2].MediaEnded += (o, e) => btnPlay2.Background = Brushes.DarkRed;
+            mediaPlayers[3].MediaEnded += (o, e) => btnPlay3.Background = Brushes.DarkRed;
+            mediaPlayers[4].MediaEnded += (o, e) => btnPlay4.Background = Brushes.DarkRed;
+            mediaPlayers[5].MediaEnded += (o, e) => btnPlay5.Background = Brushes.DarkRed;
+            mediaPlayers[6].MediaEnded += (o, e) => btnPlay6.Background = Brushes.DarkRed;
+            mediaPlayers[7].MediaEnded += (o, e) => btnPlay7.Background = Brushes.DarkRed;
+            mediaPlayers[8].MediaEnded += (o, e) => btnPlay8.Background = Brushes.DarkRed;
         }
 
         private void loadSoundSet(int SetId)
         {
-            for (int counter = 0; counter < soundPlayers.Length; counter++)
+            for (int counter = 0; counter < mediaPlayers.Length; counter++)
             {
-                soundPlayers[counter].Open(new Uri(Directory.GetParent(Environment.CommandLine).FullName + soundSets[SetId][counter]));
+                mediaPlayers[counter].Volume = 0;
+                mediaPlayers[counter].Open(new Uri(Directory.GetParent(Environment.CommandLine).FullName + soundSets[SetId][counter]));
+            }
+
+            foreach (var item in mediaPlayers) item.Volume = 0.5d;
+
+            for (int counter = 0; counter < (this.Content as Grid).Children.Count; counter++)
+            {
+                if (((this.Content as Grid).Children[counter] as Button) != null  && ((this.Content as Grid).Children[counter] as Button).Name.Contains("btnPlay"))
+                {
+                    ((this.Content as Grid).Children[counter] as Button).Background = Brushes.Gray;
+                }
             }
         }
 
         private void btnPlay_Click(object sender, EventArgs e)
         {
-
+            (sender as Button).Background = Brushes.DarkGreen;
             switch ((sender as Button).Name)
             {
                 case "btnPlay0":
-                    soundPlayers[0].Position = TimeSpan.Zero;
-                    soundPlayers[0].Play();
+                    mediaPlayers[0].Position = TimeSpan.Zero;
+                    mediaPlayers[0].Play();
                     break;
                 case "btnPlay1":
-                    soundPlayers[1].Position = TimeSpan.Zero;
-                    soundPlayers[1].Play();
+                    mediaPlayers[1].Position = TimeSpan.Zero;
+                    mediaPlayers[1].Play();
                     break;
                 case "btnPlay2":
-                    soundPlayers[2].Position = TimeSpan.Zero;
-                    soundPlayers[2].Play();
+                    mediaPlayers[2].Position = TimeSpan.Zero;
+                    mediaPlayers[2].Play();
                     break;
                 case "btnPlay3":
-                    soundPlayers[3].Position = TimeSpan.Zero;
-                    soundPlayers[3].Play();
+                    mediaPlayers[3].Position = TimeSpan.Zero;
+                    mediaPlayers[3].Play();
                     break;
                 case "btnPlay4":
-                    soundPlayers[4].Position = TimeSpan.Zero;
-                    soundPlayers[4].Play();
+                    mediaPlayers[4].Position = TimeSpan.Zero;
+                    mediaPlayers[4].Play();
                     break;
                 case "btnPlay5":
-                    soundPlayers[5].Position = TimeSpan.Zero;
-                    soundPlayers[5].Play();
+                    mediaPlayers[5].Position = TimeSpan.Zero;
+                    mediaPlayers[5].Play();
                     break;
                 case "btnPlay6":
-                    soundPlayers[6].Position = TimeSpan.Zero;
-                    soundPlayers[6].Play();
+                    mediaPlayers[6].Position = TimeSpan.Zero;
+                    mediaPlayers[6].Play();
                     break;
                 case "btnPlay7":
-                    soundPlayers[7].Position = TimeSpan.Zero;
-                    soundPlayers[7].Play();
+                    mediaPlayers[7].Position = TimeSpan.Zero;
+                    mediaPlayers[7].Play();
                     break;
                 case "btnPlay8":
-                    soundPlayers[8].Position = TimeSpan.Zero;
-                    soundPlayers[8].Play();
+                    mediaPlayers[8].Position = TimeSpan.Zero;
+                    mediaPlayers[8].Play();
                     break;
             }
         }
@@ -127,7 +148,7 @@ namespace LaunchPad
 
         private void btnStop_Click(object sender, RoutedEventArgs e)
         {
-            foreach (var item in soundPlayers)
+            foreach (var item in mediaPlayers)
             {
                 item.Pause();
                 item.Position = TimeSpan.Zero;

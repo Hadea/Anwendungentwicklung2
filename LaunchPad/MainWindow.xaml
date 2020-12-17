@@ -6,6 +6,11 @@
         xmlns:local="clr-namespace:LaunchPad"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
+    <Window.Resources>
+        <Style x:Key="PadButtons" TargetType="Button">
+            <EventSetter Event="Click" Handler="btnPlay_Click"/>
+        </Style>
+    </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="100"/>
@@ -25,15 +30,15 @@
         <Label Content="Drum-LaunchPad" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3"/>
         <RadioButton Grid.Row="1" Grid.Column="0" IsChecked="True" x:Name="rbSoundSet0" Content="Set 0" GroupName="soundSetGroup" Click="rbSoundSet0_Click"/>
         <RadioButton Grid.Row="1" Grid.Column="1" x:Name="rbSoundSet1" Content="Set 1" GroupName="soundSetGroup" Click="rbSoundSet1_Click"/>
-        <Button x:Name="btnPlay0" Grid.Column="0" Grid.Row="2" Click="btnPlay_Click" />
-        <Button x:Name="btnPlay1" Grid.Column="1" Grid.Row="2" Click="btnPlay_Click" />
-        <Button x:Name="btnPlay2" Grid.Column="2" Grid.Row="2" Click="btnPlay_Click" />
-        <Button x:Name="btnPlay3" Grid.Column="0" Grid.Row="3" Click="btnPlay_Click" />
-        <Button x:Name="btnPlay4" Grid.Column="1" Grid.Row="3" Click="btnPlay_Click" />
-        <Button x:Name="btnPlay5" Grid.Column="2" Grid.Row="3" Click="btnPlay_Click" />
-        <Button x:Name="btnPlay6" Grid.Column="0" Grid.Row="4" Click="btnPlay_Click" />
-        <Button x:Name="btnPlay7" Grid.Column="1" Grid.Row="4" Click="btnPlay_Click" />
-        <Button x:Name="btnPlay8" Grid.Column="2" Grid.Row="4" Click="btnPlay_Click" />
+        <Button x:Name="btnPlay0" Grid.Column="0" Grid.Row="2" Style="{StaticResource PadButtons}" />
+        <Button x:Name="btnPlay1" Grid.Column="1" Grid.Row="2" Style="{StaticResource PadButtons}" />
+        <Button x:Name="btnPlay2" Grid.Column="2" Grid.Row="2" Style="{StaticResource PadButtons}" />
+        <Button x:Name="btnPlay3" Grid.Column="0" Grid.Row="3" Style="{StaticResource PadButtons}" />
+        <Button x:Name="btnPlay4" Grid.Column="1" Grid.Row="3" Style="{StaticResource PadButtons}" />
+        <Button x:Name="btnPlay5" Grid.Column="2" Grid.Row="3" Style="{StaticResource PadButtons}" />
+        <Button x:Name="btnPlay6" Grid.Column="0" Grid.Row="4" Style="{StaticResource PadButtons}" />
+        <Button x:Name="btnPlay7" Grid.Column="1" Grid.Row="4" Style="{StaticResource PadButtons}" />
+        <Button x:Name="btnPlay8" Grid.Column="2" Grid.Row="4" Style="{StaticResource PadButtons}" />
         <Button Grid.Column="1" Grid.Row="5" Content="_Stop all" Click="btnStop_Click"/>
     </Grid>
 </Window>
