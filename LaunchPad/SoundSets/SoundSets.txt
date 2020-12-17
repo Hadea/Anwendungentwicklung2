@@ -1,0 +1,18 @@
+﻿/SoundSets/SoundSet0/mhak kick 106 F.wav
+/SoundSets/SoundSet0/mhak kick 14 F.wav
+/SoundSets/SoundSet0/mhak kick 140 F.wav
+/SoundSets/SoundSet0/mhak kick 35 F.wav
+/SoundSets/SoundSet0/mhak kick 46 F.wav
+/SoundSets/SoundSet0/mhak kick 63 F.wav
+/SoundSets/SoundSet0/mhak kick 81 F.wav
+/SoundSets/SoundSet0/mhak kick 89 F.wav
+/SoundSets/SoundSet0/mhak kick 02 F.wav
+/SoundSets/SoundSet1/String-2080string.wav
+/SoundSets/SoundSet1/String-CamenbertString.wav
+/SoundSets/SoundSet1/String-CrunchyWarmth.wav
+/SoundSets/SoundSet1/String-MoonliteBreeze.wav
+/SoundSets/SoundSet1/Strings-Silksparkle.wav
+/SoundSets/SoundSet1/Strings-SilksparkleDIfferent.wav
+/SoundSets/SoundSet1/Strings-SilksparkleDIfferentLow.wav
+/SoundSets/SoundSet1/String-SweetBuckets.wav
+/SoundSets/SoundSet1/String-TurtleBeach.wav

@@ -35,42 +35,39 @@ namespace LaunchPad
             }
 
             soundSets = new List<string[]>();
-            string[] firstSet = new string[9];
+            using (StreamReader reader = new StreamReader("SoundSets/SoundSets.txt"))
+            {
+                int soundCounter = 0;
+                string[] soundSet = null;
+                string fileName;
+                while ( (fileName = reader.ReadLine()) != null )
+                {
+                    if (soundCounter == 0)
+                    {
+                        soundSet = new string[9];
+                        soundSets.Add(soundSet);
+                    }
+                    soundSet[soundCounter] = fileName;
+                    soundCounter++;
 
-            firstSet[0] = "/SoundSets/SoundSet0/mhak kick 106 F.wav";
-            firstSet[1] = "/SoundSets/SoundSet0/mhak kick 14 F.wav";
-            firstSet[2] = "/SoundSets/SoundSet0/mhak kick 140 F.wav";
-            firstSet[3] = "/SoundSets/SoundSet0/mhak kick 35 F.wav";
-            firstSet[4] = "/SoundSets/SoundSet0/mhak kick 46 F.wav";
-            firstSet[5] = "/SoundSets/SoundSet0/mhak kick 63 F.wav";
-            firstSet[6] = "/SoundSets/SoundSet0/mhak kick 81 F.wav";
-            firstSet[7] = "/SoundSets/SoundSet0/mhak kick 89 F.wav";
-            firstSet[8] = "/SoundSets/SoundSet0/mhak kick 02 F.wav";
+                    if (soundCounter >= soundSet.Length)
+                    {
+                        soundCounter = 0;
+                    }
+                }
+            }
 
-            soundSets.Add(firstSet);
-
-            string[] secondSet = new string[9];
-            secondSet[0] = "/SoundSets/SoundSet1/String-2080string.wav";
-            secondSet[1] = "/SoundSets/SoundSet1/String-CamenbertString.wav";
-            secondSet[2] = "/SoundSets/SoundSet1/String-CrunchyWarmth.wav";
-            secondSet[3] = "/SoundSets/SoundSet1/String-MoonliteBreeze.wav";
-            secondSet[4] = "/SoundSets/SoundSet1/Strings-Silksparkle.wav";
-            secondSet[5] = "/SoundSets/SoundSet1/Strings-SilksparkleDIfferent.wav";
-            secondSet[6] = "/SoundSets/SoundSet1/Strings-SilksparkleDIfferentLow.wav";
-            secondSet[7] = "/SoundSets/SoundSet1/String-SweetBuckets.wav";
-            secondSet[8] = "/SoundSets/SoundSet1/String-TurtleBeach.wav";
-            soundSets.Add(secondSet);
             loadSoundSet(0);
 
-            mediaPlayers[0].MediaEnded += (o, e) => btnPlay0.Background = Brushes.DarkRed;
-            mediaPlayers[1].MediaEnded += (o, e) => btnPlay1.Background = Brushes.DarkRed;
-            mediaPlayers[2].MediaEnded += (o, e) => btnPlay2.Background = Brushes.DarkRed;
-            mediaPlayers[3].MediaEnded += (o, e) => btnPlay3.Background = Brushes.DarkRed;
-            mediaPlayers[4].MediaEnded += (o, e) => btnPlay4.Background = Brushes.DarkRed;
-            mediaPlayers[5].MediaEnded += (o, e) => btnPlay5.Background = Brushes.DarkRed;
-            mediaPlayers[6].MediaEnded += (o, e) => btnPlay6.Background = Brushes.DarkRed;
-            mediaPlayers[7].MediaEnded += (o, e) => btnPlay7.Background = Brushes.DarkRed;
-            mediaPlayers[8].MediaEnded += (o, e) => btnPlay8.Background = Brushes.DarkRed;
+            mediaPlayers[0].MediaEnded += (o, e) => btnPlay0.Background = Brushes.LightGray;
+            mediaPlayers[1].MediaEnded += (o, e) => btnPlay1.Background = Brushes.LightGray;
+            mediaPlayers[2].MediaEnded += (o, e) => btnPlay2.Background = Brushes.LightGray;
+            mediaPlayers[3].MediaEnded += (o, e) => btnPlay3.Background = Brushes.LightGray;
+            mediaPlayers[4].MediaEnded += (o, e) => btnPlay4.Background = Brushes.LightGray;
+            mediaPlayers[5].MediaEnded += (o, e) => btnPlay5.Background = Brushes.LightGray;
+            mediaPlayers[6].MediaEnded += (o, e) => btnPlay6.Background = Brushes.LightGray;
+            mediaPlayers[7].MediaEnded += (o, e) => btnPlay7.Background = Brushes.LightGray;
+            mediaPlayers[8].MediaEnded += (o, e) => btnPlay8.Background = Brushes.LightGray;
         }
 
         private void loadSoundSet(int SetId)
@@ -84,7 +81,7 @@ namespace LaunchPad
             {
                 if (((this.Content as Grid).Children[counter] as Button) != null  && ((this.Content as Grid).Children[counter] as Button).Name.Contains("btnPlay"))
                 {
-                    ((this.Content as Grid).Children[counter] as Button).Background = Brushes.Gray;
+                    ((this.Content as Grid).Children[counter] as Button).Background = Brushes.LightGray;
                 }
             }
         }
@@ -149,6 +146,14 @@ namespace LaunchPad
             {
                 item.Pause();
                 item.Position = TimeSpan.Zero;
+            }
+
+            for (int counter = 0; counter < (this.Content as Grid).Children.Count; counter++)
+            {
+                if (((this.Content as Grid).Children[counter] as Button) != null && ((this.Content as Grid).Children[counter] as Button).Name.Contains("btnPlay"))
+                {
+                    ((this.Content as Grid).Children[counter] as Button).Background = Brushes.LightGray;
+                }
             }
         }
     }
