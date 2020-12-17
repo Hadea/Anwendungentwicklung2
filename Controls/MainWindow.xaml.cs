@@ -49,5 +49,10 @@ namespace Controls
             // der alte inhalt wird in diesem fall dabei Zerstört, da es keine weitere
             // variable (referenz) gibt die auf das Objekt zeigt
         }
+
+        private void btnSound_Click(object sender, RoutedEventArgs e)
+        {
+            frmContent.Navigate(new pgeSound());
+        }
     }
 }
