@@ -31,11 +31,23 @@ namespace Controls
             string fileName = Environment.CommandLine;// liesst den absoluten pfad zu unserer Anwendung
             fileName = Directory.GetParent(fileName).FullName; // schneidet den Dateinamen von unserer Anwendung ab
             fileName = fileName + "/ShaolinDub-HarpDubz.mp3"; // setzt ans ende den Namen des Liedes
-            music.Open(new Uri(fileName));
+            music.Open(new Uri(fileName)); // lädt das lied, stellt es auf anfang, spielt es aber noch nicht ab
+            music.MediaEnded += loop; // wenn das lied endet wird jede methode die in "MediaEndet" registriert ist aufgerufen
 
             // SoundPlayer settings
             sound = new SoundPlayer(); // erstellen des Objektes SoundPlayer
             sound.SoundLocation = "Klick.wav"; // laden der WAV datei aus dem gleichen Verzeichnis in dem auch das Programm liegt
+        }
+
+        /// <summary>
+        /// Restarts the song.
+        /// </summary>
+        /// <param name="sender">unused</param>
+        /// <param name="e">unused</param>
+        private void loop(object sender, EventArgs e)
+        {
+            music.Position = TimeSpan.Zero;
+            music.Play();
         }
 
         private void btnPlay_Click(object sender, RoutedEventArgs e)

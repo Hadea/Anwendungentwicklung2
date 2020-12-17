@@ -1,0 +1,34 @@
+﻿<Window x:Class="LaunchPad.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:LaunchPad"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="100"/>
+            <ColumnDefinition Width="100"/>
+            <ColumnDefinition Width="100"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50" />
+            <RowDefinition Height="100" />
+            <RowDefinition Height="100" />
+            <RowDefinition Height="100" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Button x:Name="btnPlay0" Grid.Column="0" Grid.Row="1" Click="btnPlay_Click" />
+        <Button x:Name="btnPlay1" Grid.Column="1" Grid.Row="1" Click="btnPlay_Click" />
+        <Button x:Name="btnPlay2" Grid.Column="2" Grid.Row="1" Click="btnPlay_Click" />
+        <Button x:Name="btnPlay3" Grid.Column="0" Grid.Row="2" Click="btnPlay_Click" />
+        <Button x:Name="btnPlay4" Grid.Column="1" Grid.Row="2" Click="btnPlay_Click" />
+        <Button x:Name="btnPlay5" Grid.Column="2" Grid.Row="2" Click="btnPlay_Click" />
+        <Button x:Name="btnPlay6" Grid.Column="0" Grid.Row="3" Click="btnPlay_Click" />
+        <Button x:Name="btnPlay7" Grid.Column="1" Grid.Row="3" Click="btnPlay_Click" />
+        <Button x:Name="btnPlay8" Grid.Column="2" Grid.Row="3" Click="btnPlay_Click" />
+        <Label Content="Drum-LaunchPad" Grid.ColumnSpan="3"/>
+    </Grid>
+</Window>
