@@ -1,19 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Media;
-using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace LaunchPad
 {
@@ -27,51 +18,56 @@ namespace LaunchPad
 
         public MainWindow()
         {
-            InitializeComponent();
-            mediaPlayers = new MediaPlayer[9];
+            InitializeComponent(); //lädt die XAML datei zu dieser Klasse
+            mediaPlayers = new MediaPlayer[9]; // array erstellen damit dort MediaPlayer reinkönnen
+
+            // das array aus MediaPlayer wird befüllt
             for (int counter = 0; counter < mediaPlayers.Length; counter++)
             {
                 mediaPlayers[counter] = new MediaPlayer();
             }
 
-            soundSets = new List<string[]>();
-            using (StreamReader reader = new StreamReader("SoundSets/SoundSets.txt"))
+            soundSets = new List<string[]>();// Liste erstellen damit wir soundsets lagern können
+            using (StreamReader reader = new StreamReader("SoundSets/SoundSets.txt")) // datei mit den soundsets laden
             {
-                int soundCounter = 0;
-                string[] soundSet = null;
-                string fileName;
-                while ((fileName = reader.ReadLine()) != null)
+                int soundCounter = 0; // zähler um zu wissen ob ein weiteres soundset geladen wird
+                string[] soundSet = null; // lagert die referenz zu dem array welches wir befüllen wollen
+                string fileName; // wird die gelesene Zeile enthalten
+                while ((fileName = reader.ReadLine()) != null) // solange wir noch Zeilen in der Datei haben weiterlesen
                 {
                     if (soundCounter == 0)
                     {
+                        // immer wenn wir am anfang eines neuen sets sind, array erstellen und in die Liste der sets eintragen
                         soundSet = new string[9];
                         soundSets.Add(soundSet);
                     }
-                    soundSet[soundCounter] = fileName;
+                    soundSet[soundCounter] = fileName; // gelesene Zeile mit dem dateinamen wird in das soundset eingetragen
                     soundCounter++;
 
-                    if (soundCounter >= soundSet.Length)
+                    if (soundCounter >= soundSet.Length) // wenn wir das ende (9) des arrays erreicht haben wird im nächsten durchlauf ein neues erstellt
                     {
                         soundCounter = 0;
                     }
                 }
             }
 
-            loadSoundSet(0);
+            loadSoundSet(0); // lädt das erste soundset
 
+            // für jedes set einen radiobutton erstellen
             for (int counter = 0; counter < soundSets.Count; counter++)
             {
-                var temp = new RadioButton
+                var temp = new RadioButton // neuen RadioButton erstellen
                 {
                     Content = "Set " + counter,
-                    GroupName = "soundSetGroup",
+                    GroupName = "soundSetGroup", // Gruppe nicht vergessen damit sie auch zusammen agieren
                     Name = "Set" + counter
                 };
                 temp.Click += rbSoundSet_Click;
-                temp.IsChecked = counter == 0;
-                radioContainer.Children.Add(temp);
+                temp.IsChecked = counter == 0; // radiobutton 0 anwählen, alle anderen bleiben aus
+                radioContainer.Children.Add(temp); // radiobutton in das stackpanel einsortieren
             }
 
+            // die 9 button erstellen
             Grid contentGrid = Content as Grid;
             int buttonCounter = 0;
             List<Button> buttons = new List<Button>(9);
@@ -84,13 +80,14 @@ namespace LaunchPad
                         Name = "btnPlay" + buttonCounter++,
                         Style = FindResource("PadButtons") as Style
                     };
-                    Grid.SetRow(temp,rows);
-                    Grid.SetColumn(temp,cols);
-                    contentGrid.Children.Add(temp);
+                    Grid.SetRow(temp, rows); // Button in Zeile sortieren
+                    Grid.SetColumn(temp, cols); // Button in Spalte sortieren
+                    contentGrid.Children.Add(temp); // button als unterobjekt des Grid eintragen
                     buttons.Add(temp);
                 }
             }
 
+            // Wenn eine wav datei bis zu ende abgespielt wurde wird der entsprechende button wieder grau
             mediaPlayers[0].MediaEnded += (o, e) => buttons[0].Background = Brushes.LightGray;
             mediaPlayers[1].MediaEnded += (o, e) => buttons[1].Background = Brushes.LightGray;
             mediaPlayers[2].MediaEnded += (o, e) => buttons[2].Background = Brushes.LightGray;
@@ -104,16 +101,20 @@ namespace LaunchPad
 
         private void loadSoundSet(int SetId)
         {
+            // alle mediaplayer mit den dateinamen füllen
             for (int counter = 0; counter < mediaPlayers.Length; counter++)
             {
                 mediaPlayers[counter].Open(new Uri(Directory.GetParent(Environment.CommandLine).FullName + soundSets[SetId][counter]));
             }
 
-            for (int counter = 0; counter < (this.Content as Grid).Children.Count; counter++)
+            // falls mitten im abspielen einer wav datei das soundset gewechselt wird muss auch jeder button
+            // seine originalfarbe zurückerhalten
+            for (int counter = 0; counter < (Content as Grid).Children.Count; counter++) // alle elemente die im Grid eingetragen sind durchgehen
             {
-                if (((this.Content as Grid).Children[counter] as Button) != null && ((this.Content as Grid).Children[counter] as Button).Name.Contains("btnPlay"))
+                if (((Content as Grid).Children[counter] as Button) != null && //testen ob das unterobjekt des grid ein button ist
+                    ((Content as Grid).Children[counter] as Button).Name.Contains("btnPlay")) // testen ob der button auch den richtigen namen hat
                 {
-                    ((this.Content as Grid).Children[counter] as Button).Background = Brushes.LightGray;
+                    ((Content as Grid).Children[counter] as Button).Background = Brushes.LightGray;
                 }
             }
         }
@@ -121,45 +122,10 @@ namespace LaunchPad
         private void btnPlay_Click(object sender, EventArgs e)
         {
             (sender as Button).Background = Brushes.DarkGreen;
-            switch ((sender as Button).Name)
-            {
-                case "btnPlay0":
-                    mediaPlayers[0].Position = TimeSpan.Zero;
-                    mediaPlayers[0].Play();
-                    break;
-                case "btnPlay1":
-                    mediaPlayers[1].Position = TimeSpan.Zero;
-                    mediaPlayers[1].Play();
-                    break;
-                case "btnPlay2":
-                    mediaPlayers[2].Position = TimeSpan.Zero;
-                    mediaPlayers[2].Play();
-                    break;
-                case "btnPlay3":
-                    mediaPlayers[3].Position = TimeSpan.Zero;
-                    mediaPlayers[3].Play();
-                    break;
-                case "btnPlay4":
-                    mediaPlayers[4].Position = TimeSpan.Zero;
-                    mediaPlayers[4].Play();
-                    break;
-                case "btnPlay5":
-                    mediaPlayers[5].Position = TimeSpan.Zero;
-                    mediaPlayers[5].Play();
-                    break;
-                case "btnPlay6":
-                    mediaPlayers[6].Position = TimeSpan.Zero;
-                    mediaPlayers[6].Play();
-                    break;
-                case "btnPlay7":
-                    mediaPlayers[7].Position = TimeSpan.Zero;
-                    mediaPlayers[7].Play();
-                    break;
-                case "btnPlay8":
-                    mediaPlayers[8].Position = TimeSpan.Zero;
-                    mediaPlayers[8].Play();
-                    break;
-            }
+            // der name des buttons entscheidet welcher mediaplayer gestartet wird
+            int id = int.Parse((sender as Button).Name[7..]);
+            mediaPlayers[id].Position = TimeSpan.Zero;
+            mediaPlayers[id].Play();
         }
 
         private void rbSoundSet_Click(object sender, RoutedEventArgs e)
@@ -175,13 +141,15 @@ namespace LaunchPad
                 item.Position = TimeSpan.Zero;
             }
 
-            for (int counter = 0; counter < (this.Content as Grid).Children.Count; counter++)
+            for (int counter = 0; counter < (Content as Grid).Children.Count; counter++)
             {
-                if (((this.Content as Grid).Children[counter] as Button) != null && ((this.Content as Grid).Children[counter] as Button).Name.Contains("btnPlay"))
+                if (((Content as Grid).Children[counter] as Button) != null && ((Content as Grid).Children[counter] as Button).Name.Contains("btnPlay"))
                 {
-                    ((this.Content as Grid).Children[counter] as Button).Background = Brushes.LightGray;
+                    ((Content as Grid).Children[counter] as Button).Background = Brushes.LightGray;
                 }
             }
         }
+
+
     }
 }
