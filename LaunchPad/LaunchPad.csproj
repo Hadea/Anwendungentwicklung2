@@ -1,10 +1,18 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net5.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
+    <Authors>Lutz Kadoch</Authors>
+    <Company />
+    <Product>Launch Pad</Product>
+    <PackageProjectUrl>https://github.com/Hadea/Anwendungentwicklung2/tree/master/LaunchPad</PackageProjectUrl>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.113.6" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Update="SoundSets\SoundSet0\mhak Kick 02 F.wav">
@@ -61,7 +69,7 @@
     <None Update="SoundSets\SoundSet1\Strings-SilksparkleDIfferentLow.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="SoundSets\SoundSets.txt">
+    <None Update="SoundSets\SoundSets.db">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

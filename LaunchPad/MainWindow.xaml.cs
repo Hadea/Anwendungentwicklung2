@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-
+using System.Data.SQLite;
 namespace LaunchPad
 {
     /// <summary>
@@ -14,7 +13,7 @@ namespace LaunchPad
     public partial class MainWindow : Window
     {
         readonly MediaPlayer[] mediaPlayers;
-        readonly List<string[]> soundSets;
+        readonly Dictionary<int,string[]> soundSets;
 
         public MainWindow()
         {
@@ -27,45 +26,54 @@ namespace LaunchPad
                 mediaPlayers[counter] = new MediaPlayer();
             }
 
-            soundSets = new List<string[]>();// Liste erstellen damit wir soundsets lagern können
-            using (StreamReader reader = new StreamReader("SoundSets/SoundSets.txt")) // datei mit den soundsets laden
-            {
-                int soundCounter = 0; // zähler um zu wissen ob ein weiteres soundset geladen wird
-                string[] soundSet = null; // lagert die referenz zu dem array welches wir befüllen wollen
-                string fileName; // wird die gelesene Zeile enthalten
-                while ((fileName = reader.ReadLine()) != null) // solange wir noch Zeilen in der Datei haben weiterlesen
-                {
-                    if (soundCounter == 0)
-                    {
-                        // immer wenn wir am anfang eines neuen sets sind, array erstellen und in die Liste der sets eintragen
-                        soundSet = new string[9];
-                        soundSets.Add(soundSet);
-                    }
-                    soundSet[soundCounter] = fileName; // gelesene Zeile mit dem dateinamen wird in das soundset eingetragen
-                    soundCounter++;
+            soundSets = new Dictionary<int, string[]>();// Liste erstellen damit wir soundsets lagern können
 
-                    if (soundCounter >= soundSet.Length) // wenn wir das ende (9) des arrays erreicht haben wird im nächsten durchlauf ein neues erstellt
+            SQLiteConnectionStringBuilder builder = new();
+            builder.DataSource = Directory.GetParent(Environment.CommandLine).FullName + "/SoundSets/SoundSets.db";
+            builder.Version = 3;
+
+            using (SQLiteConnection con = new(builder.ToString()))
+            {
+                con.Open();
+                var command = con.CreateCommand();
+                command.CommandText = "select id, name from soundsets;";
+
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
                     {
-                        soundCounter = 0;
+                        soundSets.Add(reader.GetInt32(0), new string[9]);
+                        // für jedes set einen radiobutton erstellen
+                        var temp = new RadioButton // neuen RadioButton erstellen
+                        {
+                            Content = reader.GetString(1),
+                            GroupName = "soundSetGroup", // Gruppe nicht vergessen damit sie auch zusammen agieren
+                            Name = "Set" + reader.GetInt32(0)
+                        };
+                        temp.Click += rbSoundSet_Click;
+                        temp.IsChecked = reader.GetInt32(0) == 0; // radiobutton 0 anwählen, alle anderen bleiben aus
+                        radioContainer.Children.Add(temp); // radiobutton in das stackpanel einsortieren
+
+                    }
+                }
+
+                foreach (var set in soundSets)
+                {
+                    command.CommandText = "select FileName from sounds where soundsetid = @id";
+                    command.Parameters.Add(new SQLiteParameter("id", set.Key));
+                    using (var reader = command.ExecuteReader())
+                    {
+                        int soundcounter = 0;
+                        while (reader.Read() && soundcounter < 9)
+                        {
+                            soundSets[set.Key][soundcounter++] = reader.GetString(0);
+                        }
                     }
                 }
             }
 
             loadSoundSet(0); // lädt das erste soundset
 
-            // für jedes set einen radiobutton erstellen
-            for (int counter = 0; counter < soundSets.Count; counter++)
-            {
-                var temp = new RadioButton // neuen RadioButton erstellen
-                {
-                    Content = "Set " + counter,
-                    GroupName = "soundSetGroup", // Gruppe nicht vergessen damit sie auch zusammen agieren
-                    Name = "Set" + counter
-                };
-                temp.Click += rbSoundSet_Click;
-                temp.IsChecked = counter == 0; // radiobutton 0 anwählen, alle anderen bleiben aus
-                radioContainer.Children.Add(temp); // radiobutton in das stackpanel einsortieren
-            }
 
             // die 9 button erstellen
             Grid contentGrid = Content as Grid;
@@ -99,13 +107,18 @@ namespace LaunchPad
             mediaPlayers[8].MediaEnded += (o, e) => buttons[8].Background = Brushes.LightGray;
         }
 
+        /// <summary>
+        /// Loads the specified sound set into the MediaPlayer array.
+        /// </summary>
+        /// <param name="SetId">ID number of the set</param>
         private void loadSoundSet(int SetId)
         {
+            if (SetId < 0 && SetId >= soundSets.Count) // testen ob die übergebene Zahl auch möglich ist
+                throw new IndexOutOfRangeException();
+
             // alle mediaplayer mit den dateinamen füllen
             for (int counter = 0; counter < mediaPlayers.Length; counter++)
-            {
                 mediaPlayers[counter].Open(new Uri(Directory.GetParent(Environment.CommandLine).FullName + soundSets[SetId][counter]));
-            }
 
             // falls mitten im abspielen einer wav datei das soundset gewechselt wird muss auch jeder button
             // seine originalfarbe zurückerhalten
