@@ -14,6 +14,7 @@ Erweiterungen
 
 Zeitanzeige, jeder feherhafte zug gibt strafzeit
 Dynamische anzahl an buttons (nur gerade feldanzahl erlauben, oder einen leer lassen)
+Deaktivieren der Spielerstellung wenn die grösse keine gerade zahl ergibt
 Highscore abspeichern (Datenbank oder Textdatei)
 Automatisches abdecken der bilder nach 1 sec (async, await Thread.Sleep(1000))
 Klicksounds (SoundPlayer)

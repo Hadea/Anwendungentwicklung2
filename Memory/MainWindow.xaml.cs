@@ -22,46 +22,97 @@ namespace Memory
     /// </summary>
     public partial class MainWindow : Window
     {
+
+        List<BitmapImage> bitmaps;
+
         public MainWindow()
         {
             InitializeComponent();
 
-            // könnten vom nutzer vorgegeben werden
 
+            bitmaps = new List<BitmapImage>();
 
-            createGame(3, 2);
+            // alle bilder laden
+            foreach (var fileName in Directory.GetFiles("Images"))
+            {
+                BitmapImage tempBitmap = new(); // neues Bild erstellen
+                tempBitmap.BeginInit();// füllen des Bildes starten
+                tempBitmap.UriSource = new Uri( Directory.GetParent(Environment.CommandLine).FullName + @"\" + fileName);// bildinhalt aus datei laden
+                tempBitmap.EndInit();// füllen des Bildes finalisieren
+                bitmaps.Add(tempBitmap);
+            }
+
         }
 
         void createGame(int Columns, int Rows)
         {
-            //for (int counter = 0; counter < Columns; counter++)
-            //{
-            //    GridLength length;
-            //    length
-            //    Spielfeld.ColumnDefinitions.Add(new ColumnDefinition { Width= });
-            //}
+            // clear
+
+            Spielfeld.Children.Clear();
+            Spielfeld.ColumnDefinitions.Clear();
+            Spielfeld.RowDefinitions.Clear();
+
+            // Linkedliste mit erlaubten image ziffern erstellen
+            List<int> availableBitmaps = new List<int>();
+            for (int counter = 0; counter < bitmaps.Count; counter++)
+                availableBitmaps.Add(counter);
+
+            List<Image> images = new List<Image>();
+            // recreate
+            var gridElementSize = new GridLength(100);
+
+            for (int counter = 0; counter < Columns; counter++)
+            {
+                ColumnDefinition colDef = new();
+                colDef.Width = gridElementSize;
+                Spielfeld.ColumnDefinitions.Add(colDef);
+            }
 
 
+            for (int counter = 0; counter < Rows; counter++)
+            {
+                RowDefinition rowDef = new();
+                rowDef.Height = gridElementSize;
+                Spielfeld.RowDefinitions.Add(rowDef);
+            }
+
+            Random rndGen = new();
             for (int row = 0; row < Rows; row++)
             {
                 for (int col = 0; col < Columns; col++)
                 {
-                    // Bild laden
-                    BitmapImage tempImage = new(); // neues Bild erstellen
-                    tempImage.BeginInit();// füllen des Bildes starten
-                    tempImage.UriSource = new Uri(Directory.GetParent(Environment.CommandLine).FullName+"/Images/Atron.jpg");// bildinhalt aus datei laden
-                    tempImage.EndInit();// füllen des Bildes finalisieren
-                    
+                    // Image tag erstellen
+                    Image tempImage = new Image
+                    {
+                        Stretch = Stretch.Uniform,
+                    };
+                    images.Add(tempImage);
                     // Button erstellen und füllen
                     Button temp = new();
-                    temp.Content = new Image(); // button mit Image füllen
-                    (temp.Content as Image).Source = tempImage; // Bild dem Image als quelle zuweisen
-                    
+                    temp.Content = tempImage; // button mit Image füllen
+
+
                     // Im Grid eintragen
                     Grid.SetColumn(temp, col); // button in spalte positionieren
                     Grid.SetRow(temp, row); // button in zeile positionieren
                     Spielfeld.Children.Add(temp);
                 }
+            }
+
+
+            for (int counter = 0; counter < Columns * Rows / 2; counter++)
+            {
+                int choosenBitmap = rndGen.Next(availableBitmaps.Count);
+                int chosenImage;
+                chosenImage = rndGen.Next(images.Count);
+                images[chosenImage].Source = bitmaps[availableBitmaps[choosenBitmap]];
+                images.RemoveAt(chosenImage);
+
+                chosenImage = rndGen.Next(images.Count);
+                images[chosenImage].Source = bitmaps[availableBitmaps[choosenBitmap]];
+                images.RemoveAt(chosenImage);
+
+                availableBitmaps.RemoveAt(choosenBitmap);
             }
         }
 
@@ -128,6 +179,11 @@ namespace Memory
                         throw new Exception();
                 }
             }
+        }
+
+        private void btnReset_Click(object sender, RoutedEventArgs e)
+        {
+            createGame(int.Parse(tbWidth.Text), int.Parse(tbHeight.Text));
         }
     }
 }

@@ -11,18 +11,19 @@
             <ColumnDefinition Width="150" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto">
-            <Grid x:Name="Spielfeld" Margin="10" >
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="100" />
-                    <ColumnDefinition Width="100" />
-                    <ColumnDefinition Width="100" />
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="100" />
-                    <RowDefinition Height="100" />
-                </Grid.RowDefinitions>
-            </Grid>
+        <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+            <Grid x:Name="Spielfeld" Margin="10" />
         </ScrollViewer>
+        <StackPanel Grid.Column="0">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Label Content="Breite" />
+                <TextBox x:Name="tbWidth" Text="3" MaxLength="2" Width="40" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Label Content="Höhe" />
+                <TextBox x:Name="tbHeight" Text="2" MaxLength="2" Width="40" />
+            </StackPanel>
+            <Button Content="Reset" Click="btnReset_Click" />
+        </StackPanel>
     </Grid>
 </Window>
