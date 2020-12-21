@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,19 +26,43 @@ namespace Memory
         {
             InitializeComponent();
 
-            Spielfeld.Children.Add(new Button());
+            // könnten vom nutzer vorgegeben werden
 
-            var c = (Content as Grid);
-            Grid innerGrid;
-            foreach (var item in c.Children)
+
+            createGame(3, 2);
+        }
+
+        void createGame(int Columns, int Rows)
+        {
+            //for (int counter = 0; counter < Columns; counter++)
+            //{
+            //    GridLength length;
+            //    length
+            //    Spielfeld.ColumnDefinitions.Add(new ColumnDefinition { Width= });
+            //}
+
+
+            for (int row = 0; row < Rows; row++)
             {
-                if ((item is Grid))
+                for (int col = 0; col < Columns; col++)
                 {
-                    innerGrid = (item as Grid);
-                    break;
+                    // Bild laden
+                    BitmapImage tempImage = new(); // neues Bild erstellen
+                    tempImage.BeginInit();// füllen des Bildes starten
+                    tempImage.UriSource = new Uri(Directory.GetParent(Environment.CommandLine).FullName+"/Images/Atron.jpg");// bildinhalt aus datei laden
+                    tempImage.EndInit();// füllen des Bildes finalisieren
+                    
+                    // Button erstellen und füllen
+                    Button temp = new();
+                    temp.Content = new Image(); // button mit Image füllen
+                    (temp.Content as Image).Source = tempImage; // Bild dem Image als quelle zuweisen
+                    
+                    // Im Grid eintragen
+                    Grid.SetColumn(temp, col); // button in spalte positionieren
+                    Grid.SetRow(temp, row); // button in zeile positionieren
+                    Spielfeld.Children.Add(temp);
                 }
             }
-
         }
 
 
@@ -82,7 +107,7 @@ namespace Memory
                     }
                 }
             }
-            
+
             void addEntryToDatabase(int Points, string PlayerName)
             {
                 // entweder builder nutzen oder auf https://www.connectionstrings.com/ nachschauen

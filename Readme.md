@@ -12,3 +12,9 @@ https://free-sample-packs.com/markus-hakala-500-free-kick-drums/
 
 The Legowelt Elektrovolt Roland JV2080 Sample Kit
 http://www.legowelt.orgs
+
+### Memory ###
+
+Images by EVE University Wiki
+https://wiki.eveuniversity.org/
+https://creativecommons.org/licenses/by-sa/3.0/
