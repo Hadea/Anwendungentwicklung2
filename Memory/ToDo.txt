@@ -1,0 +1,20 @@
+﻿Memory
+
+1. Seite Aufteilen ins spielfeld und Steuerung/Info
+2. Grid ins spielfeld
+3. Grid unterteilen
+4. Buttons in die Gridzellen
+5. jeder button bekommt ein Image
+
+6. Anzeige der Züge darstellen
+7. Resetknopf um neu zu beginnen
+
+##################################################
+Erweiterungen
+
+Zeitanzeige, jeder feherhafte zug gibt strafzeit
+Dynamische anzahl an buttons (nur gerade feldanzahl erlauben, oder einen leer lassen)
+Highscore abspeichern (Datenbank oder Textdatei)
+Automatisches abdecken der bilder nach 1 sec (async, await Thread.Sleep(1000))
+Klicksounds (SoundPlayer)
+Hintergrundmusik (MediaPlayer, aber bitte abschaltbar :D )
