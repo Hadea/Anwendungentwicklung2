@@ -61,14 +61,10 @@ namespace LaunchPad
                 {
                     command.CommandText = "select FileName from sounds where soundsetid = @id";
                     command.Parameters.Add(new SQLiteParameter("id", set.Key));
-                    using (var reader = command.ExecuteReader())
-                    {
-                        int soundcounter = 0;
-                        while (reader.Read() && soundcounter < 9)
-                        {
-                            soundSets[set.Key][soundcounter++] = reader.GetString(0);
-                        }
-                    }
+                    using var reader = command.ExecuteReader();
+                    int soundcounter = 0;
+                    while (reader.Read() && soundcounter < 9)
+                        soundSets[set.Key][soundcounter++] = reader.GetString(0);
                 }
             }
 
