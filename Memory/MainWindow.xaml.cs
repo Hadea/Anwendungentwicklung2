@@ -22,13 +22,17 @@ namespace Memory
     /// </summary>
     public partial class MainWindow : Window
     {
+        readonly List<BitmapImage> bitmaps;
+        Button selectedButton = null;
+        private int turns = 0;
+        public int Turns { get => turns; set { turns = value; lblTurns.Content = "Turns: " + turns.ToString(); } }
 
-        List<BitmapImage> bitmaps;
+        int points = 0;
+        public int Points { get => points; set { points = value; lblPoints.Content = "Points: " + points.ToString(); } }
 
         public MainWindow()
         {
             InitializeComponent();
-
 
             bitmaps = new List<BitmapImage>();
 
@@ -37,17 +41,15 @@ namespace Memory
             {
                 BitmapImage tempBitmap = new(); // neues Bild erstellen
                 tempBitmap.BeginInit();// füllen des Bildes starten
-                tempBitmap.UriSource = new Uri( Directory.GetParent(Environment.CommandLine).FullName + @"\" + fileName);// bildinhalt aus datei laden
+                tempBitmap.UriSource = new Uri(Directory.GetParent(Environment.CommandLine).FullName + @"\" + fileName);// bildinhalt aus datei laden
                 tempBitmap.EndInit();// füllen des Bildes finalisieren
                 bitmaps.Add(tempBitmap);
             }
-
         }
 
         void createGame(int Columns, int Rows)
         {
             // clear
-
             Spielfeld.Children.Clear();
             Spielfeld.ColumnDefinitions.Clear();
             Spielfeld.RowDefinitions.Clear();
@@ -59,7 +61,7 @@ namespace Memory
 
             List<Image> images = new List<Image>();
             // recreate
-            var gridElementSize = new GridLength(100);
+            GridLength gridElementSize = new(100);
 
             for (int counter = 0; counter < Columns; counter++)
             {
@@ -67,7 +69,6 @@ namespace Memory
                 colDef.Width = gridElementSize;
                 Spielfeld.ColumnDefinitions.Add(colDef);
             }
-
 
             for (int counter = 0; counter < Rows; counter++)
             {
@@ -89,8 +90,8 @@ namespace Memory
                     images.Add(tempImage);
                     // Button erstellen und füllen
                     Button temp = new();
+                    temp.Style = FindResource("FieldButton") as Style;
                     temp.Content = tempImage; // button mit Image füllen
-
 
                     // Im Grid eintragen
                     Grid.SetColumn(temp, col); // button in spalte positionieren
@@ -183,7 +184,50 @@ namespace Memory
 
         private void btnReset_Click(object sender, RoutedEventArgs e)
         {
-            createGame(int.Parse(tbWidth.Text), int.Parse(tbHeight.Text));
+            createGame(int.Parse(tbWidth.Text), int.Parse(tbHeight.Text)); //Hack: check values!
+        }
+
+        private void btnField_Click(object sender, RoutedEventArgs e)
+        {
+            ((sender as Button).Content as Image).Visibility = Visibility.Visible;
+            // prüfen ob es der erste oder der zweite button ist welcher aufgedeckt wird
+            if (selectedButton == null)
+            {
+                // erster button
+                selectedButton = sender as Button;
+                (selectedButton.Content as Image).Visibility = Visibility.Visible;
+            }
+            else
+            {
+                Turns++;
+                // zweiter button
+                if ((selectedButton.Content as Image).Source == ((sender as Button).Content as Image).Source)
+                {
+                    // wenn inhalt gleich mit dem vom ersten
+                    selectedButton.IsEnabled = false;
+                    (sender as Button).IsEnabled = false;
+                    Points++;
+                    //      beide deaktivieren
+                    //      punkte geben
+
+                }
+                else
+                {
+                    // andernfalls
+                    _ = delayHideAsync(selectedButton, sender as Button);
+                    selectedButton = null;
+                    //      beide button verstecken (nach 2 sec)
+                    //      selected button auf null setzen
+                }
+
+            }
+        }
+
+        private static async Task delayHideAsync(Button ButtonA, Button ButtonB)
+        {
+            await Task.Delay(2000);
+            (ButtonA.Content as Image).Visibility = Visibility.Hidden;
+            (ButtonB.Content as Image).Visibility = Visibility.Hidden;
         }
     }
 }

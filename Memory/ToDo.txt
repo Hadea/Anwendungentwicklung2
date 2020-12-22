@@ -19,3 +19,4 @@ Highscore abspeichern (Datenbank oder Textdatei)
 Automatisches abdecken der bilder nach 1 sec (async, await Thread.Sleep(1000))
 Klicksounds (SoundPlayer)
 Hintergrundmusik (MediaPlayer, aber bitte abschaltbar :D )
+Eigene Bilder
