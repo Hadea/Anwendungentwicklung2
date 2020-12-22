@@ -10,6 +10,11 @@
         <Style x:Key="FieldButton" TargetType="Button">
             <Setter Property="Margin" Value="5" />
             <EventSetter Event="Click" Handler="btnField_Click"/>
+            <Style.Triggers>
+                <EventTrigger RoutedEvent="PreviewMouseDown">
+                    <SoundPlayerAction Source="/Klick.wav" />
+                </EventTrigger>
+            </Style.Triggers>
         </Style>
     </Window.Resources>
 
