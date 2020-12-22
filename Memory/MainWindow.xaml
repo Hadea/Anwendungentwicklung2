@@ -16,6 +16,13 @@
                 </EventTrigger>
             </Style.Triggers>
         </Style>
+        <Style TargetType="Button">
+            <Style.Triggers>
+                <EventTrigger RoutedEvent="PreviewMouseDown">
+                    <SoundPlayerAction Source="/Klick.wav" />
+                </EventTrigger>
+            </Style.Triggers>
+        </Style>
     </Window.Resources>
 
     <Grid Margin="10">
