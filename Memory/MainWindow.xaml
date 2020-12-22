@@ -37,9 +37,10 @@
             <RowDefinition Height="30" />
             <RowDefinition Height="30" />
             <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <ScrollViewer Grid.Column="2" Grid.RowSpan="6" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+        <ScrollViewer Grid.Column="2" Grid.RowSpan="7" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
             <Grid x:Name="Spielfeld" Margin="10" />
         </ScrollViewer>
         <Label Content="Breite" />
@@ -49,5 +50,6 @@
         <Button Content="Reset" Click="btnReset_Click" Grid.Row="2" Grid.ColumnSpan="2" />
         <Label x:Name="lblPoints" Grid.Row="3" Grid.ColumnSpan="2" />
         <Label x:Name="lblTurns" Grid.Row="4" Grid.ColumnSpan="2" />
+        <Label x:Name="lblTime" Grid.Row="5" Grid.ColumnSpan="2" />
     </Grid>
 </Window>

@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 
 namespace Memory
 {
@@ -19,6 +20,7 @@ namespace Memory
         private Button selectedButtonB = null;
         private DateTime gameStart;
         private bool gameRunning = false;
+        private readonly DispatcherTimer timer;
 
         public int Turns { get => turns; set { turns = value; lblTurns.Content = "Turns: " + turns.ToString(); } }
         private int turns = 0;
@@ -41,6 +43,16 @@ namespace Memory
                 tempBitmap.UriSource = new Uri(Directory.GetParent(Environment.CommandLine).FullName + @"\" + fileName);// bildinhalt aus datei laden
                 tempBitmap.EndInit();// füllen des Bildes finalisieren
                 bitmaps.Add(tempBitmap);
+            }
+
+            timer = new DispatcherTimer(new TimeSpan(0,0,0,0,50), DispatcherPriority.Background, displayTime, Dispatcher.CurrentDispatcher);
+        }
+
+        void displayTime(object o, EventArgs e)
+        {
+            if (gameRunning)
+            {
+                lblTime.Content = "Zeit: " + (DateTime.Now - gameStart).TotalSeconds.ToString("N3");
             }
         }
 
@@ -139,7 +151,7 @@ namespace Memory
                     {
                         Score temp = new();
                         temp.Name = reader.GetString(0);
-                        temp.Time = (reader.GetDouble(1)).ToString("N2");
+                        temp.Time = reader.GetDouble(1).ToString("N3");
                         temp.Rank = reader.GetInt32(2);
                         highscore.Add(temp);
                     }
@@ -223,6 +235,7 @@ namespace Memory
                     if (Points == Spielfeld.Children.Count / 2)
                     {
                         // alle felder gelöst
+                        gameRunning = false;
                         // datenbank füllen
                         addEntryToDatabase(Spielfeld.Children.Count, (DateTime.Now - gameStart).TotalSeconds, "Name");
                         // statistik laden
