@@ -2,18 +2,10 @@
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Memory
 {
@@ -22,13 +14,16 @@ namespace Memory
     /// </summary>
     public partial class MainWindow : Window
     {
-        readonly List<BitmapImage> bitmaps;
-        Button selectedButton = null;
-        private int turns = 0;
-        public int Turns { get => turns; set { turns = value; lblTurns.Content = "Turns: " + turns.ToString(); } }
+        private readonly List<BitmapImage> bitmaps;
+        private Button selectedButtonA = null;
+        private Button selectedButtonB = null;
 
-        int points = 0;
+        public int Turns { get => turns; set { turns = value; lblTurns.Content = "Turns: " + turns.ToString(); } }
+        private int turns = 0;
+
         public int Points { get => points; set { points = value; lblPoints.Content = "Points: " + points.ToString(); } }
+        private int points = 0;
+
 
         public MainWindow()
         {
@@ -77,7 +72,6 @@ namespace Memory
                 Spielfeld.RowDefinitions.Add(rowDef);
             }
 
-            Random rndGen = new();
             for (int row = 0; row < Rows; row++)
             {
                 for (int col = 0; col < Columns; col++)
@@ -86,6 +80,7 @@ namespace Memory
                     Image tempImage = new Image
                     {
                         Stretch = Stretch.Uniform,
+                        Visibility = Visibility.Hidden
                     };
                     images.Add(tempImage);
                     // Button erstellen und füllen
@@ -101,6 +96,7 @@ namespace Memory
             }
 
 
+            Random rndGen = new();
             for (int counter = 0; counter < Columns * Rows / 2; counter++)
             {
                 int choosenBitmap = rndGen.Next(availableBitmaps.Count);
@@ -185,49 +181,51 @@ namespace Memory
         private void btnReset_Click(object sender, RoutedEventArgs e)
         {
             createGame(int.Parse(tbWidth.Text), int.Parse(tbHeight.Text)); //Hack: check values!
+            selectedButtonA = null;
+            selectedButtonB = null;
         }
 
         private void btnField_Click(object sender, RoutedEventArgs e)
         {
+            // zwei bereits sichtbar => alle verstecken und austragen
+            if (selectedButtonB != null)
+            {
+                (selectedButtonB.Content as Image).Visibility = Visibility.Hidden;
+                (selectedButtonA.Content as Image).Visibility = Visibility.Hidden;
+                selectedButtonA = null;
+                selectedButtonB = null;
+            }
+
             ((sender as Button).Content as Image).Visibility = Visibility.Visible;
+
             // prüfen ob es der erste oder der zweite button ist welcher aufgedeckt wird
-            if (selectedButton == null)
+            if (selectedButtonA == null)
             {
                 // erster button
-                selectedButton = sender as Button;
-                (selectedButton.Content as Image).Visibility = Visibility.Visible;
+                selectedButtonA = sender as Button;
+                (selectedButtonA.Content as Image).Visibility = Visibility.Visible;
             }
             else
             {
                 Turns++;
                 // zweiter button
-                if ((selectedButton.Content as Image).Source == ((sender as Button).Content as Image).Source)
+                if ((selectedButtonA.Content as Image).Source == ((sender as Button).Content as Image).Source)
                 {
                     // wenn inhalt gleich mit dem vom ersten
-                    selectedButton.IsEnabled = false;
+                    selectedButtonA.IsEnabled = false;
                     (sender as Button).IsEnabled = false;
+                    //      punkte geben
                     Points++;
                     //      beide deaktivieren
-                    //      punkte geben
-
+                    selectedButtonA = null;
+                    selectedButtonB = null;
                 }
                 else
                 {
-                    // andernfalls
-                    _ = delayHideAsync(selectedButton, sender as Button);
-                    selectedButton = null;
-                    //      beide button verstecken (nach 2 sec)
-                    //      selected button auf null setzen
+                    // wenn inhalt ungleich zum ersten dann als zweiten offenen eintragen
+                    selectedButtonB = sender as Button;
                 }
-
             }
-        }
-
-        private static async Task delayHideAsync(Button ButtonA, Button ButtonB)
-        {
-            await Task.Delay(2000);
-            (ButtonA.Content as Image).Visibility = Visibility.Hidden;
-            (ButtonB.Content as Image).Visibility = Visibility.Hidden;
         }
     }
 }
