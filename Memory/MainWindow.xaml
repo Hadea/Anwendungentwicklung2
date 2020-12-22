@@ -30,7 +30,7 @@
         <ScrollViewer Grid.Column="2" Grid.RowSpan="6" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
             <Grid x:Name="Spielfeld" Margin="10" />
         </ScrollViewer>
-        <Label Content="Breite"  />
+        <Label Content="Breite" />
         <TextBox x:Name="tbWidth" Text="3" MaxLength="2" Width="40" Grid.Column="1" />
         <Label Content="Höhe" Grid.Row="1" />
         <TextBox x:Name="tbHeight" Text="2" MaxLength="2" Width="40" Grid.Row="1" Grid.Column="1" />

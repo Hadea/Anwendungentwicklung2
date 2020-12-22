@@ -17,6 +17,8 @@ namespace Memory
         private readonly List<BitmapImage> bitmaps;
         private Button selectedButtonA = null;
         private Button selectedButtonB = null;
+        private DateTime gameStart;
+        private bool gameRunning = false;
 
         public int Turns { get => turns; set { turns = value; lblTurns.Content = "Turns: " + turns.ToString(); } }
         private int turns = 0;
@@ -113,68 +115,58 @@ namespace Memory
             }
         }
 
-
-        void readDatabase()
+        List<Score> readDatabase()
         {
 
             // entweder builder nutzen oder auf https://www.connectionstrings.com/ nachschauen
             SQLiteConnectionStringBuilder builder = new();
-            builder.DataSource = "./highscore.db";
+            builder.DataSource = "config.db";
             builder.Version = 3;
-            /*
-            MySqlConnectionStringBuilder connectionStringBuilder = new MySqlConnectionStringBuilder(); // Der Builder kann uns den passenden Connectionstring zusammensetzen sodass Syntaxfehler minimiert werden
-            connectionStringBuilder.Server = "192.168.2.2"; // IP Adresse des servers, DNS name, Localhost und . funktioniert auch
-            connectionStringBuilder.UserID = "MusicDBUser"; // Benutzername innerhalb des DBMS, dieser nutzer sollte so wenig rechte wie möglich bekommen
-            connectionStringBuilder.Password = "MusicDBPass"; // Passwort zu dem Benutzernamen
-            connectionStringBuilder.Database = "musicdb"; // Datenbankname mit der sich verbunden werden soll, alle SQL statements sind dann relativ zu dieser Datenbank (siehe USE )
-            connectionStringBuilder.SslMode = MySqlSslMode.None; // None ist ok für testumgebungen, im Internet immer verschlüsseln. Benötigt extra CPU-Leistung
-            */
+            builder.FailIfMissing = true;
 
-            List<Pair> highscore = new();
+            List<Score> highscore = new();
 
             using (SQLiteConnection connection = new SQLiteConnection(builder.ToString()))
             {
                 connection.Open();
 
                 SQLiteCommand command = connection.CreateCommand();
-                command.CommandText = "select rowid, Name, Points from Scores order by Points desc top 10;";
-
+                command.CommandText = "select Name, SolveTime, row_number() over ( order by SolveTime asc ) rank from Scores where TileNumber = @tiles limit 10;";
+                command.Parameters.AddWithValue("tiles", Spielfeld.Children.Count);
                 using (var reader = command.ExecuteReader())
                 {
                     while (reader.Read())
                     {
-                        // angenommende Tabelle:
-                        // ID, Name, Points
-                        // 1 , Hans, 20
-                        // 2 , Lisa, 18
-                        Pair temp = new();
-                        temp.Rank = reader.GetInt32(0);
-                        temp.Name = reader.GetString(1);
-                        temp.Points = reader.GetInt32(2);
+                        Score temp = new();
+                        temp.Name = reader.GetString(0);
+                        temp.Time = (reader.GetDouble(1)).ToString("N2");
+                        temp.Rank = reader.GetInt32(2);
                         highscore.Add(temp);
                     }
                 }
             }
+            return highscore;
+        }
+        void addEntryToDatabase(int Tiles, double totalMilliseconds, string PlayerName)
+        {
+            // entweder builder nutzen oder auf https://www.connectionstrings.com/ nachschauen
+            SQLiteConnectionStringBuilder builder = new();
+            builder.DataSource = "config.db";
+            builder.Version = 3;
+            builder.FailIfMissing = true;
 
-            void addEntryToDatabase(int Points, string PlayerName)
+            using (SQLiteConnection connection = new SQLiteConnection(builder.ToString()))
             {
-                // entweder builder nutzen oder auf https://www.connectionstrings.com/ nachschauen
-                SQLiteConnectionStringBuilder builder = new();
-                builder.DataSource = "./highscore.db";
-                builder.Version = 3;
+                connection.Open();
 
-                using (SQLiteConnection connection = new SQLiteConnection(builder.ToString()))
-                {
-                    connection.Open();
+                SQLiteCommand command = connection.CreateCommand();
+                command.CommandText = "insert into Scores (Name, SolveTime, TileNumber) values (@name, @time, @number);";
+                command.Parameters.AddWithValue("name", PlayerName);
+                command.Parameters.AddWithValue("time", totalMilliseconds);
+                command.Parameters.AddWithValue("number", Tiles);
 
-                    SQLiteCommand command = connection.CreateCommand();
-                    command.CommandText = "insert into Scores (Name, Points) values (@name, @points);";
-                    command.Parameters.AddWithValue("name", PlayerName);
-                    command.Parameters.AddWithValue("points", Points);
-
-                    if (command.ExecuteNonQuery() == 0)
-                        throw new Exception();
-                }
+                if (command.ExecuteNonQuery() == 0)
+                    throw new Exception();
             }
         }
 
@@ -183,10 +175,19 @@ namespace Memory
             createGame(int.Parse(tbWidth.Text), int.Parse(tbHeight.Text)); //Hack: check values!
             selectedButtonA = null;
             selectedButtonB = null;
+            gameRunning = false;
+            Points = 0;
+            Turns = 0;
         }
 
         private void btnField_Click(object sender, RoutedEventArgs e)
         {
+            if (!gameRunning)
+            {
+                gameRunning = true;
+                gameStart = DateTime.Now;
+            }
+
             // zwei bereits sichtbar => alle verstecken und austragen
             if (selectedButtonB != null)
             {
@@ -219,6 +220,22 @@ namespace Memory
                     //      beide deaktivieren
                     selectedButtonA = null;
                     selectedButtonB = null;
+                    if (Points == Spielfeld.Children.Count / 2)
+                    {
+                        // alle felder gelöst
+                        // datenbank füllen
+                        addEntryToDatabase(Spielfeld.Children.Count, (DateTime.Now - gameStart).TotalSeconds, "Name");
+                        // statistik laden
+                        List<Score> highscore = readDatabase();
+                        // win-screen anzeigen
+                        Spielfeld.Children.Clear();
+                        Spielfeld.RowDefinitions.Clear();
+                        Spielfeld.ColumnDefinitions.Clear();
+
+                        DataGrid dg = new();
+                        dg.ItemsSource = highscore;
+                        Spielfeld.Children.Add(dg);
+                    }
                 }
                 else
                 {
