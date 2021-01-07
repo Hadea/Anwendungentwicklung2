@@ -34,12 +34,15 @@
             <Button Content="Skalierung durchschalten"
                     Height="30"
                     Click="btnScaling_Click"/>
-            <Image x:Name="imgScaling"
+            <Border BorderThickness="1" BorderBrush="Black">
+                <Image x:Name="imgScaling"
                    Width="100"
                    Height="150"
                    Source="/Geralt_ProfilePic.jpg"
                    Stretch="Fill"/>
-                <!-- Beim image gibt die Source an welches Bild geladen werden soll
+            </Border>
+            <Label x:Name="lblCurrentStretch" Content="Fill" />
+            <!-- Beim image gibt die Source an welches Bild geladen werden soll
                     sollte Width und Heigt nicht angegeben sein ist das Image so gross
                     wie die Auflösung des Bildes.
                     Stretch stellt ein wie sich das bild verhalten soll wenn die Grösse

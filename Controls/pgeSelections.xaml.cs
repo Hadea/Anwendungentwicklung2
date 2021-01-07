@@ -41,7 +41,7 @@ namespace Controls
         /// </summary>
         /// <param name="sender">unused</param>
         /// <param name="e">unused</param>
-        private void CheckBox_Click(object sender, RoutedEventArgs e)
+        private void checkBox_Click(object sender, RoutedEventArgs e)
         {
             clickCounter++;
             lblSelectionCount.Content = "Anzahl an Clicks: " + clickCounter;

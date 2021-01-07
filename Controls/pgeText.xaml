@@ -31,7 +31,7 @@
                 wählen falls uns die sternchen nicht gefallen.-->
             <Label x:Name="lblPassValidation" Content="Falsch" />
         </StackPanel>
-        <TextBlock Text="Dies ist ein etwas längerer Text welcher, wenn erlaubt, auch umbrechen kann. Dies wird übr WordWrap eingestellt."/>
+        <TextBlock TextWrapping="Wrap" Text="Dies ist ein etwas längerer Text welcher, wenn erlaubt, auch umbrechen kann. Dies wird über TextWrapping eingestellt."/>
         <!-- Textblock ist für kürzere Texte praktisch welche auch umbrechen können -->
         <TextBlock>
             Dies ist ein <Bold>Demo</Bold> Text für einen <Italic>formatierten</Italic>

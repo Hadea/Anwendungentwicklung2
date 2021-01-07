@@ -27,10 +27,10 @@
                 hier reagieren wir auf das setzen des Hakens, das entfernen und auch generell auf
                 einen klick auf die Box. Auf die weise werden immer zwei Methoden ausgelöst
                 entweder Checked und Click oder Unchecked und Click-->
-            <CheckBox Content="Option A" Checked="addOne" Unchecked="subOne" Click="CheckBox_Click"/>
-            <CheckBox Content="Option B" Checked="addOne" Unchecked="subOne" Click="CheckBox_Click"/>
-            <CheckBox Content="Option C" Checked="addOne" Unchecked="subOne" Click="CheckBox_Click"/>
-            <CheckBox Content="Option D" Checked="addOne" Unchecked="subOne" Click="CheckBox_Click"/>
+            <CheckBox Content="Option A" Checked="addOne" Unchecked="subOne" Click="checkBox_Click"/>
+            <CheckBox Content="Option B" Checked="addOne" Unchecked="subOne" Click="checkBox_Click"/>
+            <CheckBox Content="Option C" Checked="addOne" Unchecked="subOne" Click="checkBox_Click"/>
+            <CheckBox Content="Option D" Checked="addOne" Unchecked="subOne" Click="checkBox_Click"/>
         </StackPanel>
         <StackPanel Grid.Row="0" Grid.Column="1">
             <Label Content="0" x:Name="lblActiveoptions"/>

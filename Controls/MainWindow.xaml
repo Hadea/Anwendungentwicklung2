@@ -24,7 +24,8 @@
         </StackPanel>
         
         <Frame x:Name="frmContent"
-               Grid.Column="1" />
+               Grid.Column="1"
+               NavigationUIVisibility="Hidden"/>
         <!-- Der Frame wird unsere Page-Klassen als inhalt bekommen, er nutzt den kompletten
              platz der rechten seite des Grid aus-->
     </Grid>

@@ -45,6 +45,8 @@ namespace Controls
                 Stretch.UniformToFill => Stretch.Fill,
                 _ => Stretch.None                
             };
+
+            lblCurrentStretch.Content = imgScaling.Stretch.ToString();
         }
     }
 }
