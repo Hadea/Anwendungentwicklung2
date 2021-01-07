@@ -14,11 +14,14 @@ namespace LaunchPad
     {
         readonly MediaPlayer[] mediaPlayers;
         readonly Dictionary<int,string[]> soundSets;
+        readonly List<Button> padButtons;
+
 
         public MainWindow()
         {
             InitializeComponent(); //lädt die XAML datei zu dieser Klasse
             mediaPlayers = new MediaPlayer[9]; // array erstellen damit dort MediaPlayer reinkönnen
+            padButtons = new List<Button>(9);
 
             // das array aus MediaPlayer wird befüllt
             for (int counter = 0; counter < mediaPlayers.Length; counter++)
@@ -26,7 +29,7 @@ namespace LaunchPad
                 mediaPlayers[counter] = new MediaPlayer();
             }
 
-            soundSets = new Dictionary<int, string[]>();// Liste erstellen damit wir soundsets lagern können
+            soundSets = new Dictionary<int, string[]>();// Dictionary erstellen damit wir soundsets lagern können
 
             SQLiteConnectionStringBuilder builder = new();
             builder.DataSource = Directory.GetParent(Environment.CommandLine).FullName + "/SoundSets/SoundSets.db";
@@ -61,20 +64,16 @@ namespace LaunchPad
                 {
                     command.CommandText = "select FileName from sounds where soundsetid = @id";
                     command.Parameters.Add(new SQLiteParameter("id", set.Key));
-                    using var reader = command.ExecuteReader();
+                    using var reader = command.ExecuteReader(); // dieses using gilt bis zum ende des scopes der foreach
                     int soundcounter = 0;
                     while (reader.Read() && soundcounter < 9)
                         soundSets[set.Key][soundcounter++] = reader.GetString(0);
                 }
             }
 
-            loadSoundSet(0); // lädt das erste soundset
-
-
             // die 9 button erstellen
             Grid contentGrid = Content as Grid;
             int buttonCounter = 0;
-            List<Button> buttons = new List<Button>(9);
             for (int rows = 2; rows < 5; rows++)
             {
                 for (int cols = 0; cols < 3; cols++)
@@ -87,20 +86,21 @@ namespace LaunchPad
                     Grid.SetRow(temp, rows); // Button in Zeile sortieren
                     Grid.SetColumn(temp, cols); // Button in Spalte sortieren
                     contentGrid.Children.Add(temp); // button als unterobjekt des Grid eintragen
-                    buttons.Add(temp);
+                    padButtons.Add(temp);
                 }
             }
+            loadSoundSet(0); // lädt das erste soundset
 
             // Wenn eine wav datei bis zu ende abgespielt wurde wird der entsprechende button wieder grau
-            mediaPlayers[0].MediaEnded += (o, e) => buttons[0].Background = Brushes.LightGray;
-            mediaPlayers[1].MediaEnded += (o, e) => buttons[1].Background = Brushes.LightGray;
-            mediaPlayers[2].MediaEnded += (o, e) => buttons[2].Background = Brushes.LightGray;
-            mediaPlayers[3].MediaEnded += (o, e) => buttons[3].Background = Brushes.LightGray;
-            mediaPlayers[4].MediaEnded += (o, e) => buttons[4].Background = Brushes.LightGray;
-            mediaPlayers[5].MediaEnded += (o, e) => buttons[5].Background = Brushes.LightGray;
-            mediaPlayers[6].MediaEnded += (o, e) => buttons[6].Background = Brushes.LightGray;
-            mediaPlayers[7].MediaEnded += (o, e) => buttons[7].Background = Brushes.LightGray;
-            mediaPlayers[8].MediaEnded += (o, e) => buttons[8].Background = Brushes.LightGray;
+            mediaPlayers[0].MediaEnded += (o, e) => padButtons[0].Background = Brushes.LightGray;
+            mediaPlayers[1].MediaEnded += (o, e) => padButtons[1].Background = Brushes.LightGray;
+            mediaPlayers[2].MediaEnded += (o, e) => padButtons[2].Background = Brushes.LightGray;
+            mediaPlayers[3].MediaEnded += (o, e) => padButtons[3].Background = Brushes.LightGray;
+            mediaPlayers[4].MediaEnded += (o, e) => padButtons[4].Background = Brushes.LightGray;
+            mediaPlayers[5].MediaEnded += (o, e) => padButtons[5].Background = Brushes.LightGray;
+            mediaPlayers[6].MediaEnded += (o, e) => padButtons[6].Background = Brushes.LightGray;
+            mediaPlayers[7].MediaEnded += (o, e) => padButtons[7].Background = Brushes.LightGray;
+            mediaPlayers[8].MediaEnded += (o, e) => padButtons[8].Background = Brushes.LightGray;
         }
 
         /// <summary>
@@ -132,9 +132,9 @@ namespace LaunchPad
         {
             (sender as Button).Background = Brushes.DarkGreen;
             // der name des buttons entscheidet welcher mediaplayer gestartet wird
-            int id = int.Parse((sender as Button).Name[7..]);
-            mediaPlayers[id].Position = TimeSpan.Zero;
-            mediaPlayers[id].Play();
+            int id = int.Parse((sender as Button).Name[7..]); // ab dem 7ten zeichen ausschneiden, das ergebnis in einen Integer umwandeln.
+            mediaPlayers[id].Position = TimeSpan.Zero;// lied wieder zum anfang zurückspulen
+            mediaPlayers[id].Play(); // lied starten
         }
 
         private void rbSoundSet_Click(object sender, RoutedEventArgs e)
@@ -144,21 +144,16 @@ namespace LaunchPad
 
         private void btnStop_Click(object sender, RoutedEventArgs e)
         {
-            foreach (var item in mediaPlayers)
+            foreach (var item in mediaPlayers) // alle mediaplayer anhalten und zurückspulen
             {
                 item.Pause();
                 item.Position = TimeSpan.Zero;
             }
 
-            for (int counter = 0; counter < (Content as Grid).Children.Count; counter++)
+            foreach (var item in padButtons) // alle button auf grau zurücksetzen
             {
-                if (((Content as Grid).Children[counter] as Button) != null && ((Content as Grid).Children[counter] as Button).Name.Contains("btnPlay"))
-                {
-                    ((Content as Grid).Children[counter] as Button).Background = Brushes.LightGray;
-                }
+                item.Background = Brushes.LightGray;
             }
         }
-
-
     }
 }
