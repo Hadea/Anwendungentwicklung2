@@ -1,6 +1,6 @@
 ﻿namespace Memory
 {
-    internal class Score
+    public class Score
     {
         public int Rank { get; set; }
         public string Name { get; set; }

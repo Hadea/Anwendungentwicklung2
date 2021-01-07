@@ -15,27 +15,64 @@ namespace Memory
     /// </summary>
     public partial class MainWindow : Window
     {
-        private readonly List<BitmapImage> bitmaps;
+        private List<BitmapImage> bitmaps; // enthält alle Bilder
         private Button selectedButtonA = null;
         private Button selectedButtonB = null;
         private DateTime gameStart;
-        private bool gameRunning = false;
-        private readonly DispatcherTimer timer;
+        private readonly IHighScoreStorage highScore;
+        private DispatcherTimer Timer
+        {
+            get
+            {
+                if (timer == null) // wenn noch kein timer erstellt ist machen wir das jetzt "lazy initialization"
+                    timer = new DispatcherTimer(new TimeSpan(0, 0, 0, 0, 50),
+                        DispatcherPriority.Background,
+                        (_, _) => lblTime.Content = "Zeit: " + (DateTime.Now - gameStart).TotalSeconds.ToString("N1"), // Unterstrich _ für die Parameternamen bedeutet hier das die Parameter verworfen werden können da sie im Lambda nicht verwendet werden
+                        Dispatcher.CurrentDispatcher);
+                return timer;
+            }
+        }
+        private DispatcherTimer timer;
 
-        public int Turns { get => turns; set { turns = value; lblTurns.Content = "Turns: " + turns.ToString(); } }
+        public int Turns
+        {
+            get => turns;
+            set
+            {
+                turns = value;
+                lblTurns.Content = "Turns: " + turns.ToString();
+            }
+        }
         private int turns = 0;
 
-        public int Points { get => points; set { points = value; lblPoints.Content = "Points: " + points.ToString(); } }
+        public int Points
+        {
+            get => points;
+            set
+            {
+                points = value;
+                lblPoints.Content = "Points: " + points.ToString();
+            }
+        }
         private int points = 0;
 
-
-        public MainWindow()
+        /// <summary>
+        /// Creates the Game Window, loads all possible images and prepares timing.
+        /// </summary>
+        public MainWindow(IHighScoreStorage highScoreStorage)
         {
             InitializeComponent();
+            loadAllBitmapimages();
+            Timer.Stop();
+            highScore = highScoreStorage;
+        }
 
+        /// <summary>
+        /// Creates a list of BitmapImage and fills it with all images contained in the ./Images folder
+        /// </summary>
+        private void loadAllBitmapimages()
+        {
             bitmaps = new List<BitmapImage>();
-
-            // alle bilder laden
             foreach (var fileName in Directory.GetFiles("Images"))
             {
                 BitmapImage tempBitmap = new(); // neues Bild erstellen
@@ -44,39 +81,27 @@ namespace Memory
                 tempBitmap.EndInit();// füllen des Bildes finalisieren
                 bitmaps.Add(tempBitmap);
             }
-
-            timer = new DispatcherTimer(new TimeSpan(0,0,0,0,50), DispatcherPriority.Background, displayTime, Dispatcher.CurrentDispatcher);
         }
 
-        void displayTime(object o, EventArgs e)
-        {
-            if (gameRunning)
-            {
-                lblTime.Content = "Zeit: " + (DateTime.Now - gameStart).TotalSeconds.ToString("N3");
-            }
-        }
-
+        /// <summary>
+        /// Creates a new game in the specified size. Size should be divisable by 2.
+        /// </summary>
+        /// <param name="Columns">Number of tile columns</param>
+        /// <param name="Rows">Number of tile rows</param>
         void createGame(int Columns, int Rows)
         {
-            // clear
-            Spielfeld.Children.Clear();
-            Spielfeld.ColumnDefinitions.Clear();
-            Spielfeld.RowDefinitions.Clear();
+            if (Columns * Rows % 2 != 0) throw new ArgumentOutOfRangeException();
 
-            // Linkedliste mit erlaubten image ziffern erstellen
-            List<int> availableBitmaps = new List<int>();
-            for (int counter = 0; counter < bitmaps.Count; counter++)
-                availableBitmaps.Add(counter);
+            Spielfeld.Clear();
 
-            List<Image> images = new List<Image>();
-            // recreate
-            GridLength gridElementSize = new(100);
+            // spalten und zeilen im Grid erstellen
+            GridLength gridElementSize = new(100); // einheitliche längenangabe welche für breite und höhe der spielfelder benutzt wird
 
             for (int counter = 0; counter < Columns; counter++)
             {
-                ColumnDefinition colDef = new();
-                colDef.Width = gridElementSize;
-                Spielfeld.ColumnDefinitions.Add(colDef);
+                ColumnDefinition colDef = new();// neue Spalte erzeugen
+                colDef.Width = gridElementSize; // Grösse der Spalte eingeben
+                Spielfeld.ColumnDefinitions.Add(colDef); // Spalte im Grid eintragen
             }
 
             for (int counter = 0; counter < Rows; counter++)
@@ -86,6 +111,8 @@ namespace Memory
                 Spielfeld.RowDefinitions.Add(rowDef);
             }
 
+            // erstellen der buttons in den Grid-Zellen
+            List<Image> images = new List<Image>();
             for (int row = 0; row < Rows; row++)
             {
                 for (int col = 0; col < Columns; col++)
@@ -109,7 +136,12 @@ namespace Memory
                 }
             }
 
+            // Liste mit erlaubten image ziffern erstellen
+            List<int> availableBitmaps = new List<int>();
+            for (int counter = 0; counter < bitmaps.Count; counter++)
+                availableBitmaps.Add(counter);
 
+            // zwei zufällige Images mit einem zufälligen BitmapImage füllen
             Random rndGen = new();
             for (int counter = 0; counter < Columns * Rows / 2; counter++)
             {
@@ -127,77 +159,38 @@ namespace Memory
             }
         }
 
-        List<Score> readDatabase()
-        {
-
-            // entweder builder nutzen oder auf https://www.connectionstrings.com/ nachschauen
-            SQLiteConnectionStringBuilder builder = new();
-            builder.DataSource = "config.db";
-            builder.Version = 3;
-            builder.FailIfMissing = true;
-
-            List<Score> highscore = new();
-
-            using (SQLiteConnection connection = new SQLiteConnection(builder.ToString()))
-            {
-                connection.Open();
-
-                SQLiteCommand command = connection.CreateCommand();
-                command.CommandText = "select Name, SolveTime, row_number() over ( order by SolveTime asc ) rank from Scores where TileNumber = @tiles limit 10;";
-                command.Parameters.AddWithValue("tiles", Spielfeld.Children.Count);
-                using (var reader = command.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        Score temp = new();
-                        temp.Name = reader.GetString(0);
-                        temp.Time = reader.GetDouble(1).ToString("N3");
-                        temp.Rank = reader.GetInt32(2);
-                        highscore.Add(temp);
-                    }
-                }
-            }
-            return highscore;
-        }
-        void addEntryToDatabase(int Tiles, double totalMilliseconds, string PlayerName)
-        {
-            // entweder builder nutzen oder auf https://www.connectionstrings.com/ nachschauen
-            SQLiteConnectionStringBuilder builder = new();
-            builder.DataSource = "config.db";
-            builder.Version = 3;
-            builder.FailIfMissing = true;
-
-            using (SQLiteConnection connection = new SQLiteConnection(builder.ToString()))
-            {
-                connection.Open();
-
-                SQLiteCommand command = connection.CreateCommand();
-                command.CommandText = "insert into Scores (Name, SolveTime, TileNumber) values (@name, @time, @number);";
-                command.Parameters.AddWithValue("name", PlayerName);
-                command.Parameters.AddWithValue("time", totalMilliseconds);
-                command.Parameters.AddWithValue("number", Tiles);
-
-                if (command.ExecuteNonQuery() == 0)
-                    throw new Exception();
-            }
-        }
-
         private void btnReset_Click(object sender, RoutedEventArgs e)
         {
-            createGame(int.Parse(tbWidth.Text), int.Parse(tbHeight.Text)); //Hack: check values!
-            selectedButtonA = null;
-            selectedButtonB = null;
-            gameRunning = false;
-            Points = 0;
-            Turns = 0;
+            int width, height;
+
+            try
+            {
+                width = int.Parse(tbWidth.Text);
+                height = int.Parse(tbHeight.Text);
+                createGame(width, height);
+                selectedButtonA = null;
+                selectedButtonB = null;
+                Timer.Stop();
+                lblTime.Content = "Zeit: 0";
+                Points = 0;
+                Turns = 0;
+            }
+            catch (FormatException) // wird durch int.Parse geworfen
+            {
+                MessageBox.Show("Eingabe fehlerhaft", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch (ArgumentOutOfRangeException) // wird durch createGame geworfen
+            {
+                MessageBox.Show("Ungerade Anzahl an Feldern ist nicht erlaubt", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
         }
 
         private void btnField_Click(object sender, RoutedEventArgs e)
         {
-            if (!gameRunning)
+            if (!Timer.IsEnabled)
             {
-                gameRunning = true;
                 gameStart = DateTime.Now;
+                Timer.Start();
             }
 
             // zwei bereits sichtbar => alle verstecken und austragen
@@ -235,18 +228,14 @@ namespace Memory
                     if (Points == Spielfeld.Children.Count / 2)
                     {
                         // alle felder gelöst
-                        gameRunning = false;
+                        Timer.Stop();
                         // datenbank füllen
-                        addEntryToDatabase(Spielfeld.Children.Count, (DateTime.Now - gameStart).TotalSeconds, "Name");
-                        // statistik laden
-                        List<Score> highscore = readDatabase();
-                        // win-screen anzeigen
-                        Spielfeld.Children.Clear();
-                        Spielfeld.RowDefinitions.Clear();
-                        Spielfeld.ColumnDefinitions.Clear();
+                        highScore.AddEntryToDatabase(Spielfeld.Children.Count, (DateTime.Now - gameStart).TotalSeconds, "Name");
 
+                        // statistik laden und win-screen anzeigen
                         DataGrid dg = new();
-                        dg.ItemsSource = highscore;
+                        dg.ItemsSource = highScore.ReadHighscoreFromDatabase(Spielfeld.Children.Count);
+                        Spielfeld.Clear();
                         Spielfeld.Children.Add(dg);
                     }
                 }
