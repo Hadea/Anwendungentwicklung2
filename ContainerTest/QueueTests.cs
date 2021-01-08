@@ -1,11 +1,18 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Container;
+using System;
 
 namespace ContainerTest
 {
     [TestClass]
     public class QueueTests
     {
+        [TestMethod]
+        public void Createable()
+        {
+            Assert.IsNotNull(new Queue());
+        }
+        
         [TestMethod]
         public void IsEmptyAfterNew()
         {
@@ -108,6 +115,33 @@ namespace ContainerTest
             {
                 Assert.IsTrue(testQueue.Pop() == i);
             }
+        }
+
+        [TestMethod]
+        public void PopOnEmpty()
+        {
+            Queue testQueue = new();
+            int testValue = 20;
+            testQueue.Push(testValue);
+            testQueue.Push(testValue);
+            testQueue.Pop();
+            testQueue.Pop();
+            Assert.ThrowsException<IndexOutOfRangeException>(() => testQueue.Pop());
+        }
+
+        [TestMethod]
+        public void ContinuousPushAndPop()
+        {
+            Queue testQueue = new(5);
+            bool testResult = true;
+            for (int i = 0; i < 50; i++)
+            {
+                testQueue.Push(i);
+                int result = testQueue.Pop();
+                if (i != result)
+                    testResult = false;
+            }
+            Assert.IsTrue(testResult);
         }
     }
 }
