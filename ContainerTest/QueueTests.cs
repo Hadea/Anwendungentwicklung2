@@ -147,7 +147,7 @@ namespace ContainerTest
         [TestMethod]
         public void ContinuousPushAndPopOnMaxCapacity()
         {
-            Queue testQueue = new(5);
+            Queue testQueue = new(4);
             testQueue.Push(1);
             testQueue.Push(2);
             testQueue.Push(3);
