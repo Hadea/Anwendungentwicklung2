@@ -9,6 +9,7 @@ namespace TicTacToeLogic
     {
         private readonly FieldState[,] board;
         private bool currentPlayerID;
+        private bool lastStarter;
         private byte turnCounter;
 
         public bool GetCurrentPlayer()
@@ -22,13 +23,15 @@ namespace TicTacToeLogic
         public GameLogic()
         {
             board = new FieldState[3, 3];
+            lastStarter = DateTime.Now.Millisecond % 2 == 0;
             Reset();
         }
 
         public void Reset()
         {
             Array.Clear(board, 0, board.Length);
-            currentPlayerID = DateTime.Now.Millisecond % 2 == 0;
+            lastStarter = !lastStarter;
+            currentPlayerID = lastStarter;
             turnCounter = 0;
         }
 
