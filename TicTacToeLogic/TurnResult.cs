@@ -1,6 +1,6 @@
-﻿namespace TicTacToe
+﻿namespace TicTacToeLogic
 {
-    enum TurnResult
+    public enum TurnResult
     {
         Valid,
         Invalid,

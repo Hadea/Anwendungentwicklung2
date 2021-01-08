@@ -5,6 +5,7 @@ using System.Media;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using TicTacToeLogic;
 
 namespace TicTacToe
 {

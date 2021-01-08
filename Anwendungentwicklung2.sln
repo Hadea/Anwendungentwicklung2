@@ -24,6 +24,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Container", "Container\Cont
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContainerTest", "ContainerTest\ContainerTest.csproj", "{4C7F1EFE-8413-4213-A719-98AC47926222}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicTacToeTest", "TicTacToeTest\TicTacToeTest.csproj", "{CD2C3367-4AE8-4037-B726-9972FF52F787}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicTacToeLogic", "TicTacToeLogic\TicTacToeLogic.csproj", "{327E9362-F92C-4A08-B439-0F3A7BAFAAFF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -62,6 +66,14 @@ Global
 		{4C7F1EFE-8413-4213-A719-98AC47926222}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4C7F1EFE-8413-4213-A719-98AC47926222}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4C7F1EFE-8413-4213-A719-98AC47926222}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD2C3367-4AE8-4037-B726-9972FF52F787}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD2C3367-4AE8-4037-B726-9972FF52F787}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD2C3367-4AE8-4037-B726-9972FF52F787}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD2C3367-4AE8-4037-B726-9972FF52F787}.Release|Any CPU.Build.0 = Release|Any CPU
+		{327E9362-F92C-4A08-B439-0F3A7BAFAAFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{327E9362-F92C-4A08-B439-0F3A7BAFAAFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{327E9362-F92C-4A08-B439-0F3A7BAFAAFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{327E9362-F92C-4A08-B439-0F3A7BAFAAFF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TicTacToe
+namespace TicTacToeLogic
 {
-    struct PointB
+    public struct PointB
     {
         public byte X;
         public byte Y;

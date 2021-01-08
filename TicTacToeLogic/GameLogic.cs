@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Text;
 
-namespace TicTacToe
+namespace TicTacToeLogic
 {
-    class GameLogic
+    public class GameLogic
     {
         private readonly FieldState[,] board;
         private bool currentPlayerID;

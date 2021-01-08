@@ -17,6 +17,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\TicTacToeLogic\TicTacToeLogic.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="RISING_BATTLE_MUSIC.aac">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

@@ -1,7 +1,7 @@
 ﻿
-namespace TicTacToe
+namespace TicTacToeLogic
 {
-    enum FieldState
+    public enum FieldState
     {
         Empty,
         X,
