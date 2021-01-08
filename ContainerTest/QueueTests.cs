@@ -143,5 +143,23 @@ namespace ContainerTest
             }
             Assert.IsTrue(testResult);
         }
+
+        [TestMethod]
+        public void ContinuousPushAndPopOnMaxCapacity()
+        {
+            Queue testQueue = new(5);
+            testQueue.Push(1);
+            testQueue.Push(2);
+            testQueue.Push(3);
+            testQueue.Push(4);
+            Assert.IsTrue(testQueue.Pop() == 1);
+            Assert.IsTrue(testQueue.Pop() == 2);
+            testQueue.Push(5);
+            testQueue.Push(6);
+            Assert.IsTrue(testQueue.Pop() == 3);
+            testQueue.Push(7);
+            testQueue.Push(8);
+            Assert.IsTrue(testQueue.Pop() == 4);
+        }
     }
 }
