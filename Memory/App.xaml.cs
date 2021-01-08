@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 
 namespace Memory
 {
@@ -16,10 +10,10 @@ namespace Memory
     {
         MainWindow w;
 
-        private void AppStart(object sender, StartupEventArgs e)
+        private void appStart(object sender, StartupEventArgs e)
         {
-            w = new MainWindow(new HighScoreStorageSqlite());
-            w.Show();
+            w = new MainWindow(new HighScoreStorageSqlite()); // hier ist die einzige stelle wo das Objekt zum passenden Interface eingefügt wird
+            w.Show(); // das Window muss explizit angezeigt werden, im gegensatz zum XAML-Weg mit StartupURI
         }
     }
 }

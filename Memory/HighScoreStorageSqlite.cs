@@ -12,7 +12,7 @@ namespace Memory
         /// <param name="Tiles">Number of tiles of this game</param>
         /// <param name="totalMilliseconds">Elapsed time for this game in milliseconds</param>
         /// <param name="PlayerName">Name of the player</param>
-        public void AddEntryToDatabase(int Tiles, double totalMilliseconds, string PlayerName)
+        public void AddEntry(int Tiles, double totalMilliseconds, string PlayerName)
         {
             // entweder builder nutzen oder auf https://www.connectionstrings.com/ nachschauen
             SQLiteConnectionStringBuilder builder = new();
@@ -38,7 +38,7 @@ namespace Memory
         /// </summary>
         /// <param name="Tiles">Number of tiles of this game</param>
         /// <returns>Highscorelist ordered by fastest first with a maximum of 10 entries</returns>
-        public List<Score> ReadHighscoreFromDatabase(int Tiles)
+        public List<Score> ReadHighscore(int Tiles)
         {
             // entweder builder nutzen oder auf https://www.connectionstrings.com/ nachschauen
             SQLiteConnectionStringBuilder builder = new();

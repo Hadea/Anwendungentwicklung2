@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SQLite;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
@@ -64,7 +63,9 @@ namespace Memory
             InitializeComponent();
             loadAllBitmapimages();
             Timer.Stop();
-            highScore = highScoreStorage;
+            // übergebenes Objekt, egal von welchem Typ es ist, wird intern gespeichert und benutzt.
+            // Es muss nur kompatibel zum Interface sein. "Dependency Injection"
+            highScore = highScoreStorage; 
         }
 
         /// <summary>
@@ -88,6 +89,7 @@ namespace Memory
         /// </summary>
         /// <param name="Columns">Number of tile columns</param>
         /// <param name="Rows">Number of tile rows</param>
+        /// <exception cref="ArgumentOutOfRangeException">Throws if number of field elements not even</exception>
         void createGame(int Columns, int Rows)
         {
             if (Columns * Rows % 2 != 0) throw new ArgumentOutOfRangeException();
@@ -230,11 +232,11 @@ namespace Memory
                         // alle felder gelöst
                         Timer.Stop();
                         // datenbank füllen
-                        highScore.AddEntryToDatabase(Spielfeld.Children.Count, (DateTime.Now - gameStart).TotalSeconds, "Name");
+                        highScore.AddEntry(Spielfeld.Children.Count, (DateTime.Now - gameStart).TotalSeconds, "Name");
 
                         // statistik laden und win-screen anzeigen
                         DataGrid dg = new();
-                        dg.ItemsSource = highScore.ReadHighscoreFromDatabase(Spielfeld.Children.Count);
+                        dg.ItemsSource = highScore.ReadHighscore(Spielfeld.Children.Count);
                         Spielfeld.Clear();
                         Spielfeld.Children.Add(dg);
                     }
