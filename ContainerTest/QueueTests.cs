@@ -161,5 +161,19 @@ namespace ContainerTest
             testQueue.Push(8);
             Assert.IsTrue(testQueue.Pop() == 4);
         }
+
+        [TestMethod]
+        public void ContinuousPushTiming()
+        {
+            Queue testQueue = new(5);
+            DateTime testStart = DateTime.Now;
+            for (int counter = 0; counter < 100000; counter++)
+                testQueue.Push(counter);
+            for (int counter = 0; counter < 100000; counter++)
+                testQueue.Pop();
+            DateTime testEnd = DateTime.Now;
+            Assert.IsTrue((testEnd - testStart).TotalMilliseconds < 100);
+        }
+
     }
 }
