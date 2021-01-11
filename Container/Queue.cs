@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Container
 {
@@ -8,39 +9,45 @@ namespace Container
         int[] elements;
         int pushIndex = 0;
         int popIndex = 0;
-        
+        int minimumSize = 0;
+
         public int Capacity
         {
             get => elements.Length;
             set
             {
-                if (value < 0) throw new ArgumentOutOfRangeException();
-                if (value < elementCount) throw new InsufficientMemoryException();
-                int[] biggerArray = new int[value];
-
-                int readIndex = popIndex;
-                int writeIndex = 0;
-
-                for (int counter = 0; counter < elementCount; counter++)
-                {
-                    if (readIndex == elements.Length)
-                    {
-                        readIndex = 0;
-                    }
-                    biggerArray[writeIndex++] = elements[readIndex++];
-                }
-                
-                //Array.Copy(elements, popIndex, biggerArray, 0, elements.Length - popIndex);
-                //Array.Copy(elements, 0, biggerArray, elements.Length - popIndex, popIndex);
-                popIndex = 0;
-                pushIndex = elementCount;
-                elements = biggerArray;
+                minimumSize = value;
+                resize(value);
             }
+        }
+
+        private void resize(int value)
+        {
+            if (value < 0) throw new ArgumentOutOfRangeException();
+            if (value < elementCount) throw new InsufficientMemoryException();
+            int[] biggerArray = new int[value];
+
+            int readIndex = popIndex;
+            int writeIndex = 0;
+
+            for (int counter = 0; counter < elementCount; counter++)
+            {
+                if (readIndex == elements.Length)
+                {
+                    readIndex = 0;
+                }
+                biggerArray[writeIndex++] = elements[readIndex++];
+            }
+
+            popIndex = 0;
+            pushIndex = elementCount;
+            elements = biggerArray;
         }
 
         public Queue(int InitialCapacity = 20)
         {
             elements = new int[InitialCapacity];
+            minimumSize = InitialCapacity;
         }
 
         public bool IsEmpty()
@@ -51,7 +58,7 @@ namespace Container
         public void Push(int v)
         {
             if (elements.Length == elementCount)
-                Capacity *= 2;
+                resize(Capacity * 2);
             elementCount++;
             if (pushIndex == elements.Length) pushIndex = 0;
             elements[pushIndex] = v;
@@ -61,11 +68,18 @@ namespace Container
         public int Pop()
         {
             if (IsEmpty()) throw new IndexOutOfRangeException();
-            //TODO : checken ob das array verkleinert werden kann
-            if (elementCount < Capacity / 3) Capacity /= 2;
+            if (elementCount < Capacity / 3 && Capacity > minimumSize) resize(Capacity / 2);
             elementCount--;
             if (popIndex == elements.Length) popIndex = 0;
             return elements[popIndex++];
+        }
+
+        public void ForEach(Action<int> Method)
+        {
+            while (elementCount > 0)
+            {
+                Method(Pop());
+            }
         }
     }
 }

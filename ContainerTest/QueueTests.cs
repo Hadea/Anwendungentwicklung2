@@ -12,7 +12,7 @@ namespace ContainerTest
         {
             Assert.IsNotNull(new Queue());
         }
-        
+
         [TestMethod]
         public void IsEmptyAfterNew()
         {
@@ -133,15 +133,11 @@ namespace ContainerTest
         public void ContinuousPushAndPop()
         {
             Queue testQueue = new(5);
-            bool testResult = true;
             for (int i = 0; i < 50; i++)
             {
                 testQueue.Push(i);
-                int result = testQueue.Pop();
-                if (i != result)
-                    testResult = false;
+                Assert.IsTrue(i == testQueue.Pop());
             }
-            Assert.IsTrue(testResult);
         }
 
         [TestMethod]
@@ -224,12 +220,61 @@ namespace ContainerTest
             Queue testQueue = new(10);
             for (int counter = 0; counter < 8; counter++)
                 testQueue.Push(counter);
-            Assert.ThrowsException<InsufficientMemoryException>( () => testQueue.Capacity = 5);
+            Assert.ThrowsException<InsufficientMemoryException>(() => testQueue.Capacity = 5);
         }
-/*
-        //TODO: Capacity OutOfRangeException testen
 
-        //TODO: Capacity never lower than constructor given size
-        */
+        [TestMethod]
+        public void ZBonusCapacityOutOfRange()
+        {
+            Queue testQueue = new();
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() => testQueue.Capacity = -1);
+        }
+
+        [TestMethod]
+        public void ZBonusCapacityNeverBelowInitialization()
+        {
+            Queue testQueue = new(10);
+            for (int counter = 0; counter < 30; counter++)
+                testQueue.Push(counter);
+            for (int counter = 0; counter < 29; counter++)
+                testQueue.Pop();
+            Assert.IsTrue(testQueue.Capacity == 10);
+        }
+
+        [TestMethod]
+        public void ZBonusCapacityMinimumOnUserDefinition()
+        {
+            Queue testQueue = new(10);
+            for (int counter = 0; counter < 30; counter++)
+                testQueue.Push(counter);
+            for (int counter = 0; counter < 29; counter++)
+                testQueue.Pop();
+            testQueue.Capacity = 5;
+            for (int counter = 0; counter < 29; counter++)
+                testQueue.Push(counter);
+            for (int counter = 0; counter < 29; counter++)
+                testQueue.Pop();
+            Assert.IsTrue(testQueue.Capacity == 5);
+        }
+        [TestMethod]
+        public void ZBonusDirectResize()
+        {
+            Queue testQueue = new(15);
+            testQueue.Capacity = 7;
+            Assert.IsTrue(testQueue.Capacity == 7);
+        }
+
+        [TestMethod]
+        public void ZBonusForEachDelegate()
+        {
+            Queue testQueue = new(10);
+            testQueue.Push(1);
+            testQueue.Push(2);
+            testQueue.Push(3);
+            testQueue.Push(4);
+            int Q = 0;
+            testQueue.ForEach( (i) => Q += i );
+            Assert.IsTrue(Q == 10);
+        }
     }
 }
