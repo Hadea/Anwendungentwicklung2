@@ -12,7 +12,7 @@ namespace ContainerTest
         {
             Assert.IsNotNull(new Queue());
         }
-        
+
         [TestMethod]
         public void IsEmptyAfterNew()
         {
@@ -175,5 +175,47 @@ namespace ContainerTest
             Assert.IsTrue((testEnd - testStart).TotalMilliseconds < 100);
         }
 
+        [TestMethod]
+        public void ZBonusResizeAutomated()
+        {
+            Queue testQueue = new(5);
+            for (int counter = 0; counter < 20; counter++)
+                testQueue.Push(counter);
+            for (int counter = 0; counter < 10; counter++)
+                Assert.IsTrue(testQueue.Pop() == counter);
+            for (int counter = 20; counter < 40; counter++)
+                testQueue.Push(counter);
+            for (int counter = 10; counter < 30; counter++)
+                Assert.IsTrue(testQueue.Pop() == counter);
+            Assert.IsTrue(testQueue.Capacity <= 20);
+        }
+
+        [TestMethod]
+        public void ZBonusResizeManualMiddle()
+        {
+            Queue testQueue = new(10);
+            for (int counter = 0; counter < 8; counter++)
+                testQueue.Push(counter);
+            for (int counter = 0; counter < 4; counter++)
+                Assert.IsTrue(testQueue.Pop() == counter);
+            testQueue.Capacity = 5;
+            for (int counter = 4; counter < 8; counter++)
+                Assert.IsTrue(testQueue.Pop() == counter);
+        }
+
+        [TestMethod]
+        public void ZBonusResizeManualEnd()
+        {
+            Queue testQueue = new(10);
+            for (int counter = 0; counter < 10; counter++)
+                testQueue.Push(counter);
+            for (int counter = 0; counter < 8; counter++)
+                Assert.IsTrue(testQueue.Pop() == counter);
+            for (int counter = 10; counter < 12; counter++)
+                testQueue.Push(counter);
+            testQueue.Capacity = 5;
+            for (int counter = 8; counter < 12; counter++)
+                Assert.IsTrue(testQueue.Pop() == counter);
+        }
     }
 }
