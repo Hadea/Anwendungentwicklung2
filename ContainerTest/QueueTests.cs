@@ -217,5 +217,14 @@ namespace ContainerTest
             for (int counter = 8; counter < 12; counter++)
                 Assert.IsTrue(testQueue.Pop() == counter);
         }
+
+        [TestMethod]
+        public void ZBonusResizeTooSmall()
+        {
+            Queue testQueue = new(10);
+            for (int counter = 0; counter < 8; counter++)
+                testQueue.Push(counter);
+            Assert.ThrowsException<InsufficientMemoryException>( () => testQueue.Capacity = 5);
+        }
     }
 }
