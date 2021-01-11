@@ -189,7 +189,7 @@ namespace ContainerTest
                 Assert.IsTrue(testQueue.Pop() == counter);
             Assert.IsTrue(testQueue.Capacity <= 20);
         }
-/*
+
         [TestMethod]
         public void ZBonusResizeManualMiddle()
         {
@@ -226,6 +226,10 @@ namespace ContainerTest
                 testQueue.Push(counter);
             Assert.ThrowsException<InsufficientMemoryException>( () => testQueue.Capacity = 5);
         }
+/*
+        //TODO: Capacity OutOfRangeException testen
+
+        //TODO: Capacity never lower than constructor given size
         */
     }
 }
