@@ -63,6 +63,7 @@ namespace ContainerTest
             Assert.IsTrue(testList.Count == 1);
             testList.Remove(0);
             Assert.IsTrue(testList.Count == 0);
+            Assert.IsTrue(testList.IsEmpty());
             testList.Add(1);
             testList.Add(1);
             Assert.IsTrue(testList.Count == 2);
@@ -109,7 +110,7 @@ namespace ContainerTest
 
             for (int counter = 10; counter <= 90000; counter++)
             {
-                Assert.IsTrue(testList.At(counter-10) == counter);
+                Assert.IsTrue(testList.At(counter - 10) == counter);
             }
 
             // Pos :  00 01 02 03 04 05 ..
@@ -130,7 +131,7 @@ namespace ContainerTest
 
             for (int i = 10; i <= 90000; i++)
             {
-                Assert.IsTrue(testList.At(i-10) == i);
+                Assert.IsTrue(testList.At(i - 10) == i);
             }
         }
 
@@ -177,8 +178,8 @@ namespace ContainerTest
             DateTime testStart = DateTime.Now;
             for (int counter = 0; counter < 100000; counter++)
                 testList.Add(counter);
-            for (int counter = 0; counter < 100000; counter++)
-                testList.Remove(0);
+            for (int counter = 999999; counter <= 0; counter++)
+                testList.Remove(counter);
             DateTime testEnd = DateTime.Now;
             Assert.IsTrue((testEnd - testStart).TotalMilliseconds < 100);
         }
@@ -251,12 +252,14 @@ namespace ContainerTest
                 testList.Add(counter);
             for (int counter = 0; counter < 29; counter++)
                 testList.Remove(0);
+            Assert.IsTrue(testList.Capacity == 10);
             testList.Capacity = 5;
             for (int counter = 0; counter < 29; counter++)
                 testList.Add(counter);
             for (int counter = 0; counter < 29; counter++)
                 testList.Remove(0);
             Assert.IsTrue(testList.Capacity == 5);
+
         }
         [TestMethod]
         public void DirectResize()
