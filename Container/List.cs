@@ -52,7 +52,7 @@ namespace Container
         public void Remove(int v)
         {
             if (v >= count) throw new IndexOutOfRangeException();
-            for (int counter = v; counter < count-1; counter++)
+            for (int counter = v; counter < count - 1; counter++)
             {
                 elements[counter] = elements[counter + 1];
             }
@@ -71,6 +71,12 @@ namespace Container
             {
                 p(elements[i]);
             }
+        }
+
+        public int this[int index]
+        {
+            get => elements[index];
+            set => elements[index] = value;
         }
     }
 }
