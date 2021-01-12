@@ -178,7 +178,7 @@ namespace ContainerTest
             DateTime testStart = DateTime.Now;
             for (int counter = 0; counter < 100000; counter++)
                 testList.Add(counter);
-            for (int counter = 999999; counter <= 0; counter++)
+            for (int counter = 999999; counter >= 0; counter++)
                 testList.Remove(counter);
             DateTime testEnd = DateTime.Now;
             Assert.IsTrue((testEnd - testStart).TotalMilliseconds < 100);
