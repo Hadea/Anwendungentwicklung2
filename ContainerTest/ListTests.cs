@@ -283,5 +283,25 @@ namespace ContainerTest
             testList.ForEach((i) => Q += i);
             Assert.IsTrue(Q == 10);
         }
+
+        [TestMethod]
+        public void AdditionOfLists()
+        {
+            List listA = new();
+            listA.Add(1);
+            listA.Add(2);
+            listA.Add(3);
+            List listB = new();
+            listB.Add(4);
+            listB.Add(5);
+            listB.Add(6);
+
+            List listC = listA + listB;
+
+            for (int counter = 0; counter < listC.Count; counter++)
+            {
+                Assert.IsTrue(listC[counter] == counter + 1);
+            }
+        }
     }
 }
