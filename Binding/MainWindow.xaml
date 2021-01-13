@@ -6,30 +6,18 @@
         xmlns:local="clr-namespace:Binding"
         mc:Ignorable="d"
         Title="MainWindow"
-        Height="200"
-        Width="300">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="40" />
-            <RowDefinition Height="40" />
-            <RowDefinition Height="40" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-        <TextBox x:Name="tbInput" Grid.Row="0" />
-        <Label x:Name="lblOutput" Grid.Row="1"
-               Content="{Binding ElementName=tbInput, Path=Text}" />
-        <!-- Binding bedeutet das der UI-Thread immer wenn er zeit hat werte aktualisiert
-            ElementName ist der Variablenname der Klasse an die wir uns binden
-            Path ist das Property welches wir binden wollen
-            sollte sich in dem gebundenen Property etwas ändern (setter) gibt dieser
-            bescheid sodass das ui alle angebundenen Controls aktualisieren kann -->
-        <TextBox IsReadOnly="True" Grid.Row="2" Text="{Binding ElementName=lblOutput, Path=Content}" />
-        <TextBox Grid.Row="3" Text="{Binding ElementName=tbInput, Path=Text , UpdateSourceTrigger=PropertyChanged}" />
-        <!-- Die untere Textbox bindet sich an die oberste
-            beim daten holen geschieht dies sofort
-            beim daten senden ist die standardeinstellung bei der TextBox "LostFocus"
-            dadurch werden die bindungen erst beim verlassen der textbox aktualisiert
-            wenn wir dies nicht wollen können wir es umstellen auf UpdateSourceTrigger=PropertyChanged
-            sodass nach jeder änderung die bindungen aktualisiert werden -->
+        Height="400"
+        Width="600">
+    <Grid Margin="5">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="220" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <StackPanel>
+            <Button Content="Intro" Click="loadBindingIntro" />
+            <Button Content="Intro Übung" Click="loadBindingIntroExercise" />
+            <Button Content="Bindungsrichtung" Click="loadBindingDirection"/>
+        </StackPanel>
+        <Frame Grid.Column="1" x:Name="frmContent" NavigationUIVisibility="Hidden" />
     </Grid>
 </Window>

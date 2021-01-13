@@ -24,5 +24,20 @@ namespace Binding
         {
             InitializeComponent();
         }
+
+        private void loadBindingIntro(object sender, RoutedEventArgs e)
+        {
+            frmContent.Navigate(new BindingIntro());
+        }
+
+        private void loadBindingIntroExercise(object sender, RoutedEventArgs e)
+        {
+            frmContent.Navigate(new BindingIntroExercise());
+        }
+
+        private void loadBindingDirection(object sender, RoutedEventArgs e)
+        {
+            frmContent.Navigate(new BindingDirection());
+        }
     }
 }

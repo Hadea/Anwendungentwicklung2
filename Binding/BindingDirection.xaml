@@ -1,0 +1,38 @@
+﻿<Page x:Class="Binding.BindingDirection"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Binding"
+      mc:Ignorable="d" 
+      d:DesignHeight="200" d:DesignWidth="350"
+      Title="BindingDirection">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="58"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="24" />
+            <RowDefinition Height="24" />
+            <RowDefinition Height="24" />
+            <RowDefinition Height="24" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <TextBox Grid.Row="0" Grid.Column="0" Text="{Binding ElementName=tbA, Path=Text, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" />
+        <TextBox Grid.Row="0" Grid.Column="2" x:Name="tbA" />
+        <TextBox Grid.Row="1" Grid.Column="0" Text="{Binding ElementName=tbB, Path=Text, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource}"/>
+        <TextBox Grid.Row="1" Grid.Column="2" x:Name="tbB" />
+        <TextBox Grid.Row="2" Grid.Column="0" Text="{Binding ElementName=tbC, Path=Text, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+        <TextBox Grid.Row="2" Grid.Column="2" x:Name="tbC" />
+        <TextBox Grid.Row="3" Grid.Column="0" Text="{Binding ElementName=tbD, Path=Text, UpdateSourceTrigger=PropertyChanged, Mode=OneTime}"/>
+        <TextBox Grid.Row="3" Grid.Column="2" x:Name="tbD" Text="once" />
+
+        <Label HorizontalAlignment="Center" Content="holen" Grid.Row="0" Grid.Column="1"/>
+        <Label HorizontalAlignment="Center" Content="schieben" Grid.Row="1" Grid.Column="1"/>
+        <Label HorizontalAlignment="Center" Content="beides" Grid.Row="2" Grid.Column="1"/>
+        <Label HorizontalAlignment="Center" Content="start" Grid.Row="3" Grid.Column="1"/>
+    </Grid>
+</Page>
