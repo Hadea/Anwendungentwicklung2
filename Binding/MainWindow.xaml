@@ -24,5 +24,12 @@
             sollte sich in dem gebundenen Property etwas ändern (setter) gibt dieser
             bescheid sodass das ui alle angebundenen Controls aktualisieren kann -->
         <TextBox IsReadOnly="True" Grid.Row="2" Text="{Binding ElementName=lblOutput, Path=Content}" />
+        <TextBox Grid.Row="3" Text="{Binding ElementName=tbInput, Path=Text , UpdateSourceTrigger=PropertyChanged}" />
+        <!-- Die untere Textbox bindet sich an die oberste
+            beim daten holen geschieht dies sofort
+            beim daten senden ist die standardeinstellung bei der TextBox "LostFocus"
+            dadurch werden die bindungen erst beim verlassen der textbox aktualisiert
+            wenn wir dies nicht wollen können wir es umstellen auf UpdateSourceTrigger=PropertyChanged
+            sodass nach jeder änderung die bindungen aktualisiert werden -->
     </Grid>
 </Window>
