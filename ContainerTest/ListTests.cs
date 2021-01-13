@@ -303,5 +303,46 @@ namespace ContainerTest
                 Assert.IsTrue(listC[counter] == counter + 1);
             }
         }
+
+        [TestMethod]
+        public void AdditionOfManyLists()
+        {
+            List listA = new();
+            listA.Add(1);
+            listA.Add(2);
+            listA.Add(3);
+            List listB = new();
+            listB.Add(4);
+            listB.Add(5);
+            listB.Add(6);
+
+            int[] expectedA = {1,2,3,4,5,6,1,2,3 };
+            List resultA = List.Merge(listA, listB, listA);
+
+            for (int counter = 0; counter < resultA.Count; counter++)
+                Assert.IsTrue(resultA[counter] == expectedA[counter]);
+
+            int[] expectedB = {1,2,3,4,5,6,4,5,6,1,2,3,4,5,6 };
+            List resultB = List.Merge(listA, listB, listB, listA, listB);
+
+            for (int counter = 0; counter < resultB.Count; counter++)
+                Assert.IsTrue(resultB[counter] == expectedB[counter]);
+        }
+        [TestMethod]
+        public void Inversion()
+        {
+            List listA = new(5);
+            listA.Add(1);
+            listA.Add(2);
+            listA.Add(3);
+            listA.Add(4);
+
+            List listB = !listA;
+            int[] expectedB = { 4, 3, 2, 1 };
+            Assert.IsTrue(listB.Count == 4);
+
+            for (int counter = 0; counter < listB.Count; counter++)
+                Assert.IsTrue(listB[counter] == expectedB[counter]);
+        }
     }
 }
