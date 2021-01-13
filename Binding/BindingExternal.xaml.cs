@@ -20,10 +20,19 @@ namespace Binding
     /// </summary>
     public partial class BindingExternal : Page
     {
+        public BindingExternal()
+        {
+            InitializeComponent();
+        }
         public BindingExternal(Window bindingTarget = null)
         {
             InitializeComponent();
             DataContext = bindingTarget;
+            WindowContext = bindingTarget;
+            //sldC.DataContext = this;
+            //sldD.DataContext = this;
         }
+
+        public Window WindowContext { get; set; }
     }
 }
