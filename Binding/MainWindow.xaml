@@ -1,0 +1,28 @@
+﻿<Window x:Class="Binding.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Binding"
+        mc:Ignorable="d"
+        Title="MainWindow"
+        Height="200"
+        Width="300">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40" />
+            <RowDefinition Height="40" />
+            <RowDefinition Height="40" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <TextBox x:Name="tbInput" Grid.Row="0" />
+        <Label x:Name="lblOutput" Grid.Row="1"
+               Content="{Binding ElementName=tbInput, Path=Text}" />
+        <!-- Binding bedeutet das der UI-Thread immer wenn er zeit hat werte aktualisiert
+            ElementName ist der Variablenname der Klasse an die wir uns binden
+            Path ist das Property welches wir binden wollen
+            sollte sich in dem gebundenen Property etwas ändern (setter) gibt dieser
+            bescheid sodass das ui alle angebundenen Controls aktualisieren kann -->
+        <TextBox IsReadOnly="True" Grid.Row="2" Text="{Binding ElementName=lblOutput, Path=Content}" />
+    </Grid>
+</Window>
