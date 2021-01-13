@@ -8,15 +8,12 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="BindingExternal"
       x:Name="thisPage">
-    <Page.Resources>
-
-    </Page.Resources>
     <StackPanel>
         <Label Content="DataContext" />
         <Slider Minimum="300" Maximum="800" TickFrequency="10" Value="{Binding Path=Width}" />
         <Slider Minimum="300" Maximum="800" TickFrequency="10" Value="{Binding Path=Height}" />
         <Label Content="Eigenes Property" />
-        <Slider x:Name="sldC" Minimum="300" Maximum="800" TickFrequency="10" Value="{Binding Path=WindowContext.Width}"/>
-        <Slider x:Name="sldD" Minimum="300" Maximum="800" TickFrequency="10" Value="{Binding Path=WindowContext.Height}"/>
+        <Slider Minimum="300" Maximum="800" TickFrequency="10" Value="{Binding Path=WindowContext.Width}" DataContext="{x:Reference Name=thisPage}" />
+        <Slider Minimum="300" Maximum="800" TickFrequency="10" Value="{Binding Path=WindowContext.Height}" DataContext="{x:Reference Name=thisPage}"/>
     </StackPanel>
 </Page>

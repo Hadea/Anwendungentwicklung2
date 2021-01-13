@@ -29,8 +29,6 @@ namespace Binding
             InitializeComponent();
             DataContext = bindingTarget;
             WindowContext = bindingTarget;
-            //sldC.DataContext = this;
-            //sldD.DataContext = this;
         }
 
         public Window WindowContext { get; set; }
