@@ -51,7 +51,7 @@ namespace Container
 
         public void Remove(int v)
         {
-            if (v >= count) throw new IndexOutOfRangeException();
+            if (v >= count || v < 0) throw new IndexOutOfRangeException();
             for (int counter = v; counter < count - 1; counter++)
             {
                 elements[counter] = elements[counter + 1];
@@ -62,6 +62,7 @@ namespace Container
 
         public int At(int v)
         {
+            if (v >= count || v < 0) throw new IndexOutOfRangeException();
             return elements[v];
         }
 
@@ -75,8 +76,25 @@ namespace Container
 
         public int this[int index]
         {
-            get => elements[index];
-            set => elements[index] = value;
+            get
+            {
+                if (index >= count || index < 0) throw new IndexOutOfRangeException();
+                return elements[index];
+            }
+            set
+            {
+                if (index >= count || index < 0) throw new IndexOutOfRangeException();
+                elements[index] = value;
+            }
+        }
+
+        public static List operator +(List firstList, List secondList)
+        {
+            if (firstList == null || secondList == null) throw new ArgumentNullException();
+            List resultList = new(firstList.Count + secondList.Count);
+            firstList.ForEach(resultList.Add);
+            secondList.ForEach(resultList.Add);
+            return resultList;
         }
     }
 }
