@@ -39,5 +39,10 @@ namespace Binding
         {
             frmContent.Navigate(new BindingDirection());
         }
+
+        private void loadBindingExternal(object sender, RoutedEventArgs e)
+        {
+            frmContent.Navigate(new BindingExternal(this));
+        }
     }
 }
