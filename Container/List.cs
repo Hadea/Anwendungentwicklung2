@@ -96,5 +96,22 @@ namespace Container
             secondList.ForEach(resultList.Add);
             return resultList;
         }
+
+        public static List operator !(List listToInvert)
+        {
+            List resultList = new(listToInvert.count);
+            for (int counter = listToInvert.Count - 1; counter >= 0; counter--)
+                resultList.Add(listToInvert[counter]);
+            return resultList;
+        }
+
+        public static List Merge(params List[] lists)
+        {
+            int newLegth = 0;
+            foreach (var item in lists) newLegth += item.Count;
+            List resultList = new(newLegth);
+            foreach (var item in lists) item.ForEach(resultList.Add);
+            return resultList;
+        }
     }
 }
