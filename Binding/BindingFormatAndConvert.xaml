@@ -4,22 +4,36 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Binding"
+      xmlns:sys="clr-namespace:System;assembly=mscorlib"
       mc:Ignorable="d" 
       d:DesignHeight="200" d:DesignWidth="350"
       Title="BindingFormatAndConvert">
-
     <StackPanel>
         <TextBox x:Name="tbEmployee" Text="Hans Wurst" />
         <Slider x:Name="sldSalary" Minimum="3000" Maximum="5000" />
         <TextBlock>
+            <!-- Lange schreibweise einer Bindung -->
             <TextBlock.Text>
+                <!-- Wenn StringFormat direkt mit einem der Parameter beginnt und nicht mit einem einleitungstext
+                    muss ein paar geschweifte klammern an den anfang. Ansonsten verhält es sich wie ein string
+                    welchen wir mit $ in den Formatierungsmodus setzen
+                    $"Bischen Text {VariableA} weiterer Text {VariableB:formatierung}" -->
                 <MultiBinding StringFormat="{}{0} -> {1:c}">
                     <Binding Path="Text" ElementName="tbEmployee"/>
                     <Binding Path="Value" ElementName="sldSalary"/>
                 </MultiBinding>
             </TextBlock.Text>
         </TextBlock>
-        <Label Content="{Binding ElementName=sldSalary, Path=Value}" ContentStringFormat="Gehalt {0:c}" />
+        <!-- Der Text wird über StringFormat umgestaltet. Erlaubt ist dabei alles was auch über die Methode .ToString() geht -->
         <TextBlock Text="{Binding ElementName=sldSalary, Path=Value, StringFormat=Gehalt {0:C}}" />
+        <!-- Das Label bekommt seinen inhalt in Content(Typ Object) sodass ein direktes StringFormat der Bindung
+            nicht funktioniert. Hierfür dann ContentStringFormat verwenden welches die gleiche syntax unterstützt -->
+        <Label Content="{Binding ElementName=sldSalary, Path=Value}" ContentStringFormat="Gehalt {0:c}" />
+        <!-- Standardeinstellung für die Culture ist 'en-US' sodass alles im US-Amerikanischen stil gezeigt wird -->
+        <TextBlock Text="{Binding Source={x:Static sys:DateTime.Now}}" />
+        <!-- Die einstellung der Culture können wir auf ein anderes Land einstellen sodass der Nutzer seine gewohnte
+            schreibweise sieht. Vorsicht, es wird hier nur ein visueller effekt erstellt, es passiert keine umrechnung -->
+        <TextBlock Text="{Binding Source={x:Static sys:DateTime.Now}, ConverterCulture='de-DE'}" />
+        <TextBlock Text="{Binding ElementName=sldSalary, Path=Value, ConverterCulture='de-DE', StringFormat=Gehalt {0:C}}" />
     </StackPanel>
 </Page>
