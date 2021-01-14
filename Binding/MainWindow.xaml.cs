@@ -49,5 +49,10 @@ namespace Binding
         {
             frmContent.Navigate(new BindingFormatAndConvert());
         }
+
+        private void loadBindingConvertExercise(object sender, RoutedEventArgs e)
+        {
+            frmContent.Navigate(new BindingConvertExercise());
+        }
     }
 }
