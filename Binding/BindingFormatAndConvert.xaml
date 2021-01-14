@@ -8,6 +8,9 @@
       mc:Ignorable="d" 
       d:DesignHeight="200" d:DesignWidth="350"
       Title="BindingFormatAndConvert">
+    <Page.Resources>
+        <local:StringToBoolConverter x:Key="StringToBoolConverter"/>
+    </Page.Resources>
     <StackPanel>
         <TextBox x:Name="tbEmployee" Text="Hans Wurst" />
         <Slider x:Name="sldSalary" Minimum="3000" Maximum="5000" />
@@ -35,5 +38,8 @@
             schreibweise sieht. Vorsicht, es wird hier nur ein visueller effekt erstellt, es passiert keine umrechnung -->
         <TextBlock Text="{Binding Source={x:Static sys:DateTime.Now}, ConverterCulture='de-DE'}" />
         <TextBlock Text="{Binding ElementName=sldSalary, Path=Value, ConverterCulture='de-DE', StringFormat=Gehalt {0:C}}" />
+        <Label Content="---------------------" />
+        <TextBox x:Name="tbJain" />
+        <CheckBox IsChecked="{Binding ElementName=tbJain, Path=Text, Converter={StaticResource StringToBoolConverter}}" />
     </StackPanel>
 </Page>
