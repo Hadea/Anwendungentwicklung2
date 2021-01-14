@@ -46,4 +46,18 @@ namespace Binding
             return "nö";
         }
     }
+
+    public class DoubleToWidthConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is double == false) throw new ArgumentException();
+            return (double)value / 20;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return value;
+        }
+    }
 }
