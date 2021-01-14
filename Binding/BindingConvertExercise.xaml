@@ -1,0 +1,44 @@
+﻿<Page x:Class="Binding.BindingConvertExercise"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Binding"
+      mc:Ignorable="d" 
+      d:DesignHeight="350" d:DesignWidth="350"
+      Title="BindingConvertExercise">
+    <Page.Resources>
+        <local:DoubleToHeightConverter x:Key="DoubleToHeightConverter"/>
+    </Page.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions >
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="40"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="22" />
+            <RowDefinition Height="22" />
+            <RowDefinition Height="22" />
+            <RowDefinition Height="22" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Slider x:Name="sldA" Minimum="0" Maximum="4000" Grid.Row="0" Grid.Column="0"/>
+        <Slider x:Name="sldB" Minimum="0" Maximum="4000" Grid.Row="1" Grid.Column="0"/>
+        <Slider x:Name="sldC" Minimum="0" Maximum="4000" Grid.Row="2" Grid.Column="0"/>
+        <Slider x:Name="sldD" Minimum="0" Maximum="4000" Grid.Row="3" Grid.Column="0"/>
+        <TextBlock Text="{Binding ElementName=sldA, Path=Value}" Grid.Row="0" Grid.Column="1"/>
+        <TextBlock Text="{Binding ElementName=sldB, Path=Value}" Grid.Row="1" Grid.Column="1"/>
+        <TextBlock Text="{Binding ElementName=sldC, Path=Value}" Grid.Row="2" Grid.Column="1"/>
+        <TextBlock Text="{Binding ElementName=sldD, Path=Value}" Grid.Row="3" Grid.Column="1"/>
+        <Canvas x:Name="cnvGraph" Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2" Background="Beige" Height="200" Width="200" >
+            <Line Stroke="Blue" StrokeThickness="4" X1="0" Y1="{Binding ElementName=cnvGraph, Path=Height}"
+                  X2="50" Y2="{Binding ElementName=sldA, Path=Value, Converter={StaticResource DoubleToHeightConverter}}" />
+            <Line Stroke="Blue" StrokeThickness="4" X1="50" Y1="{Binding ElementName=sldA, Path=Value, Converter={StaticResource DoubleToHeightConverter}}"
+                  X2="100" Y2="{Binding ElementName=sldB, Path=Value, Converter={StaticResource DoubleToHeightConverter}}" />
+            <Line Stroke="Blue" StrokeThickness="4" X1="100" Y1="{Binding ElementName=sldB, Path=Value, Converter={StaticResource DoubleToHeightConverter}}"
+                  X2="150" Y2="{Binding ElementName=sldC, Path=Value, Converter={StaticResource DoubleToHeightConverter}}" />
+            <Line Stroke="Blue" StrokeThickness="4" X1="150" Y1="{Binding ElementName=sldC, Path=Value, Converter={StaticResource DoubleToHeightConverter}}"
+                  X2="200" Y2="{Binding ElementName=sldD, Path=Value, Converter={StaticResource DoubleToHeightConverter}}" />
+        </Canvas>
+    </Grid>
+</Page>
