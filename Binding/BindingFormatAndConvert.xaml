@@ -1,0 +1,25 @@
+﻿<Page x:Class="Binding.BindingFormatAndConvert"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Binding"
+      mc:Ignorable="d" 
+      d:DesignHeight="200" d:DesignWidth="350"
+      Title="BindingFormatAndConvert">
+
+    <StackPanel>
+        <TextBox x:Name="tbEmployee" Text="Hans Wurst" />
+        <Slider x:Name="sldSalary" Minimum="3000" Maximum="5000" />
+        <TextBlock>
+            <TextBlock.Text>
+                <MultiBinding StringFormat="{}{0} -> {1:c}">
+                    <Binding Path="Text" ElementName="tbEmployee"/>
+                    <Binding Path="Value" ElementName="sldSalary"/>
+                </MultiBinding>
+            </TextBlock.Text>
+        </TextBlock>
+        <Label Content="{Binding ElementName=sldSalary, Path=Value}" ContentStringFormat="Gehalt {0:c}" />
+        <TextBlock Text="{Binding ElementName=sldSalary, Path=Value, StringFormat=Gehalt {0:C}}" />
+    </StackPanel>
+</Page>

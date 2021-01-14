@@ -18,6 +18,7 @@
             <Button Content="Intro Übung" Click="loadBindingIntroExercise" />
             <Button Content="Bindungsrichtung" Click="loadBindingDirection"/>
             <Button Content="Übung für Externe Daten" Click="loadBindingExternal"/>
+            <Button Content="Formatieren und Konvertieren" Click="loadBindingFormatAndConvert"/>
         </StackPanel>
         <Frame Grid.Column="1" x:Name="frmContent" NavigationUIVisibility="Hidden" />
     </Grid>
