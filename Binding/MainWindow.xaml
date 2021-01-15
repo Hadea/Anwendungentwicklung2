@@ -20,6 +20,7 @@
             <Button Content="Übung für Externe Daten" Click="loadBindingExternal"/>
             <Button Content="Formatieren und Konvertieren" Click="loadBindingFormatAndConvert"/>
             <Button Content="Konvertierungsübung" Click="loadBindingConvertExercise"/>
+            <Button Content="Binden an Properties" Click="loadBindingProperties"/>
         </StackPanel>
         <Frame Grid.Column="1" x:Name="frmContent" NavigationUIVisibility="Hidden" />
     </Grid>

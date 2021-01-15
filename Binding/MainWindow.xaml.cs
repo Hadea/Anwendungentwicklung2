@@ -54,5 +54,10 @@ namespace Binding
         {
             frmContent.Navigate(new BindingConvertExercise());
         }
+
+        private void loadBindingProperties(object sender, RoutedEventArgs e)
+        {
+            frmContent.Navigate(new BindingProperties());
+        }
     }
 }
