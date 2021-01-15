@@ -37,12 +37,30 @@ namespace Binding
             {
                 if (sliderVal != value)
                 {
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("SliderValue"));
                     sliderVal = value;
+                    SliderValueReversed = 100 - value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("SliderValue"));
                 }
             }
         }
         private double sliderVal;
+
+        private double sliderValRef;
+
+        public double SliderValueReversed
+        {
+            get { return sliderValRef; }
+            set
+            {
+                if (sliderValRef != value)
+                {
+                    sliderValRef = value;
+                    SliderValue = 100-value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("SliderValueReversed"));
+                }
+            }
+        }
+
 
         private void btnReadProp_Click(object sender, RoutedEventArgs e)
         {

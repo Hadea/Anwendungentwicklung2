@@ -12,5 +12,6 @@
         <Slider Minimum="0" Maximum="100" Value="{Binding Path=SliderValue}" />
         <Slider Minimum="0" Maximum="100" Value="{Binding Path=SliderValue}" />
         <Button Height="25" Click="btnReadProp_Click" />
+        <Slider Minimum="0" Maximum="100" Value="{Binding Path=SliderValueReversed}" />
     </StackPanel>
 </Page>
