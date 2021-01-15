@@ -59,5 +59,10 @@ namespace Binding
         {
             frmContent.Navigate(new BindingProperties());
         }
+
+        private void loadBindingCommand(object sender, RoutedEventArgs e)
+        {
+            frmContent.Navigate(new BindingCommands());
+        }
     }
 }

@@ -21,6 +21,7 @@
             <Button Content="Formatieren und Konvertieren" Click="loadBindingFormatAndConvert"/>
             <Button Content="Konvertierungsübung" Click="loadBindingConvertExercise"/>
             <Button Content="Binden an Properties" Click="loadBindingProperties"/>
+            <Button Content="Binden an Kommandos" Click="loadBindingCommand"/>
         </StackPanel>
         <Frame Grid.Column="1" x:Name="frmContent" NavigationUIVisibility="Hidden" />
     </Grid>
