@@ -64,5 +64,10 @@ namespace Binding
         {
             frmContent.Navigate(new BindingCommands());
         }
+
+        private void loadBindingTemplate(object sender, RoutedEventArgs e)
+        {
+            frmContent.Navigate(new BindingTemplate());
+        }
     }
 }
