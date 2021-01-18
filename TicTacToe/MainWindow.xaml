@@ -4,15 +4,35 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TicTacToe"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
         Title="Tic Tac Toe"
         Height="550"
         Width="800">
+    <Window.CommandBindings>
+        <CommandBinding Command="ApplicationCommands.New" Executed="New_Command"/>
+        <CommandBinding Command="ApplicationCommands.Close" Executed="Close_Command"/>
+        <CommandBinding Command="local:FieldButtonCommands.Select" Executed="Select_Command" CanExecute="Select_CanExecute"/>
+    </Window.CommandBindings>
+    <Window.Resources>
+        <Style x:Key="FieldButton" TargetType="Button">
+            <Setter Property="FontSize" Value="40"/>
+            <Setter Property="Command" Value="local:FieldButtonCommands.Select" />
+        </Style>
+    </Window.Resources>
     <StackPanel>
+        <Menu>
+            <MenuItem Header="Spiel">
+                <MenuItem Header="Reset" Command="ApplicationCommands.New"/>
+                <MenuItem Header="Music" IsCheckable="True" IsChecked="{Binding Music}"/>
+                <Separator/>
+                <MenuItem Header="Beenden" Command="ApplicationCommands.Close"/>
+            </MenuItem>
+        </Menu>
         <!-- untergeordnete elemente werden untereinander sortiert anhand ihrer höhe -->
         <Label Content="Tic Tac Toe"
                FontSize="50" />
-        <Grid Margin="20">
+        <Grid x:Name="grdFieldButtons" Margin="20">
             <!-- 20 pixel abstand zum rand, rein für die optik-->
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
@@ -30,27 +50,89 @@
             </Grid.RowDefinitions>
 
             <!-- Button werden erstellt und im Grid an ihre Position sortiert sie nehmen dabei die Grösse des Grid-Feldes an  -->
-            <Button Grid.Column="1" Grid.Row="0" x:Name="btnField11" FontSize="40" Click="btnField11_Click"/>
-            <Button Grid.Column="2" Grid.Row="0" x:Name="btnField21" FontSize="40" Click="btnField21_Click"/>
-            <Button Grid.Column="3" Grid.Row="0" x:Name="btnField31" FontSize="40" Click="btnField31_Click"/>
-            <Button Grid.Column="1" Grid.Row="1" x:Name="btnField12" FontSize="40" Click="btnField12_Click"/>
-            <Button Grid.Column="2" Grid.Row="1" x:Name="btnField22" FontSize="40" Click="btnField22_Click"/>
-            <Button Grid.Column="3" Grid.Row="1" x:Name="btnField32" FontSize="40" Click="btnField32_Click"/>
-            <Button Grid.Column="1" Grid.Row="2" x:Name="btnField13" FontSize="40" Click="btnField13_Click"/>
-            <Button Grid.Column="2" Grid.Row="2" x:Name="btnField23" FontSize="40" Click="btnField23_Click"/>
-            <Button Grid.Column="3" Grid.Row="2" x:Name="btnField33" FontSize="40" Click="btnField33_Click"/>
+            <Button Grid.Column="1" Grid.Row="0" Style="{StaticResource FieldButton}">
+                <Button.CommandParameter>
+                    <x:Array Type="sys:Object">
+                        <sys:Byte>0</sys:Byte>
+                        <sys:Byte>0</sys:Byte>
+                    </x:Array>
+                </Button.CommandParameter>
+            </Button>
+            <Button Grid.Column="2" Grid.Row="0" Style="{StaticResource FieldButton}">
+                <Button.CommandParameter>
+                    <x:Array Type="sys:Object">
+                        <sys:Byte>1</sys:Byte>
+                        <sys:Byte>0</sys:Byte>
+                    </x:Array>
+                </Button.CommandParameter>
+            </Button>
+            <Button Grid.Column="3" Grid.Row="0" Style="{StaticResource FieldButton}">
+                <Button.CommandParameter>
+                    <x:Array Type="sys:Object">
+                        <sys:Byte>2</sys:Byte>
+                        <sys:Byte>0</sys:Byte>
+                    </x:Array>
+                </Button.CommandParameter>
+            </Button>
+            <Button Grid.Column="1" Grid.Row="1" Style="{StaticResource FieldButton}">
+                <Button.CommandParameter>
+                    <x:Array Type="sys:Object">
+                        <sys:Byte>0</sys:Byte>
+                        <sys:Byte>1</sys:Byte>
+                    </x:Array>
+                </Button.CommandParameter>
+            </Button>
+            <Button Grid.Column="2" Grid.Row="1" Style="{StaticResource FieldButton}">
+                <Button.CommandParameter>
+                    <x:Array Type="sys:Object">
+                        <sys:Byte>1</sys:Byte>
+                        <sys:Byte>1</sys:Byte>
+                    </x:Array>
+                </Button.CommandParameter>
+            </Button>
+            <Button Grid.Column="3" Grid.Row="1" Style="{StaticResource FieldButton}">
+                <Button.CommandParameter>
+                    <x:Array Type="sys:Object">
+                        <sys:Byte>2</sys:Byte>
+                        <sys:Byte>1</sys:Byte>
+                    </x:Array>
+                </Button.CommandParameter>
+            </Button>
+            <Button Grid.Column="1" Grid.Row="2" Style="{StaticResource FieldButton}">
+                <Button.CommandParameter>
+                    <x:Array Type="sys:Object">
+                        <sys:Byte>0</sys:Byte>
+                        <sys:Byte>2</sys:Byte>
+                    </x:Array>
+                </Button.CommandParameter>
+            </Button>
+            <Button Grid.Column="2" Grid.Row="2" Style="{StaticResource FieldButton}">
+                <Button.CommandParameter>
+                    <x:Array Type="sys:Object">
+                        <sys:Byte>1</sys:Byte>
+                        <sys:Byte>2</sys:Byte>
+                    </x:Array>
+                </Button.CommandParameter>
+            </Button>
+            <Button Grid.Column="3" Grid.Row="2" Style="{StaticResource FieldButton}">
+                <Button.CommandParameter>
+                    <x:Array Type="sys:Object">
+                        <sys:Byte>2</sys:Byte>
+                        <sys:Byte>2</sys:Byte>
+                    </x:Array>
+                </Button.CommandParameter>
+            </Button>
         </Grid>
-        <Label Content="Willkommen zu Tic Tac Toe"
-               FontSize="25"
-               x:Name="lblMessage" />
+        <Label Content="{Binding Message}"
+               FontSize="25"/>
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="100" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="100" />
             </Grid.ColumnDefinitions>
-            <Button Content="Reset" Grid.Column="0" Width="40" Click="btnReset_Click" />
-            <CheckBox x:Name="cbPlay" Content="Music" Grid.Column="2" Click="cbPlay_Click"/>
+            <Button Content="Reset" Grid.Column="0" Width="40" Command="ApplicationCommands.New" />
+            <CheckBox x:Name="cbPlay" Content="Music" Grid.Column="2" IsChecked="{Binding Music}"/>
         </Grid>
     </StackPanel>
 </Window>
