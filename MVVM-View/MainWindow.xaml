@@ -17,8 +17,10 @@
         <StackPanel>
             <TextBox Text="{Binding Filter}"/>
             <Button Content="Clear" />
+            <Button Content="Add" Click="Add_Click" />
+            <Button Content="Modify" Click="Modify_Click"/>
         </StackPanel>
-        <ListView ItemsSource="{Binding EntryList}" Grid.Column="1" >
+        <ListView x:Name="lvUser" ItemsSource="{Binding EntryList}" Grid.Column="1" >
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 
 namespace MVVM_ViewModel
@@ -23,11 +24,24 @@ namespace MVVM_ViewModel
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public List<UserViewModel> EntryList { get; set; }
+
+        public ObservableCollection<UserViewModel> EntryList
+        {
+            get => entries;
+            set
+            {
+                if (entries != value)
+                {
+                    entries = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(EntryList)));
+                }
+            }
+        }
+        private ObservableCollection<UserViewModel> entries;
 
         public MainViewModel()
         {
-            EntryList = new List<UserViewModel>();
+            EntryList = new ObservableCollection<UserViewModel>();
             EntryList.Add(new UserViewModel { Name = "Hans", Salary = 55000.0 });
             EntryList.Add(new UserViewModel { Name = "Peter", Salary = 58000.0 });
             EntryList.Add(new UserViewModel { Name = "Hildegard", Salary = 62000.0 });
