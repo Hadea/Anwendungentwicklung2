@@ -12,7 +12,7 @@
             <Grid>
                 <Rectangle x:Name="rctBorder" Width="100" Height="100" Fill="{TemplateBinding Background}" />
                 <Rectangle Width="50" Height="50" Fill="{TemplateBinding Foreground}" />
-                <Label Content="{TemplateBinding Content}" HorizontalAlignment="Center"  VerticalAlignment="Center"/>
+                <Label Content="{TemplateBinding Content}" Foreground="{TemplateBinding Background}" HorizontalAlignment="Center"  VerticalAlignment="Center"/>
             </Grid>
             <ControlTemplate.Triggers>
                 <Trigger Property="IsMouseOver" Value="true">
@@ -20,6 +20,9 @@
                 </Trigger>
             </ControlTemplate.Triggers>
         </ControlTemplate>
+        <Style TargetType="Button">
+            <Setter Property="Template" Value="{StaticResource gridButton}" />
+        </Style>
     </Page.Resources>
     <StackPanel>
         <Button Height="22" Width="100" />
