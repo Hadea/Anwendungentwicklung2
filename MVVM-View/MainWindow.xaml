@@ -17,7 +17,7 @@
         <StackPanel>
             <TextBox Text="{Binding Filter}"/>
             <Button Content="Clear" />
-            <Button Content="Add" Click="Add_Click" />
+            <Button Content="Add" Command="{Binding AddUser}" />
             <Button Content="Modify" Click="Modify_Click"/>
         </StackPanel>
         <ListView x:Name="lvUser" ItemsSource="{Binding EntryList}" Grid.Column="1" >
