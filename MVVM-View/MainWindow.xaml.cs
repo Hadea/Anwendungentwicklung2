@@ -13,10 +13,5 @@ namespace MVVM_View
             InitializeComponent();
             DataContext = new MainViewModel();
         }
-
-        private void Modify_Click(object sender, RoutedEventArgs e)
-        {
-            (DataContext as MainViewModel).EntryList[lvUser.SelectedIndex].Name = "geändert";
-        }
     }
 }

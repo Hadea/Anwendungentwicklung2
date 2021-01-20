@@ -44,18 +44,21 @@ namespace MVVM_ViewModel
         {
             // verbinden der Commands mit den Properties
             AddUser = new AddUserCommand() {Parent = this };
+            ModifyUser = new ModifyUserCommand() {Parent = this };
 
-            EntryList = new ObservableCollection<UserViewModel>();
-
-            // beispieldaten füllen
-            EntryList.Add(new UserViewModel { Name = "Hans", Salary = 55000.0 });
-            EntryList.Add(new UserViewModel { Name = "Peter", Salary = 58000.0 });
-            EntryList.Add(new UserViewModel { Name = "Hildegard", Salary = 62000.0 });
+            EntryList = new ObservableCollection<UserViewModel>
+            {
+                // beispieldaten füllen
+                new UserViewModel { Name = "Hans", Salary = 55000.0 },
+                new UserViewModel { Name = "Peter", Salary = 58000.0 },
+                new UserViewModel { Name = "Hildegard", Salary = 62000.0 }
+            };
 
             Filter = "A";
         }
 
-        public ICommand AddUser { get; set; }
+        public ICommand AddUser { get; init; }
+        public ICommand ModifyUser { get; init; }
 
     }
 }

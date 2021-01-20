@@ -18,7 +18,7 @@
             <TextBox Text="{Binding Filter}"/>
             <Button Content="Clear" />
             <Button Content="Add" Command="{Binding AddUser}" />
-            <Button Content="Modify" Click="Modify_Click"/>
+            <Button Content="Modify" Command="{Binding ModifyUser}" CommandParameter="{Binding ElementName=lvUser, Path=SelectedIndex}"/>
         </StackPanel>
         <ListView x:Name="lvUser" ItemsSource="{Binding EntryList}" Grid.Column="1" >
             <ListView.ItemTemplate>
