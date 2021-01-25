@@ -8,7 +8,7 @@ namespace AddressBookLogic
 
         public override void Execute(object parameter)
         {
-            DataStorage.Save(_parent.Contacts.ToList());
+            _parent.logic.Save();
         }
     }
 }

@@ -40,7 +40,7 @@ namespace AddressBookLogic
                 if (_selectedContact != value)
                 {
                     _selectedContact = value;
-                    (Command_DeleteContact as DeleteContactCommand ).RaiseCanExecuteChanged();
+                    (Command_DeleteContact as DeleteContactCommand).RaiseCanExecuteChanged();
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SelectedContact)));
                 }
             }
@@ -49,7 +49,35 @@ namespace AddressBookLogic
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public string ContentFilter { get; set; }
+        public string ContentFilter
+        {
+            get => _contentFilter;
+            set
+            {
+                if (_contentFilter != value)
+                {
+                    _contentFilter = value;
+                    reloadContacts();
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Contacts)));
+                }
+            }
+        }
 
+        private void reloadContacts()
+        {
+            Contacts.Clear();
+            foreach (var item in logic.ContactList)
+                if (item.FirstName.Contains(_contentFilter) ||
+                    item.LastName.Contains(_contentFilter) ||
+                    item.HouseNo.Contains(_contentFilter) ||
+                    item.City.Contains(_contentFilter) ||
+                    item.State.Contains(_contentFilter) ||
+                    item.Street.Contains(_contentFilter) ||
+                    item.Country.Contains(_contentFilter))
+                    Contacts.Add(item);
+        }
+
+        private string _contentFilter;
+        public DataStorage logic = new();
     }
 }

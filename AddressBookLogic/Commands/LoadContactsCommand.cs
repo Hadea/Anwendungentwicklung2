@@ -6,7 +6,8 @@
 
         public override void Execute(object parameter)
         {
-            _parent.Contacts = new(DataStorage.Load());
+            _parent.logic.Load();
+            _parent.Contacts = new(_parent.logic.ContactList);
         }
     }
 }

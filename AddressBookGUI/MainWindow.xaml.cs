@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using AddressBookLogic;
+using System.Windows;
 
 namespace AddressBookGUI
 {

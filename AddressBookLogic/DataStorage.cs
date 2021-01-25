@@ -4,9 +4,14 @@ using System.Data.SQLite;
 
 namespace AddressBookLogic
 {
-    class DataStorage
+    public class DataStorage
     {
-        public static void Save(List<ContactViewModel> ContactsToStore)
+
+        private List<ContactViewModel> _contactList = new List<ContactViewModel>();
+        public List<ContactViewModel> ContactList { get => _contactList; }
+
+
+        public void Save()
         {
             SQLiteConnectionStringBuilder builder = new();
             builder.Version = 3;
@@ -28,7 +33,7 @@ namespace AddressBookLogic
 
                 command.CommandText = "delete from Contacts;"; // sqlite kennt kein truncate als extra befehl. delete ohne where wird automatisch zu tuncate
                 command.ExecuteNonQuery();
-                foreach (var item in ContactsToStore)
+                foreach (var item in ContactList)
                 {
                     command.CommandText = "insert into Contacts values (@firstname, @lastname, @street, @houseno, @zip, @city, @state, @country);";
                     command.Parameters.AddWithValue("firstname", item.FirstName);
@@ -44,13 +49,13 @@ namespace AddressBookLogic
             }
         }
 
-        public static List<ContactViewModel> Load()
+        public void Load()
         {
             SQLiteConnectionStringBuilder builder = new();
             builder.Version = 3;
             builder.DataSource = "Contacts.db";
 
-            List<ContactViewModel> resultList = new();
+            _contactList = new();
             using (SQLiteConnection con = new(builder.ToString()))
             {
                 con.Open();
@@ -63,7 +68,7 @@ namespace AddressBookLogic
                     command.CommandText = "select firstname, lastname, street, houseno, zip, city, state, country from contacts order by firstname;";
                     using var reader = command.ExecuteReader();
                     while (reader.Read())
-                        resultList.Add(new ContactViewModel(
+                        _contactList.Add(new ContactViewModel(
                             reader.GetString(0),
                             reader.GetString(1),
                             reader.GetString(2),
@@ -74,8 +79,6 @@ namespace AddressBookLogic
                             reader.GetString(7)));
                 }
             }
-
-            return resultList;
         }
     }
 }

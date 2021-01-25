@@ -6,14 +6,14 @@ namespace AddressBookLogic
     public class ContactViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
-        private string _firstName;
-        private string _lastName;
-        private string _street;
-        private string _houseNo;
-        private string _zip;
-        private string _city;
-        private string _state;
-        private string _country;
+        private string _firstName = string.Empty;
+        private string _lastName = string.Empty;
+        private string _street = string.Empty;
+        private string _houseNo = string.Empty;
+        private string _zip = string.Empty;
+        private string _city = string.Empty;
+        private string _state = string.Empty;
+        private string _country = string.Empty;
 
         public ContactViewModel()
         {
