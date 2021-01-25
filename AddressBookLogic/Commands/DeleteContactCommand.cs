@@ -12,6 +12,7 @@
         public override void Execute(object parameter)
         {
             _parent.Contacts.Remove(_parent.SelectedContact);
+            _parent.logic.ContactList.Remove(_parent.SelectedContact);
             _parent.SelectedContact = null;
         }
 
