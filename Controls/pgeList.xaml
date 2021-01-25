@@ -10,7 +10,11 @@
 
 
     <StackPanel>
+        <!-- ListView bindet sich nicht direkt auf eine Collection sondern auf ein ICollectionView was zum
+        sortieren und filtern zwischengeschaltet wird. Sortieren und Filtern werden dadurch nur visuelle 
+        effekte welche die originaldaten unangetastet lassen.-->
         <ListView ItemsSource="{Binding ItemsView}" Height="100" />
-        <TextBox Text="{Binding Filter, UpdateSourceTrigger=PropertyChanged}"/>
+        <!-- Textbox bindet sich auf ein Property welches bei jedem tastendruck den filter aktualisiert -->
+        <TextBox Text="{Binding TextFilter, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource}"/>
     </StackPanel>
 </Page>
