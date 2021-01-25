@@ -54,5 +54,10 @@ namespace Controls
         {
             frmContent.Navigate(new pgeSound());
         }
+
+        private void btnList_Click(object sender, RoutedEventArgs e)
+        {
+            frmContent.Navigate(new pgeList());
+        }
     }
 }

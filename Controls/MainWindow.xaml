@@ -21,6 +21,7 @@
             <Button Content="Bilder" Click="btnImage_Click" />
             <Button Content="Selektionen" Click="btnSelections_Click" />
             <Button Content="Sound" Click="btnSound_Click" />
+            <Button Content="Listen" Click="btnList_Click" />
         </StackPanel>
         
         <Frame x:Name="frmContent"
