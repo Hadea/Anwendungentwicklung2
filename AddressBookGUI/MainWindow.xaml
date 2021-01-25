@@ -62,7 +62,7 @@
             <TextBox x:Name="tbZIP" Text="{Binding ElementName=lvContacts, Path=SelectedItem.ZIP}"/>
             <Label Content="_State" Target="{Binding ElementName=tbState}"/>
             <TextBox x:Name="tbState" Text="{Binding ElementName=lvContacts, Path=SelectedItem.State}"/>
-            <Label Content="_State" Target="{Binding ElementName=tbCity}"/>
+            <Label Content="_City" Target="{Binding ElementName=tbCity}"/>
             <TextBox x:Name="tbCity" Text="{Binding ElementName=lvContacts, Path=SelectedItem.City}"/>
             <Label Content="_Country" Target="{Binding ElementName=tbCountry}" />
             <TextBox x:Name="tbCountry" Text="{Binding ElementName=lvContacts, Path=SelectedItem.Country}"/>

@@ -40,6 +40,7 @@ namespace AddressBookLogic
                 if (_selectedContact != value)
                 {
                     _selectedContact = value;
+                    (Command_DeleteContact as DeleteContactCommand ).RaiseCanExecuteChanged();
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SelectedContact)));
                 }
             }
