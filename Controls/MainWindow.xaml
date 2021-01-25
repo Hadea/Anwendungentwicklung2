@@ -22,6 +22,7 @@
             <Button Content="Selektionen" Click="btnSelections_Click" />
             <Button Content="Sound" Click="btnSound_Click" />
             <Button Content="Listen" Click="btnList_Click" />
+            <Button Content="Listen und Filter v2" Click="btnListFilter_Click" />
         </StackPanel>
         
         <Frame x:Name="frmContent"

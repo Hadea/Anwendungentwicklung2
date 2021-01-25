@@ -59,5 +59,10 @@ namespace Controls
         {
             frmContent.Navigate(new pgeList());
         }
+
+        private void btnListFilter_Click(object sender, RoutedEventArgs e)
+        {
+            frmContent.Navigate(new pgeListFilter());
+        }
     }
 }
