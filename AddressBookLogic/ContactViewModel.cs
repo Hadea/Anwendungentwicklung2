@@ -14,13 +14,11 @@ namespace AddressBookLogic
         private string _city = string.Empty;
         private string _state = string.Empty;
         private string _country = string.Empty;
+        private ObservableCollection<WebLinkViewModel> _webProfiles = new();
 
-        public ContactViewModel()
-        {
-            WebProfiles = new ObservableCollection<string>();
-        }
+        public ContactViewModel() { }
 
-        public ContactViewModel(string FirstName, string LastName, string Street, string HouseNo, string ZIP,string City, string State, string Country)
+        public ContactViewModel(string FirstName, string LastName, string Street, string HouseNo, string ZIP, string City, string State, string Country)
         {
             _firstName = FirstName;
             _lastName = LastName;
@@ -136,6 +134,17 @@ namespace AddressBookLogic
             }
         }
 
-        public ObservableCollection<string> WebProfiles { get; set; }
+        public ObservableCollection<WebLinkViewModel> WebProfiles
+        {
+            get => _webProfiles;
+            set
+            {
+                if (_webProfiles != value)
+                {
+                    _webProfiles = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(WebProfiles)));
+                }
+            }
+        }
     }
 }

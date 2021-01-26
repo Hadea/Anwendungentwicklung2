@@ -22,12 +22,14 @@ namespace AddressBookLogic
                 con.Open();
                 // check if new db-file or existing
                 var command = con.CreateCommand();
-                command.CommandText = "SELECT count(name) FROM sqlite_master WHERE type = 'table' AND name = 'Contacts'";
+                command.CommandText = "SELECT count(name) FROM sqlite_master WHERE type = 'table' AND name in ('Contacts', 'Links')";
                 var result = command.ExecuteScalar();
-                if ((Int64)result == 0)
+                if ((Int64)result != 2)
                 {
                     // tabelle neu aufbauen
                     command.CommandText = "create table Contacts (firstname varchar(50) not null, lastname varchar(50) not null, street  varchar(50) not null, houseno varchar(50) not null, zip  varchar(50) not null, city varchar(50) not null, state varchar(50) not null, country varchar(50) not null)";
+                    command.ExecuteNonQuery();
+                    command.CommandText = "create table Links (contactID int not null, description varchar(50), link varchar(150))";
                     command.ExecuteNonQuery();
                 }
 
@@ -45,6 +47,16 @@ namespace AddressBookLogic
                     command.Parameters.AddWithValue("state", item.State);
                     command.Parameters.AddWithValue("country", item.Country);
                     command.ExecuteNonQuery();
+                    command.CommandText = "select last_insert_rowid()";
+                    result = command.ExecuteScalar();
+                    command.CommandText = "insert into Links values (@ContactID, @Description, @Link)";
+                    foreach (var webProfile in item.WebProfiles)
+                    {
+                        command.Parameters.AddWithValue("@ContactID", result);
+                        command.Parameters.AddWithValue("@Description", webProfile.Description);
+                        command.Parameters.AddWithValue("@Link", webProfile.Link);
+                        command.ExecuteNonQuery();
+                    }
                 }
             }
         }
@@ -60,15 +72,18 @@ namespace AddressBookLogic
             {
                 con.Open();
                 var command = con.CreateCommand();
+                var commandLink = con.CreateCommand();
                 // check if new db-file or existing
                 command.CommandText = "SELECT count(name) FROM sqlite_master WHERE type = 'table' AND name = 'Contacts'";
                 var result = command.ExecuteScalar();
                 if ((Int64)result != 0)
                 {
-                    command.CommandText = "select firstname, lastname, street, houseno, zip, city, state, country from contacts order by firstname;";
+                    command.CommandText = "select firstname, lastname, street, houseno, zip, city, state, country, rowid from contacts order by firstname;";
+                    commandLink.CommandText = "select description, link from links where contactID = @contactID;";
                     using var reader = command.ExecuteReader();
                     while (reader.Read())
-                        _contactList.Add(new ContactViewModel(
+                    {
+                        var newContact = new ContactViewModel(
                             reader.GetString(0),
                             reader.GetString(1),
                             reader.GetString(2),
@@ -76,7 +91,24 @@ namespace AddressBookLogic
                             reader.GetString(4),
                             reader.GetString(5),
                             reader.GetString(6),
-                            reader.GetString(7)));
+                            reader.GetString(7));
+                        int contactID = reader.GetInt32(8);
+
+                        commandLink.Parameters.Clear();
+                        commandLink.Parameters.AddWithValue("@contactID", contactID);
+
+                        using (var linkReader = commandLink.ExecuteReader())
+                        {
+                            while (linkReader.Read())
+                            {
+                                newContact.WebProfiles.Add(new WebLinkViewModel { 
+                                    Description = linkReader.GetString(0), 
+                                    Link = linkReader.GetString(1) });
+                            }
+                        }
+                        _contactList.Add(newContact);
+
+                    }
                 }
             }
         }
