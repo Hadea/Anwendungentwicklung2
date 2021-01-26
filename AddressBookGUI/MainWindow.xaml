@@ -5,22 +5,29 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AddressBookGUI"
         xmlns:logic="clr-namespace:AddressBookLogic;assembly=AddressBookLogic"
+        xmlns:cef="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Kontakt Management Suite" Height="450" Width="800">
     <Window.DataContext>
         <logic:AddressBookViewModel/>
     </Window.DataContext>
+    <Window.Resources>
+        <Style TargetType="Label">
+            <Setter Property="Padding" Value="0"/>
+        </Style>
+    </Window.Resources>
     <Grid Margin="10">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="250" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="20" />
             <RowDefinition Height="50" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <ListView x:Name="lvContacts" ItemsSource="{Binding Contacts}" Grid.Row="1" SelectedItem="{Binding SelectedContact}" SelectionMode="Single">
+        <ListView x:Name="lvContacts" ItemsSource="{Binding Contacts}" Grid.Row="2" SelectedItem="{Binding SelectedContact}" SelectionMode="Single">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
@@ -30,12 +37,12 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Center">
+        <StackPanel Orientation="Horizontal" Grid.Row="3" HorizontalAlignment="Center">
             <Button Content="New" Command="{Binding Command_AddContact}" Width="80" Margin="0,0,5,0"/>
             <Button Content="Delete" Command="{Binding Command_DeleteContact}" Width="80"  Margin="0,0,5,0"/>
             <TextBox x:Name="tbFilter" Text="{Binding ContentFilter, UpdateSourceTrigger=PropertyChanged}" Width="80"/>
         </StackPanel>
-        <!--        <Grid Grid.Row="1" Grid.Column="1">
+        <Grid Grid.Row="2" Grid.Column="1" Margin="10,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="80"/>
                 <ColumnDefinition Width="80"/>
@@ -48,37 +55,40 @@
                 <RowDefinition Height="22" />
                 <RowDefinition Height="22" />
                 <RowDefinition Height="22" />
-            </Grid.RowDefinitions>-->
-        <StackPanel Grid.Row="1" Grid.Column="1">
-            <Label Content="_First Name" Target="{Binding ElementName=tbFirstName}" />
-            <TextBox x:Name="tbFirstName" Text="{Binding ElementName=lvContacts, Path=SelectedItem.FirstName}"/>
-            <Label Content="_Last Name" Target="{Binding ElementName=tbLastName}" />
-            <TextBox x:Name="tbLastName" Text="{Binding ElementName=lvContacts, Path=SelectedItem.LastName}"/>
-            <Label Content="_Street" Target="{Binding ElementName=tbStreet}"/>
-            <TextBox x:Name="tbStreet" Text="{Binding ElementName=lvContacts, Path=SelectedItem.Street}"/>
-            <Label Content="_House No." Target="{Binding ElementName=tbHouseNo}" />
-            <TextBox x:Name="tbHouseNo" Text="{Binding ElementName=lvContacts, Path=SelectedItem.HouseNo}"/>
-            <Label Content="_ZIP" Target="{Binding ElementName=tbZIP}" />
-            <TextBox x:Name="tbZIP" Text="{Binding ElementName=lvContacts, Path=SelectedItem.ZIP}"/>
-            <Label Content="_State" Target="{Binding ElementName=tbState}"/>
-            <TextBox x:Name="tbState" Text="{Binding ElementName=lvContacts, Path=SelectedItem.State}"/>
-            <Label Content="_City" Target="{Binding ElementName=tbCity}"/>
-            <TextBox x:Name="tbCity" Text="{Binding ElementName=lvContacts, Path=SelectedItem.City}"/>
-            <Label Content="_Country" Target="{Binding ElementName=tbCountry}" />
-            <TextBox x:Name="tbCountry" Text="{Binding ElementName=lvContacts, Path=SelectedItem.Country}"/>
-            <!--<Label Content="_Web Profiles" Target="{Binding ElementName=lbWebProfiles}" />-->
-            <!--<ListBox x:Name="lbWebProfiles" ItemsSource="{Binding SelectedContact}" />-->
-        </StackPanel>
+                <RowDefinition Height="22" />
+                <RowDefinition Height="22" />
+                <RowDefinition Height="120" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Label Grid.Row="0" Grid.Column="0" Content="_First Name" Target="{Binding ElementName=tbFirstName}" />
+            <TextBox Grid.Row="0" Grid.Column="1" x:Name="tbFirstName" Text="{Binding ElementName=lvContacts, Path=SelectedItem.FirstName}"/>
+            <Label Grid.Row="1" Grid.Column="0" Content="_Last Name" Target="{Binding ElementName=tbLastName}" />
+            <TextBox Grid.Row="1" Grid.Column="1" x:Name="tbLastName" Text="{Binding ElementName=lvContacts, Path=SelectedItem.LastName}"/>
+            <Label Grid.Row="2" Grid.Column="0" Content="_Street" Target="{Binding ElementName=tbStreet}"/>
+            <TextBox Grid.Row="2" Grid.Column="1" x:Name="tbStreet" Text="{Binding ElementName=lvContacts, Path=SelectedItem.Street}"/>
+            <Label Grid.Row="3" Grid.Column="0" Content="_House No." Target="{Binding ElementName=tbHouseNo}" />
+            <TextBox Grid.Row="3" Grid.Column="1" x:Name="tbHouseNo" Text="{Binding ElementName=lvContacts, Path=SelectedItem.HouseNo}"/>
+            <Label Grid.Row="6" Grid.Column="0" Content="_City" Target="{Binding ElementName=tbCity}"/>
+            <TextBox Grid.Row="6" Grid.Column="1" x:Name="tbCity" Text="{Binding ElementName=lvContacts, Path=SelectedItem.City}"/>
+            <Label Grid.Row="4" Grid.Column="0" Content="_ZIP" Target="{Binding ElementName=tbZIP}" />
+            <TextBox Grid.Row="4" Grid.Column="1" x:Name="tbZIP" Text="{Binding ElementName=lvContacts, Path=SelectedItem.ZIP}"/>
+            <Label Grid.Row="5" Grid.Column="0" Content="_State" Target="{Binding ElementName=tbState}"/>
+            <TextBox Grid.Row="5" Grid.Column="1" x:Name="tbState" Text="{Binding ElementName=lvContacts, Path=SelectedItem.State}"/>
+            <Label Grid.Row="7" Grid.Column="0" Content="_Country" Target="{Binding ElementName=tbCountry}" />
+            <TextBox Grid.Row="7" Grid.Column="1" x:Name="tbCountry" Text="{Binding ElementName=lvContacts, Path=SelectedItem.Country}"/>
+            <DataGrid Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2" ItemsSource="{Binding SelectedContact.WebProfiles}" />
+            <cef:ChromiumWebBrowser Grid.Row="0" Grid.Column="2"  Grid.RowSpan="10" Address="https://google.com" />
+        </Grid>
 
-        <!--
-    </Grid>
-        -->
         <Menu>
             <MenuItem Header="Datenbank">
                 <MenuItem Header="Load" Command="{Binding Command_LoadContacts}" />
                 <MenuItem Header="Save" Command="{Binding Command_SaveContacts}" />
                 <Separator/>
                 <MenuItem Header="Quit"/>
+            </MenuItem>
+            <MenuItem Header="Help">
+                <MenuItem Header="About" />
             </MenuItem>
         </Menu>
 

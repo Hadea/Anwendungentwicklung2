@@ -5,7 +5,12 @@
     <TargetFramework>net5.0-windows</TargetFramework>
     <RootNamespace>AddressBookGUI</RootNamespace>
     <UseWPF>true</UseWPF>
+    <CefSharpAnyCpuSupport>true</CefSharpAnyCpuSupport>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CefSharp.Wpf.NETCore" Version="87.1.131-pre" />
+  </ItemGroup>
 
 
   <ItemGroup>
