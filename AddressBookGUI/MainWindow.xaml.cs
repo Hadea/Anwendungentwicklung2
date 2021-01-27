@@ -1,5 +1,5 @@
-﻿using AddressBookLogic;
-using System.Windows;
+﻿using System.Windows;
+using System.Windows.Controls;
 
 namespace AddressBookGUI
 {
@@ -11,6 +11,12 @@ namespace AddressBookGUI
         public MainWindow()
         {
             InitializeComponent();
+#if DEBUG
+            // dieser code wird nur ausgeführt wenn wir im Debug-Modus von Visual Studio sind.
+            // im Realeasemode wird die Zeile nicht mitcompiliert.
+            mnuMainMenu.Items.Add(new MenuItem() { Header = "Cheats" });
+#endif
+
         }
 
     }

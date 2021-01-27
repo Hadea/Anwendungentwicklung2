@@ -102,7 +102,7 @@
             </DataGrid>
             <cef:ChromiumWebBrowser Grid.Row="0" Grid.Column="2"  Grid.RowSpan="10" Address="{Binding WebAddress}" />
         </Grid>
-        <Menu>
+        <Menu x:Name="mnuMainMenu">
             <MenuItem Header="Datenbank">
                 <MenuItem Header="Load" Command="{Binding Command_LoadContacts}" />
                 <MenuItem Header="Save" Command="{Binding Command_SaveContacts}" />
