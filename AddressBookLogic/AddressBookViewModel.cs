@@ -12,12 +12,19 @@ namespace AddressBookLogic
             Command_DeleteContact = new DeleteContactCommand(this);
             Command_LoadContacts = new LoadContactsCommand(this);
             Command_SaveContacts = new SaveContactsCommand(this);
+            Command_NavigateWeb = new NavigateWebCommand(this);
+            Command_AddLink = new AddLinkCommand(this);
+            Command_DeleteLink = new DeleteLinkCommand(this);
+
             Contacts = new();
         }
         public ICommand Command_AddContact { get; init; }
         public ICommand Command_DeleteContact { get; init; }
         public ICommand Command_LoadContacts { get; init; }
         public ICommand Command_SaveContacts { get; init; }
+        public ICommand Command_NavigateWeb { get; init; }
+        public ICommand Command_AddLink { get; init; }
+        public ICommand Command_DeleteLink { get; init; }
         public ObservableCollection<ContactViewModel> Contacts
         {
             get { return _contacts; }
@@ -62,6 +69,20 @@ namespace AddressBookLogic
                 }
             }
         }
+
+        private string _webAddress;
+
+        public string WebAddress
+        {
+            get => _webAddress; 
+            set
+            {
+                _webAddress = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(WebAddress)));
+            }
+        }
+
+
 
         private void reloadContacts()
         {

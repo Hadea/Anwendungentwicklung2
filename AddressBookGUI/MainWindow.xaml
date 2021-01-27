@@ -9,7 +9,7 @@
         mc:Ignorable="d"
         Title="Kontakt Management Suite" Height="450" Width="800">
     <Window.DataContext>
-        <logic:AddressBookViewModel/>
+        <logic:AddressBookViewModel x:Name="abvmData"/>
     </Window.DataContext>
     <Window.Resources>
         <Style TargetType="Label">
@@ -76,10 +76,32 @@
             <TextBox Grid.Row="5" Grid.Column="1" x:Name="tbState" Text="{Binding ElementName=lvContacts, Path=SelectedItem.State}"/>
             <Label Grid.Row="7" Grid.Column="0" Content="_Country" Target="{Binding ElementName=tbCountry}" />
             <TextBox Grid.Row="7" Grid.Column="1" x:Name="tbCountry" Text="{Binding ElementName=lvContacts, Path=SelectedItem.Country}"/>
-            <DataGrid Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2" ItemsSource="{Binding SelectedContact.WebProfiles}" />
-            <cef:ChromiumWebBrowser Grid.Row="0" Grid.Column="2"  Grid.RowSpan="10" Address="https://google.com" />
+            <DataGrid x:Name="grdLinks" Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2" ItemsSource="{Binding SelectedContact.WebProfiles}"
+                      AutoGenerateColumns="False"
+                      CanUserDeleteRows="False"
+                      CanUserAddRows="False"
+                      CanUserResizeRows="False"
+                      CanUserResizeColumns="True"
+                      CanUserReorderColumns="False"
+                      CanUserSortColumns="False"
+                      IsEnabled="True">
+                <DataGrid.InputBindings>
+                    <KeyBinding Key="Delete" Command="{Binding Command_DeleteLink}" CommandParameter="{Binding ElementName=grdLinks, Path=SelectedItem}" />
+                    <KeyBinding Key="Insert" Command="{Binding Command_AddLink}" />
+                </DataGrid.InputBindings>
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn Header="Go">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="go" Command="{Binding ElementName=abvmData, Path=Command_NavigateWeb}" CommandParameter="{Binding Link}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Header="Link" Binding="{Binding Link}" />
+                </DataGrid.Columns>
+            </DataGrid>
+            <cef:ChromiumWebBrowser Grid.Row="0" Grid.Column="2"  Grid.RowSpan="10" Address="{Binding WebAddress}" />
         </Grid>
-
         <Menu>
             <MenuItem Header="Datenbank">
                 <MenuItem Header="Load" Command="{Binding Command_LoadContacts}" />

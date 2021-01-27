@@ -4,21 +4,6 @@ namespace AddressBookLogic
 {
     public class WebLinkViewModel : INotifyPropertyChanged
     {
-
-        public string Description
-        {
-            get => _description;
-            set
-            {
-                if (_description != value)
-                {
-                    _description = value;
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Description)));
-                }
-            }
-        }
-        private string _description = string.Empty;
-
         public string Link
         {
             get { return _link; }

@@ -29,7 +29,7 @@ namespace AddressBookLogic
                     // tabelle neu aufbauen
                     command.CommandText = "create table Contacts (firstname varchar(50) not null, lastname varchar(50) not null, street  varchar(50) not null, houseno varchar(50) not null, zip  varchar(50) not null, city varchar(50) not null, state varchar(50) not null, country varchar(50) not null)";
                     command.ExecuteNonQuery();
-                    command.CommandText = "create table Links (contactID int not null, description varchar(50), link varchar(150))";
+                    command.CommandText = "create table Links (contactID int not null, link varchar(150))";
                     command.ExecuteNonQuery();
                 }
 
@@ -49,11 +49,10 @@ namespace AddressBookLogic
                     command.ExecuteNonQuery();
                     command.CommandText = "select last_insert_rowid()";
                     result = command.ExecuteScalar();
-                    command.CommandText = "insert into Links values (@ContactID, @Description, @Link)";
+                    command.CommandText = "insert into Links values (@ContactID, @Link)";
                     foreach (var webProfile in item.WebProfiles)
                     {
                         command.Parameters.AddWithValue("@ContactID", result);
-                        command.Parameters.AddWithValue("@Description", webProfile.Description);
                         command.Parameters.AddWithValue("@Link", webProfile.Link);
                         command.ExecuteNonQuery();
                     }
@@ -79,7 +78,7 @@ namespace AddressBookLogic
                 if ((Int64)result != 0)
                 {
                     command.CommandText = "select firstname, lastname, street, houseno, zip, city, state, country, rowid from contacts order by firstname;";
-                    commandLink.CommandText = "select description, link from links where contactID = @contactID;";
+                    commandLink.CommandText = "select link from links where contactID = @contactID;";
                     using var reader = command.ExecuteReader();
                     while (reader.Read())
                     {
@@ -98,16 +97,10 @@ namespace AddressBookLogic
                         commandLink.Parameters.AddWithValue("@contactID", contactID);
 
                         using (var linkReader = commandLink.ExecuteReader())
-                        {
                             while (linkReader.Read())
-                            {
-                                newContact.WebProfiles.Add(new WebLinkViewModel { 
-                                    Description = linkReader.GetString(0), 
-                                    Link = linkReader.GetString(1) });
-                            }
-                        }
+                                newContact.WebProfiles.Add(new WebLinkViewModel { Link = linkReader.GetString(0) });
+                        
                         _contactList.Add(newContact);
-
                     }
                 }
             }
