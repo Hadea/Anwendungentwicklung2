@@ -1,16 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace MultiThreading
@@ -25,32 +18,45 @@ namespace MultiThreading
         Task threadC;
         Task threadD;
 
-        volatile bool farbe = false;
 
         public pgeThreadingTask()
         {
             InitializeComponent();
         }
 
-        private async void btnStart_Click(object sender, RoutedEventArgs e)
+        private void btnStart_Click(object sender, RoutedEventArgs e)
         {
-            threadA = new Task(threadAStuff);
+            rectA.Fill = Brushes.Blue;
+            rectB.Fill = Brushes.Blue;
+            rectC.Fill = Brushes.Blue;
+            rectD.Fill = Brushes.Blue;
+            threadA = new Task(()=>threadAStuff(rectA));
+            threadB = new Task(()=>threadAStuff(rectB));
+            threadC = new Task(()=>threadAStuff(rectC));
+            threadD = new Task(()=>threadAStuff(rectD));
             threadA.Start();
-            rectB.Fill = Brushes.Red;
-
-            for (int counter = 0; counter < 60; counter++)
-            {
-                await Task.Delay(100);
-                rectA.Fill = farbe ? Brushes.Red : Brushes.Blue ;
-            }
+            threadB.Start();
+            threadC.Start();
+            threadD.Start();
         }
 
-        
 
-        private void threadAStuff()
+
+        private void threadAStuff(Rectangle Rect)
         {
-            Thread.Sleep(5000);
-            farbe = true;
+            Random rnd = new Random();
+            Thread.Sleep(rnd.Next(3500,6000));
+            // direkter zugriff auf Objekte aus dem UI-Thread funktionieren nicht. 
+            // nicht einmal wenn die gesetzten variablen explizit innerhalb des UI-Thread gelesen werden.
+            // Rect.Fill = Brushes.Red; 
+
+            // Mit Dispatcher.Invoke teilen wir dem UI-Thread mit das er eine methode ausführen soll.
+            Dispatcher.Invoke(() => Rect.Fill = Brushes.Red);
+        }
+
+        private void btnGetColor_Click(object sender, RoutedEventArgs e)
+        {
+            rectOut.Fill = rectA.Fill;
         }
     }
 }
