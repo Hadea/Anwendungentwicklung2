@@ -16,31 +16,41 @@ using System.Windows.Shapes;
 namespace MultiThreading
 {
     /// <summary>
-    /// Interaction logic for pgeThreadingAsync.xaml
+    /// Interaction logic for pgeThreadingTask.xaml
     /// </summary>
-    public partial class pgeThreadingAsync : Page
+    public partial class pgeThreadingTask : Page
     {
-        public pgeThreadingAsync()
+        Task threadA;
+        Task threadB;
+        Task threadC;
+        Task threadD;
+
+        volatile bool farbe = false;
+
+        public pgeThreadingTask()
         {
             InitializeComponent();
         }
 
         private async void btnStart_Click(object sender, RoutedEventArgs e)
         {
-            tblAusgabe.Text = "running";
-            tblAusgabe.Text = await Task.Run(() => Wait5SecForString());
-            tblAusgabe.Text = await Task.Run(() => Wait5SecForString2());
+            threadA = new Task(threadAStuff);
+            threadA.Start();
+            rectB.Fill = Brushes.Red;
+
+            for (int counter = 0; counter < 60; counter++)
+            {
+                await Task.Delay(100);
+                rectA.Fill = farbe ? Brushes.Red : Brushes.Blue ;
+            }
         }
 
-        public static string Wait5SecForString()
+        
+
+        private void threadAStuff()
         {
             Thread.Sleep(5000);
-            return "Done";
-        }
-        public static string Wait5SecForString2()
-        {
-            Thread.Sleep(5000);
-            return "Done 2";
+            farbe = true;
         }
     }
 }

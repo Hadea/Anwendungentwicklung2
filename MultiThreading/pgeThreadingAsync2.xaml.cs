@@ -16,20 +16,26 @@ using System.Windows.Shapes;
 namespace MultiThreading
 {
     /// <summary>
-    /// Interaction logic for pgeThreadingAsync.xaml
+    /// Interaction logic for pgeThreadingAsync2.xaml
     /// </summary>
-    public partial class pgeThreadingAsync : Page
+    public partial class pgeThreadingAsync2 : Page
     {
-        public pgeThreadingAsync()
+        public pgeThreadingAsync2()
         {
             InitializeComponent();
         }
 
-        private async void btnStart_Click(object sender, RoutedEventArgs e)
+        private async void btnAStart_Click(object sender, RoutedEventArgs e)
         {
-            tblAusgabe.Text = "running";
-            tblAusgabe.Text = await Task.Run(() => Wait5SecForString());
-            tblAusgabe.Text = await Task.Run(() => Wait5SecForString2());
+            tblAusgabeA.Text = "running";
+            tblAusgabeA.Text = await Task.Run(() => Wait5SecForString());
+            tblAusgabeA.Text = await Task.Run(() => Wait5SecForString2());
+        }
+        private async void btnBStart_Click(object sender, RoutedEventArgs e)
+        {
+            tblAusgabeB.Text = "running";
+            tblAusgabeB.Text = await Task.Run(() => Wait5SecForString());
+            tblAusgabeB.Text = await Task.Run(() => Wait5SecForString2());
         }
 
         public static string Wait5SecForString()

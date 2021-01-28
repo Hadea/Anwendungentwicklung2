@@ -34,5 +34,14 @@ namespace MultiThreading
         {
             frmContent.Navigate(new pgeThreadingAsync());
         }
+
+        private void btnThreadingAsync2_Click(object sender, RoutedEventArgs e)
+        {
+            frmContent.Navigate(new pgeThreadingAsync2());
+        }
+        private void btnThreadingTask_Click(object sender, RoutedEventArgs e)
+        {
+            frmContent.Navigate(new pgeThreadingTask());
+        }
     }
 }
