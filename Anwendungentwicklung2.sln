@@ -42,9 +42,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaschenrechnerView", "Tasch
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Login", "Login\Login.csproj", "{F014A9BD-6166-4465-BA9A-EB908C075905}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AddressBookLogic", "AddressBookLogic\AddressBookLogic.csproj", "{9497B047-B958-4572-83B9-C413108383EA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AddressBookLogic", "AddressBookLogic\AddressBookLogic.csproj", "{9497B047-B958-4572-83B9-C413108383EA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AddressBookGUI", "AddressBookGUI\AddressBookGUI.csproj", "{1045AF01-6461-495C-B974-DB24FB048116}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AddressBookGUI", "AddressBookGUI\AddressBookGUI.csproj", "{1045AF01-6461-495C-B974-DB24FB048116}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiThreading", "MultiThreading\MultiThreading.csproj", "{4A6A00A7-1594-4561-8007-EE8A7264E964}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -128,6 +130,10 @@ Global
 		{1045AF01-6461-495C-B974-DB24FB048116}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1045AF01-6461-495C-B974-DB24FB048116}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1045AF01-6461-495C-B974-DB24FB048116}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A6A00A7-1594-4561-8007-EE8A7264E964}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A6A00A7-1594-4561-8007-EE8A7264E964}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A6A00A7-1594-4561-8007-EE8A7264E964}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A6A00A7-1594-4561-8007-EE8A7264E964}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
