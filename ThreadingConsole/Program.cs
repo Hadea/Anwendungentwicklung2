@@ -12,8 +12,15 @@ namespace ThreadingConsole
             Console.ReadLine();
 
             var t = new Task<int>[4];
-            for (int counter = 0; counter < t.Length; counter++)
-                t[counter] = new Task<int>(() => { return countUp("T" + counter.ToString()); });
+
+            //t[0] = new Task<int>(() => { return countUpV2("T0", 0); });
+            //t[1] = new Task<int>(() => { return countUpV2("T1", 0); });
+            //t[2] = new Task<int>(() => { return countUpV2("T2", 0); });
+            //t[3] = new Task<int>(() => { return countUpV2("T3", 0); });
+            t[0] = new Task<int>(() => { return countUp("T0"); });
+            t[1] = new Task<int>(() => { return countUp("T1"); });
+            t[2] = new Task<int>(() => { return countUp("T2"); });
+            t[3] = new Task<int>(() => { return countUp("T3"); });
 
             foreach (var item in t) item.Start();
 
@@ -48,7 +55,27 @@ namespace ThreadingConsole
                     counter += 1;
                 }
             }
-            Console.WriteLine($"Thread: {name}, intern: {eigenerCounter}");
+            Console.WriteLine($"Thread: {name}, intern: {eigenerCounter}, vergangene Zeit: {(DateTime.Now - startTime).TotalSeconds}");
+            return eigenerCounter;
+        }
+
+        static int countUpV2(string name, int refreshspeed)
+        {
+            int eigenerCounter = 0;
+            DateTime startTime = DateTime.Now;
+            int zwischenCounter = 0;
+            while ((DateTime.Now - startTime).TotalSeconds < 5)
+            {
+                eigenerCounter += 1;
+                zwischenCounter += 1;
+                if (zwischenCounter > refreshspeed) lock (sync)
+                    {
+                        counter += zwischenCounter;
+                        zwischenCounter = 0;
+                    }
+            }
+            counter += zwischenCounter;
+            Console.WriteLine($"Thread: {name}, intern: {eigenerCounter}, vergangene Zeit: {(DateTime.Now - startTime).TotalSeconds}");
             return eigenerCounter;
         }
     }
