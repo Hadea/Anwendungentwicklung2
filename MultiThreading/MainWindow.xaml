@@ -13,7 +13,7 @@
         </Grid.ColumnDefinitions>
         <StackPanel>
             <Button Height="22" Content="Ohne" Click="btnWithout_Click"/>
-            <Button Height="22"/>
+            <Button Height="22" Content="Async" Click="btnThreadingAsync_Click"/>
             <Button Height="22"/>
             <Button Height="22"/>
         </StackPanel>

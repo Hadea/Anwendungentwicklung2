@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -15,25 +16,25 @@ using System.Windows.Shapes;
 namespace MultiThreading
 {
     /// <summary>
-    /// Interaction logic for pgeWithoutThreading.xaml
+    /// Interaction logic for pgeThreadingAsync.xaml
     /// </summary>
-    public partial class pgeWithoutThreading : Page
+    public partial class pgeThreadingAsync : Page
     {
-        public pgeWithoutThreading()
+        public pgeThreadingAsync()
         {
             InitializeComponent();
         }
 
-        private void btnStart_Click(object sender, RoutedEventArgs e)
+        private async void btnStart_Click(object sender, RoutedEventArgs e)
         {
             tblAusgabe.Text = "running";
-            tblAusgabe.Text = Wait5SecForString();
+            tblAusgabe.Text = await Task.Run(() => Wait5SecForString());
         }
 
         public static string Wait5SecForString()
         {
             Thread.Sleep(5000);
-            return "done";
+            return "Done";
         }
     }
 }
