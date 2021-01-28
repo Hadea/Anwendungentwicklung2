@@ -5,6 +5,7 @@ namespace ThreadingConsole
 {
     class Program
     {
+        static Object sync = new Object();
         static void Main()
         {
             Console.WriteLine($"Willkommen zum Threading-Spielplatz. Sie haben {Environment.ProcessorCount} Prozessoren. Loslogen mit Enter");
@@ -17,7 +18,7 @@ namespace ThreadingConsole
             foreach (var item in t) item.Start();
 
             DateTime startTime = DateTime.Now;
-            while ((DateTime.Now - startTime).TotalSeconds < 2)
+            while ((DateTime.Now - startTime).TotalSeconds < 6)
             {
                 Task.Delay(250).Wait();
                 Console.WriteLine("Aktueller Zählerstand: {0}", counter);
@@ -41,8 +42,11 @@ namespace ThreadingConsole
             DateTime startTime = DateTime.Now;
             while ((DateTime.Now - startTime).TotalSeconds < 5)
             {
-                eigenerCounter += 1;
-                counter += 1;
+                lock (sync)
+                {
+                    eigenerCounter += 1;
+                    counter += 1;
+                }
             }
             Console.WriteLine($"Thread: {name}, intern: {eigenerCounter}");
             return eigenerCounter;
