@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -20,35 +21,41 @@ namespace MultiThreading
     public partial class pgeThreadingTaskCancel : Page
     {
         Task<int> worker;
+
+        CancellationTokenSource cancelTokenSource;
         public pgeThreadingTaskCancel()
         {
             InitializeComponent();
         }
 
-        private void btnStart_Click(object sender, RoutedEventArgs e)
+        private async void btnStart_Click(object sender, RoutedEventArgs e)
         {
-            keepRunning = true;
             rectOut.Fill = Brushes.Blue;
-            worker = new Task<int>(waitAndColor);
+            cancelTokenSource = new CancellationTokenSource();
+            worker = new Task<int>(() => { return waitAndColor(cancelTokenSource.Token); }, cancelTokenSource.Token);
             worker.Start();
+            await Task.WhenAll(worker);
+            rectOut.Fill = Brushes.Green;
+            tblOut.Text = worker.Result.ToString();
         }
 
         private void btnStop_Click(object sender, RoutedEventArgs e)
         {
-            keepRunning = false;
+            cancelTokenSource.Cancel();
         }
 
-        bool keepRunning = true;
-
-        private int waitAndColor()
+        private int waitAndColor(CancellationToken CancelToken)
         {
             int counter = 0;
-            while (counter < 1000000000 && keepRunning)
+            while (counter < 1000000000)
             {
                 counter++;
+
+                if (counter % 1000000 == 0 && !CancelToken.IsCancellationRequested)
+                {
+                    CancelToken.ThrowIfCancellationRequested();
+                }
             }
-            Dispatcher.Invoke(() => rectOut.Fill = Brushes.Green);
-            Dispatcher.Invoke(() => tblOut.Text = counter.ToString());
             return counter;
         }
     }

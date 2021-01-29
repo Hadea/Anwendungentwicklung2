@@ -22,8 +22,7 @@
             <RowDefinition Height="25" />
         </Grid.RowDefinitions>
         <Button Grid.Column="1" Grid.Row="0" Content="Start" Click="btnStart_Click" />
-        <Button Grid.Column="2" Grid.Row="0" Content="Stop" Click="btnStop_Click" />
         <TextBlock x:Name="tbOut" Grid.Column="3" Grid.Row="0" />
-        <ProgressBar x:Name="pbProgress" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="3"/>
+        <ProgressBar x:Name="pbProgress" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="3" Maximum="1000"/>
     </Grid>
 </Page>

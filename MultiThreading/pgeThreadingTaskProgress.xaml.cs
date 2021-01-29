@@ -1,17 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace MultiThreading
 {
@@ -23,38 +14,36 @@ namespace MultiThreading
         public pgeThreadingTaskProgress()
         {
             InitializeComponent();
+            progressCom = new Progress<int>(refreshProgressBar);
         }
 
         Task<int> worker;
-
-        CancellationTokenSource cancelTokenSource;
-
+        Progress<int> progressCom;
         private async void btnStart_Click(object sender, RoutedEventArgs e)
         {
             tbOut.Background = Brushes.Blue;
-            cancelTokenSource = new CancellationTokenSource();
-            worker = new Task<int>(() => { return waitAndColor(cancelTokenSource.Token); }, cancelTokenSource.Token);
+            refreshProgressBar(0);
+            worker = new Task<int>(() => { return waitAndColor(progressCom); });
             worker.Start();
             await Task.WhenAll(worker);
             tbOut.Background = Brushes.Green;
             tbOut.Text = worker.Result.ToString();
         }
 
-        private void btnStop_Click(object sender, RoutedEventArgs e)
+        private void refreshProgressBar(int reportedProgress)
         {
-            cancelTokenSource.Cancel();
+            pbProgress.Value = reportedProgress;
         }
 
-        private int waitAndColor(CancellationToken CancelToken, IProgress<int> progress)
+        private int waitAndColor(IProgress<int> progress)
         {
             int counter = 0;
-            while (counter < 1000000000)
+            while (counter < 1000_000_000)
             {
                 counter++;
-                progress.Report(counter / 100000);
-                if (counter % 1000000 == 0 && !CancelToken.IsCancellationRequested)
+                if (counter % 1000_000 == 0)
                 {
-                    CancelToken.ThrowIfCancellationRequested();
+                    progress.Report(counter / 1000_000);
                 }
             }
             return counter;

@@ -51,7 +51,7 @@ namespace MultiThreading
 
         private void btnThreadingTaskProgress_Click(object sender, RoutedEventArgs e)
         {
-            frmContent.Navigate(new pgeThreadeingTaskProgress());
+            frmContent.Navigate(new pgeThreadingTaskProgress());
         }
     }
 }
