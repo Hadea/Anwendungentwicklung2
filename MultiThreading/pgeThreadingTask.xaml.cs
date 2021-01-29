@@ -40,8 +40,6 @@ namespace MultiThreading
             threadD.Start();
         }
 
-
-
         private void threadAStuff(Rectangle Rect)
         {
             Random rnd = new Random();

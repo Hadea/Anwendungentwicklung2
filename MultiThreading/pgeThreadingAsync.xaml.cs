@@ -1,17 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace MultiThreading
 {
@@ -28,18 +17,18 @@ namespace MultiThreading
         private async void btnStart_Click(object sender, RoutedEventArgs e)
         {
             tblAusgabe.Text = "running";
-            tblAusgabe.Text = await Task.Run(() => Wait5SecForString());
-            tblAusgabe.Text = await Task.Run(() => Wait5SecForString2());
+            tblAusgabe.Text = await Wait5SecForString();
+            tblAusgabe.Text = await Wait5SecForString2();
         }
 
-        public static string Wait5SecForString()
+        public static async Task<string> Wait5SecForString()
         {
-            Thread.Sleep(5000);
+            await Task.Delay(5000);
             return "Done";
         }
-        public static string Wait5SecForString2()
+        public static async Task<string> Wait5SecForString2()
         {
-            Thread.Sleep(5000);
+            await Task.Delay(5000);
             return "Done 2";
         }
     }
