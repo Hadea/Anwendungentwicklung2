@@ -17,6 +17,7 @@
             <Button Height="22" Content="Async2" Click="btnThreadingAsync2_Click"/>
             <Button Height="22" Content="Task" Click="btnThreadingTask_Click"/>
             <Button Height="22" Content="Task abbrechen" Click="btnThreadingTaskCancel_Click"/>
+            <Button Height="22" Content="Task fortschritt" Click="btnThreadingTaskProgress_Click"/>
         </StackPanel>
         <Frame x:Name="frmContent" NavigationUIVisibility="Hidden" Grid.Column="1"/>
     </Grid>
