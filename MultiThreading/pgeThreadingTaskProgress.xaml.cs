@@ -18,7 +18,7 @@ namespace MultiThreading
         }
 
         Task<int> worker;
-        Progress<int> progressCom;
+        readonly Progress<int> progressCom;
         private async void btnStart_Click(object sender, RoutedEventArgs e)
         {
             tbOut.Background = Brushes.Blue;

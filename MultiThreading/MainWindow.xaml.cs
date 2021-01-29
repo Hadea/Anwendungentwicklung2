@@ -20,9 +20,13 @@ namespace MultiThreading
     /// </summary>
     public partial class MainWindow : Window
     {
+        public ICommand Command_NavigatePage { get; init; }
+
         public MainWindow()
         {
             InitializeComponent();
+            DataContext = this;
+            Command_NavigatePage = new LoadPageCommand(this);
         }
 
         private void btnWithout_Click(object sender, RoutedEventArgs e)
@@ -52,6 +56,11 @@ namespace MultiThreading
         private void btnThreadingTaskProgress_Click(object sender, RoutedEventArgs e)
         {
             frmContent.Navigate(new pgeThreadingTaskProgress());
+        }
+
+        private void btnThreadingProgressCancel_Click(object sender, RoutedEventArgs e)
+        {
+            frmContent.Navigate(new pgeThreadingProgressCancel());
         }
     }
 }

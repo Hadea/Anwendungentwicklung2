@@ -11,13 +11,17 @@
             <ColumnDefinition Width="220"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
         <StackPanel>
-            <Button Height="22" Content="Ohne" Click="btnWithout_Click"/>
-            <Button Height="22" Content="Async" Click="btnThreadingAsync_Click"/>
-            <Button Height="22" Content="Async2" Click="btnThreadingAsync2_Click"/>
-            <Button Height="22" Content="Task" Click="btnThreadingTask_Click"/>
-            <Button Height="22" Content="Task abbrechen" Click="btnThreadingTaskCancel_Click"/>
-            <Button Height="22" Content="Task fortschritt" Click="btnThreadingTaskProgress_Click"/>
+            <Button Height="22" Content="Ohne" Command="{Binding Command_NavigatePage}" CommandParameter="MultiThreading.pgeWithoutThreading"/>
+            <Button Height="22" Content="Async" Command="{Binding Command_NavigatePage}" CommandParameter="MultiThreading.pgeThreadingAsync"/>
+            <Button Height="22" Content="Async2" Command="{Binding Command_NavigatePage}" CommandParameter="MultiThreading.pgeThreadingAsync2"/>
+            <Button Height="22" Content="Task" Command="{Binding Command_NavigatePage}" CommandParameter="MultiThreading.pgeThreadingTask"/>
+            <Button Height="22" Content="Task abbrechen" Command="{Binding Command_NavigatePage}" CommandParameter="MultiThreading.pgeThreadingTaskCancel"/>
+            <Button Height="22" Content="Task Fortschritt" Command="{Binding Command_NavigatePage}" CommandParameter="MultiThreading.pgeThreadingTaskProgress"/>
+            <Button Height="22" Content="Übung Fortschritt und Abbruch" Command="{Binding Command_NavigatePage}" CommandParameter="MultiThreading.pgeThreadingProgressCancel"/>
         </StackPanel>
         <Frame x:Name="frmContent" NavigationUIVisibility="Hidden" Grid.Column="1"/>
     </Grid>
