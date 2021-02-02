@@ -69,14 +69,11 @@ namespace MultiThreading
             }
 
 
-            byte[] dataArray = await Task.Run(() => createArray(100_000_000, progressReporters[freeProgressID++].Progress, cancelSource.Token), cancelSource.Token);
+            byte[] dataArray = await Task.Run(() => createArray(1_000_000_000, progressReporters[freeProgressID++].Progress, cancelSource.Token), cancelSource.Token);
             if (cancelSource.IsCancellationRequested) return;
 
             int segmentLength = dataArray.Length / threadCount;
             int segmentLengthFirst = dataArray.Length - segmentLength * threadCount + segmentLength;
-
-            segmentLength = 20000000;
-            segmentLengthFirst = 20000000;
 
             sumTasks.Add(new Task<long>(() => sumArray(
                     new ThreadDataContainer { ThreadID = 0,
@@ -86,22 +83,23 @@ namespace MultiThreading
                 cancelSource.Token));
             for (int count = 0; count < threadCount-1; count++)
             {
-                spProgress.Children.Add(new ProgressBar());
-                sumTasks.Add(new Task<long>(() => sumArray(new ThreadDataContainer { ThreadID = count + 1,
-                    DataArray = new ArraySegment<byte>(dataArray, segmentLengthFirst + segmentLength * count, segmentLength) }, progressReporters[freeProgressID++].Progress, cancelSource.Token), cancelSource.Token));
+                ThreadDataContainer data;
+                data.DataArray = new ArraySegment<byte>(dataArray, segmentLengthFirst + segmentLength * count, segmentLength);
+                data.ThreadID = count + 1;
+                sumTasks.Add(new Task<long>(() => sumArray(data, progressReporters[freeProgressID++].Progress, cancelSource.Token), cancelSource.Token));
             }
 
-            spProgress.Children.Add(new ProgressBar());
             avgTasks.Add(new Task<byte>(() => avgArray(new ThreadDataContainer { ThreadID = threadCount + 1, DataArray = new ArraySegment<byte>(dataArray, 0, segmentLengthFirst) }, progressReporters[freeProgressID++].Progress, cancelSource.Token), cancelSource.Token));
             for (int count = 0; count < threadCount-1; count++)
             {
-                spProgress.Children.Add(new ProgressBar());
-                avgTasks.Add(new Task<byte>(() => avgArray(new ThreadDataContainer { ThreadID = count + threadCount + 1, DataArray = new ArraySegment<byte>(dataArray, segmentLengthFirst + segmentLength * count, segmentLength) }, progressReporters[freeProgressID++].Progress, cancelSource.Token), cancelSource.Token));
+                ThreadDataContainer data;
+                data.DataArray = new ArraySegment<byte>(dataArray, segmentLengthFirst + segmentLength * count, segmentLength);
+                data.ThreadID = count + 1;
+                avgTasks.Add(new Task<byte>(() => avgArray(data, progressReporters[freeProgressID++].Progress, cancelSource.Token), cancelSource.Token));
             }
 
             foreach (var item in sumTasks) item.Start();
             foreach (var item in avgTasks) item.Start();
-
 
             await Task.WhenAll(sumTasks);
             await Task.WhenAll(avgTasks);
