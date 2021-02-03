@@ -13,7 +13,7 @@ namespace MultiThreading
         }
         public bool CanExecute(object parameter)
         {
-            return !_parent.IsRunning;
+            return _parent.IsNotRunning;
         }
 
         public void Execute(object parameter)

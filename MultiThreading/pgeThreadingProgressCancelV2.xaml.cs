@@ -71,6 +71,7 @@ namespace MultiThreading
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsNotRunning)));
                     (Command_Start as StartCommand).RaiseCanExecuteChanged();
                     (Command_Stop as StopCommand).RaiseCanExecuteChanged();
+                    (Command_Clear as ClearCommand).RaiseCanExecuteChanged();
                 }
             }
         }
@@ -86,6 +87,7 @@ namespace MultiThreading
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsRunning)));
                     (Command_Start as StartCommand).RaiseCanExecuteChanged();
                     (Command_Stop as StopCommand).RaiseCanExecuteChanged();
+                    (Command_Stop as ClearCommand).RaiseCanExecuteChanged();
                 }
             }
         }
@@ -113,6 +115,7 @@ namespace MultiThreading
 
         public async void StartUserSplit()
         {
+            IsRunning = true;
             Clear();
             // leeres array erstellen
             byte[] dataArray = new byte[SelectedWorkload];
@@ -146,6 +149,7 @@ namespace MultiThreading
                 creationReporter.Add(chunk);
             }
 
+            spProgress.Children.Add(new Border { Width = spProgress.ActualWidth - 5, Height=2 });
             List<ProgressReporter> WorkReporter = new(WorkloadSplit*2);
 
             for (int i = 0; i < 2; i++)
@@ -181,6 +185,7 @@ namespace MultiThreading
         }
         public async void StartThreadSplit()
         {
+            IsRunning = true;
             // UI vorbereiten
             Clear();
             int freeProgressID = 0;

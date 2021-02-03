@@ -21,6 +21,7 @@ namespace MultiThreading
             _parent.Clear();
         }
 
-        public void RaiseCanExecute() => CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+        public void RaiseCanExecuteChanged() => CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+
     }
 }

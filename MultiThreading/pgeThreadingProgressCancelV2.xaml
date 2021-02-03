@@ -28,7 +28,7 @@
             <GroupBox Header="Allgemein">
                 <StackPanel Orientation="Horizontal">
                     <Button Content="Stop" Command="{Binding Command_Stop}" Width="100" />
-                    <ComboBox ItemsSource="{Binding WorkloadList}" SelectedValue="{Binding SelectedWorkload}" Width="100" />
+                    <ComboBox ItemsSource="{Binding WorkloadList}" SelectedValue="{Binding SelectedWorkload}" Width="100" IsEnabled="{Binding IsNotRunning, Mode=OneWay}" />
                     <Button Content="Clear" Command="{Binding Command_Clear}" Width="100" />
                 </StackPanel>
             </GroupBox>
@@ -44,20 +44,20 @@
                     </Grid.RowDefinitions>
                     <Button Content="Start" Command="{Binding Command_Start}" CommandParameter="SplitByThread" Grid.Row="1" Grid.Column="1" />
                     <Slider x:Name="sldThreads" MinWidth="100" TickFrequency="1" TickPlacement="BottomRight"
-                            Minimum="1" Maximum="16" Value="{Binding ThreadCount}" Grid.Row="0" />
+                            Minimum="1" Maximum="16" Value="{Binding ThreadCount}" Grid.Row="0" IsEnabled="{Binding IsNotRunning, Mode=OneWay}" />
                     <TextBlock MinWidth="50" Text="{Binding ElementName=sldThreads, Path=Value, StringFormat=Threads: {0}}"
-                               Grid.Row="0" Grid.Column="1" TextAlignment="Left"/>
+                               Grid.Row="0" Grid.Column="1" TextAlignment="Left" IsEnabled="{Binding IsNotRunning, Mode=OneWay}"/>
                 </Grid>
             </GroupBox>
             <GroupBox Header="Teilen der Aufgabe in feste Abschnitte">
                 <StackPanel Orientation="Horizontal">
-                    <Label Width="100" Content="Anzahl der _Teile" Target="{Binding ElementName=tbWorkloadSplit}" />
+                    <Label Width="100" Content="Anzahl der _Teile" Target="{Binding ElementName=tbWorkloadSplit, Mode=OneWay}" />
                     <TextBox Width="100" x:Name="tbWorkloadSplit" Text="{Binding WorkloadSplit}" />
                     <Button Width="100" Content="Start" Command="{Binding Command_Start}" CommandParameter="SplitByUser" />
                 </StackPanel>
             </GroupBox>
-            <TextBlock Width="100" Text="{Binding Path=Sum, StringFormat=Summe : {0}}"/>
-            <TextBlock Width="100" Text="{Binding Path=Avg, StringFormat=Durchschnitt : {0}}"/>
+            <TextBlock Width="100" Text="{Binding Path=Sum, StringFormat=Summe : {0}, Mode=OneWay}"/>
+            <TextBlock Width="100" Text="{Binding Path=Avg, StringFormat=Durchschnitt : {0}, Mode=OneWay}"/>
             <WrapPanel Orientation="Horizontal" x:Name="spProgress"/>
         </StackPanel>
     </ScrollViewer>
