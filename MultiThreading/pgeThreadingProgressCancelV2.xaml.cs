@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -13,18 +14,17 @@ namespace MultiThreading
     /// </summary>
     public partial class pgeThreadingProgressCancelV2 : Page, INotifyPropertyChanged
     {
-        CancellationTokenSource cancelSource;
-        int threadCount = 4;
+        private CancellationTokenSource cancelSource;
+        public event PropertyChangedEventHandler PropertyChanged;
+
+
         public ICommand Command_Start { get; init; }
-
-        internal void StopThreads()
-        {
-            cancelSource.Cancel();
-        }
-
         public ICommand Command_Stop { get; init; }
+        public ICommand Command_Clear { get; init; }
 
-        private long _sum = 0;
+
+        public List<int> WorkloadList { get; set; } = new List<int> { 1_000_000_000, 500_000_000, 100_000, 1_000 };
+        public int SelectedWorkload { get; set; } = 500_000_000;
 
         public long Sum
         {
@@ -39,9 +39,8 @@ namespace MultiThreading
             }
         }
 
-        private byte _avg = 0;
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        private long _sum = 0;
 
         public byte Avg
         {
@@ -55,8 +54,11 @@ namespace MultiThreading
                 }
             }
         }
+        private byte _avg = 0;
 
         public int ThreadCount { get => threadCount; set => threadCount = value; }
+        private int threadCount = 2;
+
         public bool IsRunning
         {
             get => _isRunning;
@@ -66,11 +68,38 @@ namespace MultiThreading
                 {
                     _isRunning = value;
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsRunning)));
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsNotRunning)));
                     (Command_Start as StartCommand).RaiseCanExecuteChanged();
+                    (Command_Stop as StopCommand).RaiseCanExecuteChanged();
+                }
+            }
+        }
+        public bool IsNotRunning
+        {
+            get => !_isRunning;
+            set
+            {
+                if (_isRunning == value)
+                {
+                    _isRunning = !value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsNotRunning)));
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsRunning)));
+                    (Command_Start as StartCommand).RaiseCanExecuteChanged();
+                    (Command_Stop as StopCommand).RaiseCanExecuteChanged();
                 }
             }
         }
         private bool _isRunning;
+
+        public int WorkloadSplit { get; set; } = 20;
+
+        public void StopThreads() => cancelSource.Cancel();
+        internal void Clear()
+        {
+            spProgress.Children.Clear();
+            Sum = 0;
+            Avg = 0;
+        }
 
         public pgeThreadingProgressCancelV2()
         {
@@ -78,26 +107,94 @@ namespace MultiThreading
             IsRunning = false;
             Command_Start = new StartCommand(this);
             Command_Stop = new StopCommand(this);
+            Command_Clear = new ClearCommand(this);
             DataContext = this;
         }
-        
-        public async void Start()
+
+        public async void StartUserSplit()
+        {
+            Clear();
+            // leeres array erstellen
+            byte[] dataArray = new byte[SelectedWorkload];
+            int usedThreads = Environment.ProcessorCount;
+
+            // aufteilen des arrays
+            int segmentLength = dataArray.Length / WorkloadSplit;
+            int segmentLengthFirst = dataArray.Length - segmentLength * WorkloadSplit + segmentLength;
+
+            cancelSource = new();
+
+            // creation
+            List<ProgressReporter> creationReporter = new(WorkloadSplit);
+            {
+                ProgressReporter chunk = new()
+                {
+                    WorkSegment = new ArraySegment<byte>(dataArray, 0, segmentLengthFirst)
+                };
+                chunk.ReferencedBar.Style = (Style)FindResource("stylePBWork");
+                spProgress.Children.Add(chunk.ReferencedBar);
+                creationReporter.Add(chunk);
+            }
+            for (int counter = 0; counter < WorkloadSplit - 1; counter++)
+            {
+                ProgressReporter chunk = new()
+                {
+                    WorkSegment = new ArraySegment<byte>(dataArray, segmentLengthFirst + segmentLength * counter, segmentLength)
+                };
+                chunk.ReferencedBar.Style = (Style)FindResource("stylePBWork");
+                spProgress.Children.Add(chunk.ReferencedBar);
+                creationReporter.Add(chunk);
+            }
+
+            List<ProgressReporter> WorkReporter = new(WorkloadSplit*2);
+
+            for (int i = 0; i < 2; i++)
+            {
+                {
+                    ProgressReporter chunk = new()
+                    {
+                        WorkSegment = new ArraySegment<byte>(dataArray, 0, segmentLengthFirst)
+                    };
+                    chunk.ReferencedBar.Style = (Style)FindResource("stylePBWork");
+                    spProgress.Children.Add(chunk.ReferencedBar);
+                    WorkReporter.Add(chunk);
+                }
+                for (int counter = 0; counter < WorkloadSplit - 1; counter++)
+                {
+                    ProgressReporter chunk = new()
+                    {
+                        WorkSegment = new ArraySegment<byte>(dataArray, segmentLengthFirst + segmentLength * counter, segmentLength)
+                    };
+                    chunk.ReferencedBar.Style = (Style)FindResource("stylePBWork");
+                    spProgress.Children.Add(chunk.ReferencedBar);
+                    WorkReporter.Add(chunk);
+                }
+            }
+
+            //TODO: Options
+            //Hack: reimplement ForEachAsync / split functions
+            await Task.Run(() => Parallel.ForEach(creationReporter, (data) => createArray(data.WorkSegment, data.Progress, cancelSource.Token)));
+            if (cancelSource.IsCancellationRequested) { IsRunning = false; return; }
+            await Task.Run(() => Parallel.ForEach(WorkReporter, (data) => sumArray(data.WorkSegment, data.Progress, cancelSource.Token)));
+
+            IsRunning = false;
+        }
+        public async void StartThreadSplit()
         {
             // UI vorbereiten
-            spProgress.Children.Clear();
-            Sum = 0;
-            Avg = 0;
+            Clear();
             int freeProgressID = 0;
             ProgressReporter[] progressReporters = new ProgressReporter[threadCount * 3];
 
             for (int counter = 0; counter < progressReporters.Length; counter++)
             {
                 progressReporters[counter] = new();
+                progressReporters[counter].ReferencedBar.Style = (Style)FindResource("stylePBThread");
                 spProgress.Children.Add(progressReporters[counter].ReferencedBar);
             }
 
             // array erstellen und abschnitte abstecken
-            byte[] dataArray = new byte[1_000_000_000];
+            byte[] dataArray = new byte[SelectedWorkload];
             int segmentLength = dataArray.Length / threadCount;
             int segmentLengthFirst = dataArray.Length - segmentLength * threadCount + segmentLength;
 
@@ -143,7 +240,7 @@ namespace MultiThreading
             sumTasks.ForEach((item) => buffer += item.Result);
             Sum = buffer;
 
-            if (cancelSource.IsCancellationRequested) { IsRunning = false; return;}
+            if (cancelSource.IsCancellationRequested) { IsRunning = false; return; }
 
             // Durchschnitt berechnen
             {
@@ -166,6 +263,8 @@ namespace MultiThreading
             Avg = (byte)(buffer / avgTasks.Count);
             IsRunning = false;
         }
+
+        ///////////////////   Not object related //////////////////
 
         static void createArray(ArraySegment<byte> data, IProgress<byte> Progress, CancellationToken Token)
         {
@@ -219,10 +318,11 @@ namespace MultiThreading
             return (byte)(sum / ++position);
         }
 
-        class ProgressReporter
+        class ProgressReporter // nested class
         {
             public readonly ProgressBar ReferencedBar;
             public readonly Progress<byte> Progress;
+            public ArraySegment<byte> WorkSegment;
             public ProgressReporter()
             {
                 ReferencedBar = new ProgressBar();
@@ -232,7 +332,6 @@ namespace MultiThreading
             {
                 ReferencedBar.Value = NewValue;
             }
-
         }
 
     }

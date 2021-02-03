@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace MultiThreading
@@ -18,12 +13,22 @@ namespace MultiThreading
         }
         public bool CanExecute(object parameter)
         {
-            return ! _parent.IsRunning;
+            return !_parent.IsRunning;
         }
 
         public void Execute(object parameter)
         {
-            _parent.Start();
+            switch (parameter as string)
+            {
+                case "SplitByThread":
+                    _parent.StartThreadSplit();
+                    break;
+                case "SplitByUser":
+                    _parent.StartUserSplit();
+                    break;
+                default:
+                    throw new ArgumentException("Unknown version of Start");
+            }
         }
 
         public void RaiseCanExecuteChanged()
