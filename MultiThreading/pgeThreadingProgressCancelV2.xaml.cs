@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace MultiThreading
 {
@@ -14,9 +14,15 @@ namespace MultiThreading
     public partial class pgeThreadingProgressCancelV2 : Page, INotifyPropertyChanged
     {
         CancellationTokenSource cancelSource;
-        const int threadCount = 4;
-        readonly List<Task<long>> sumTasks = new();
-        readonly List<Task<byte>> avgTasks = new();
+        int threadCount = 4;
+        public ICommand Command_Start { get; init; }
+
+        internal void StopThreads()
+        {
+            cancelSource.Cancel();
+        }
+
+        public ICommand Command_Stop { get; init; }
 
         private long _sum = 0;
 
@@ -50,17 +56,39 @@ namespace MultiThreading
             }
         }
 
-        public pgeThreadingProgressCancelV2() => InitializeComponent();
-        private void btnStop_Click(object sender, RoutedEventArgs e) => cancelSource.Cancel();
-
-        private async void btnStart_Click(object sender, RoutedEventArgs e)
+        public int ThreadCount { get => threadCount; set => threadCount = value; }
+        public bool IsRunning
         {
-            cancelSource = new();
+            get => _isRunning;
+            set
+            {
+                if (_isRunning != value)
+                {
+                    _isRunning = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsRunning)));
+                    (Command_Start as StartCommand).RaiseCanExecuteChanged();
+                }
+            }
+        }
+        private bool _isRunning;
+
+        public pgeThreadingProgressCancelV2()
+        {
+            InitializeComponent();
+            IsRunning = false;
+            Command_Start = new StartCommand(this);
+            Command_Stop = new StopCommand(this);
+            DataContext = this;
+        }
+        
+        public async void Start()
+        {
+            // UI vorbereiten
             spProgress.Children.Clear();
-
+            Sum = 0;
+            Avg = 0;
             int freeProgressID = 0;
-
-            ProgressReporter[] progressReporters = new ProgressReporter[threadCount * 2 + 1];
+            ProgressReporter[] progressReporters = new ProgressReporter[threadCount * 3];
 
             for (int counter = 0; counter < progressReporters.Length; counter++)
             {
@@ -68,108 +96,127 @@ namespace MultiThreading
                 spProgress.Children.Add(progressReporters[counter].ReferencedBar);
             }
 
-
-            byte[] dataArray = await Task.Run(() => createArray(1_000_000_000, progressReporters[freeProgressID++].Progress, cancelSource.Token), cancelSource.Token);
-            if (cancelSource.IsCancellationRequested) return;
-
+            // array erstellen und abschnitte abstecken
+            byte[] dataArray = new byte[1_000_000_000];
             int segmentLength = dataArray.Length / threadCount;
             int segmentLengthFirst = dataArray.Length - segmentLength * threadCount + segmentLength;
 
-            sumTasks.Add(new Task<long>(() => sumArray(
-                    new ThreadDataContainer { ThreadID = 0,
-                        DataArray = new ArraySegment<byte>(dataArray, 0, segmentLengthFirst) },
-                    progressReporters[freeProgressID++].Progress,
-                    cancelSource.Token),
-                cancelSource.Token));
-            for (int count = 0; count < threadCount-1; count++)
+            // taskcontainer vorbereiten
+            cancelSource = new(); // abbruch ermöglichen
+            List<Task> fillTasks = new();
+            List<Task<long>> sumTasks = new();
+            List<Task<byte>> avgTasks = new();
+
+            // array füllen
             {
-                ThreadDataContainer data;
-                data.DataArray = new ArraySegment<byte>(dataArray, segmentLengthFirst + segmentLength * count, segmentLength);
-                data.ThreadID = count + 1;
-                sumTasks.Add(new Task<long>(() => sumArray(data, progressReporters[freeProgressID++].Progress, cancelSource.Token), cancelSource.Token));
+                var data = new ArraySegment<byte>(dataArray, 0, segmentLengthFirst);
+                fillTasks.Add(new Task(() => createArray(data, progressReporters[freeProgressID++].Progress,
+                    cancelSource.Token), cancelSource.Token));
+            }
+            for (int count = 0; count < threadCount - 1; count++)
+            {
+                var data = new ArraySegment<byte>(dataArray, segmentLengthFirst + segmentLength * count, segmentLength);
+                fillTasks.Add(new Task(() => createArray(data, progressReporters[freeProgressID++].Progress,
+                    cancelSource.Token), cancelSource.Token));
             }
 
-            avgTasks.Add(new Task<byte>(() => avgArray(new ThreadDataContainer { ThreadID = threadCount + 1, DataArray = new ArraySegment<byte>(dataArray, 0, segmentLengthFirst) }, progressReporters[freeProgressID++].Progress, cancelSource.Token), cancelSource.Token));
-            for (int count = 0; count < threadCount-1; count++)
-            {
-                ThreadDataContainer data;
-                data.DataArray = new ArraySegment<byte>(dataArray, segmentLengthFirst + segmentLength * count, segmentLength);
-                data.ThreadID = count + 1;
-                avgTasks.Add(new Task<byte>(() => avgArray(data, progressReporters[freeProgressID++].Progress, cancelSource.Token), cancelSource.Token));
-            }
+            foreach (var item in fillTasks) item.Start(); // alle füllthreads starten
+            await Task.WhenAll(fillTasks); // die Methode btnStart_Click wird pausiert bis alle threads fertig sind
+            if (cancelSource.IsCancellationRequested) { IsRunning = false; return; }
 
+            // summe berechnen
+            {
+                var data = new ArraySegment<byte>(dataArray, 0, segmentLengthFirst);
+                sumTasks.Add(new Task<long>(() => sumArray(data, progressReporters[freeProgressID++].Progress,
+                        cancelSource.Token), cancelSource.Token));
+            }
+            for (int count = 0; count < threadCount - 1; count++)
+            {
+
+                var data = new ArraySegment<byte>(dataArray, segmentLengthFirst + segmentLength * count, segmentLength);
+                sumTasks.Add(new Task<long>(() => sumArray(data, progressReporters[freeProgressID++].Progress,
+                    cancelSource.Token), cancelSource.Token));
+            }
             foreach (var item in sumTasks) item.Start();
-            foreach (var item in avgTasks) item.Start();
-
             await Task.WhenAll(sumTasks);
-            await Task.WhenAll(avgTasks);
-
             long buffer = 0;
             sumTasks.ForEach((item) => buffer += item.Result);
             Sum = buffer;
+
+            if (cancelSource.IsCancellationRequested) { IsRunning = false; return;}
+
+            // Durchschnitt berechnen
+            {
+                var data = new ArraySegment<byte>(dataArray, 0, segmentLengthFirst);
+                avgTasks.Add(new Task<byte>(() => avgArray(data, progressReporters[freeProgressID++].Progress,
+                    cancelSource.Token), cancelSource.Token));
+            }
+            for (int count = 0; count < threadCount - 1; count++)
+            {
+                var data = new ArraySegment<byte>(dataArray, segmentLengthFirst + segmentLength * count, segmentLength);
+                avgTasks.Add(new Task<byte>(() => avgArray(data, progressReporters[freeProgressID++].Progress,
+                    cancelSource.Token), cancelSource.Token));
+            }
+
+            foreach (var item in avgTasks) item.Start();
+            await Task.WhenAll(avgTasks);
+
             buffer = 0;
             avgTasks.ForEach((item) => buffer += item.Result);
             Avg = (byte)(buffer / avgTasks.Count);
+            IsRunning = false;
         }
 
-        static byte[] createArray(int Length, IProgress<byte> Progress, CancellationToken Token)
+        static void createArray(ArraySegment<byte> data, IProgress<byte> Progress, CancellationToken Token)
         {
-            byte[] randomArray = new byte[Length];
             Random rndGen = new();
             byte progressPercent = 0;
-            for (int position = 0; position < randomArray.Length; position++)
+            for (int position = 0; position < data.Count; position++)
             {
-                randomArray[position] = (byte)rndGen.Next(256);
-                if (position % (randomArray.Length / 100) == 0)
+                data[position] = (byte)rndGen.Next(256);
+                if (position % (data.Count / 100) == 0)
                 {
                     Progress.Report(++progressPercent);
                     if (Token.IsCancellationRequested) break;
                 }
             }
-            return randomArray;
         }
 
-        static long sumArray(ThreadDataContainer Data, IProgress<byte> Progress, CancellationToken Token)
+        static long sumArray(ArraySegment<byte> Data, IProgress<byte> Progress, CancellationToken Token)
         {
             long sum = 0;
             byte progressPercent = 0;
-            for (int position = 0; position < Data.DataArray.Count; position++)
+            for (int position = 0; position < Data.Count; position++)
             {
-                sum += Data.DataArray[position];
-                if (position % (Data.DataArray.Count / 100) == 0) // nur 300 mal pro gesamtdurchlauf aktualisieren
+                sum += Data[position];
+                if (position % (Data.Count / 100) == 0) // nur 100 mal pro gesamtdurchlauf aktualisieren
                 {
                     Progress.Report(++progressPercent);
 
-                    // da auch die abfrage nach dem canceltoken etwas zeit kostet wird das zeitgleich mit dem fortschritt erledigt
+                    // da auch die abfrage nach dem canceltoken etwas zeit kostet wird das zusammen mit dem fortschritt erledigt
                     if (Token.IsCancellationRequested) break;
                 }
             }
             return sum;
         }
 
-        static byte avgArray(ThreadDataContainer Data, IProgress<byte> Progress, CancellationToken Token)
+        static byte avgArray(ArraySegment<byte> Data, IProgress<byte> Progress, CancellationToken Token)
         {
             long sum = 0;
             byte progressPercent = 0;
             int position = 0;
-            for (; position < Data.DataArray.Count; position++)
+            for (; position < Data.Count; position++)
             {
-                sum += Data.DataArray[position];
-                if (position % (Data.DataArray.Count / 100) == 0) // nur 300 mal pro gesamtdurchlauf aktualisieren
+                sum += Data[position];
+                if (position % (Data.Count / 100) == 0) // nur 100 mal pro gesamtdurchlauf aktualisieren
                 {
                     Progress.Report(++progressPercent);
 
-                    // da auch die abfrage nach dem canceltoken etwas zeit kostet wird das zeitgleich mit dem fortschritt erledigt
+                    // da auch die abfrage nach dem canceltoken etwas zeit kostet wird das zusammen mit dem fortschritt erledigt
                     if (Token.IsCancellationRequested) break;
                 }
             }
             return (byte)(sum / ++position);
-        }
-
-        struct ThreadDataContainer
-        {
-            public int ThreadID;
-            public ArraySegment<byte> DataArray;
         }
 
         class ProgressReporter
