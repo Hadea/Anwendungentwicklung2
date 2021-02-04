@@ -19,6 +19,7 @@
             <Button Height="22" Content="Async" Command="{Binding Command_NavigatePage}" CommandParameter="MultiThreading.pgeThreadingAsync"/>
             <Button Height="22" Content="Async2" Command="{Binding Command_NavigatePage}" CommandParameter="MultiThreading.pgeThreadingAsync2"/>
             <Button Height="22" Content="Task" Command="{Binding Command_NavigatePage}" CommandParameter="MultiThreading.pgeThreadingTask"/>
+            <Button Height="22" Content="Task Async Selbstgemacht" Command="{Binding Command_NavigatePage}" CommandParameter="MultiThreading.pgeThreadingAwaitSelfmade"/>
             <Button Height="22" Content="Task abbrechen" Command="{Binding Command_NavigatePage}" CommandParameter="MultiThreading.pgeThreadingTaskCancel"/>
             <Button Height="22" Content="Task Fortschritt" Command="{Binding Command_NavigatePage}" CommandParameter="MultiThreading.pgeThreadingTaskProgress"/>
             <Button Height="22" Content="Übung Fortschritt und Abbruch (DualThread)" Command="{Binding Command_NavigatePage}" CommandParameter="MultiThreading.pgeThreadingProgressCancel"/>
