@@ -16,6 +16,7 @@ namespace MultiThreading
     {
         private CancellationTokenSource cancelSource;
         public event PropertyChangedEventHandler PropertyChanged;
+        object sync = new();
 
 
         public ICommand Command_Start { get; init; }
@@ -149,8 +150,8 @@ namespace MultiThreading
                 creationReporter.Add(chunk);
             }
 
-            spProgress.Children.Add(new Border { Width = spProgress.ActualWidth - 5, Height=2 });
-            List<ProgressReporter> WorkReporter = new(WorkloadSplit*2);
+            spProgress.Children.Add(new Border { Width = spProgress.ActualWidth - 5, Height = 2 });
+            List<ProgressReporter> WorkReporter = new(WorkloadSplit * 2);
 
             for (int i = 0; i < 2; i++)
             {
@@ -177,11 +178,36 @@ namespace MultiThreading
 
             //TODO: Options
             //Hack: reimplement ForEachAsync / split functions
-            await Task.Run(() => Parallel.ForEach(creationReporter, (data) => createArray(data.WorkSegment, data.Progress, cancelSource.Token)));
-            if (cancelSource.IsCancellationRequested) { IsRunning = false; return; }
-            await Task.Run(() => Parallel.ForEach(WorkReporter, (data) => sumArray(data.WorkSegment, data.Progress, cancelSource.Token)));
+            ParallelOptions options = new ParallelOptions();
+            options.CancellationToken = cancelSource.Token;
+            options.MaxDegreeOfParallelism = Environment.ProcessorCount - 1;
 
-            IsRunning = false;
+            List<long> results = new(WorkloadSplit);
+            try
+            {
+                await Task.Run(() => Parallel.ForEach(creationReporter, options, (data) => createArray(data.WorkSegment, data.Progress, cancelSource.Token)));
+
+                await Task.Run(() => Parallel.ForEach(WorkReporter, options, (data) =>
+                {
+                    long result = sumArray(data.WorkSegment, data.Progress, cancelSource.Token);
+                    lock (sync)
+                    {
+                        results.Add(result);
+                    }
+                }));
+            }
+            catch (OperationCanceledException)
+            {
+            }
+            finally
+            {
+                long buffer = 0;
+                foreach (var item in results) buffer += item;
+                Sum = buffer / 2;
+                Avg = (byte)(buffer /2 / SelectedWorkload);
+                IsRunning = false;
+            }
+
         }
         public async void StartThreadSplit()
         {

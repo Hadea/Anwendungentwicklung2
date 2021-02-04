@@ -14,13 +14,13 @@
             <Setter Property="Width" Value="100"/>
             <Setter Property="Height" Value="50" />
             <Setter Property="Maximum" Value="100" />
-            <Setter Property="Padding" Value="2" />
+            <Setter Property="Margin" Value="1" />
         </Style>
         <Style x:Key="stylePBWork" TargetType="ProgressBar">
             <Setter Property="Width" Value="30"/>
             <Setter Property="Height" Value="30" />
             <Setter Property="Maximum" Value="100" />
-            <Setter Property="Padding" Value="2" />
+            <Setter Property="Margin" Value="1" />
         </Style>
     </Page.Resources>
     <ScrollViewer>
@@ -56,8 +56,15 @@
                     <Button Width="100" Content="Start" Command="{Binding Command_Start}" CommandParameter="SplitByUser" />
                 </StackPanel>
             </GroupBox>
-            <TextBlock Width="100" Text="{Binding Path=Sum, StringFormat=Summe : {0}, Mode=OneWay}"/>
-            <TextBlock Width="100" Text="{Binding Path=Avg, StringFormat=Durchschnitt : {0}, Mode=OneWay}"/>
+            <TextBlock HorizontalAlignment="Center">
+                <TextBlock.Text>
+                    <MultiBinding StringFormat="Summe: {0}  Durchschnitt {1}">
+                        <Binding Path="Sum"/>
+                        <Binding Path="Avg"/>
+                    </MultiBinding>
+                </TextBlock.Text>
+            </TextBlock>
+
             <WrapPanel Orientation="Horizontal" x:Name="spProgress"/>
         </StackPanel>
     </ScrollViewer>
