@@ -60,7 +60,6 @@ namespace MultiThreading
         {
             // Store continuation delegate
             this.continuation = continuation;
-            Console.WriteLine("Continuation set");
         }
         public void SlowReturn()
         {

@@ -24,6 +24,7 @@
             <Button Height="22" Content="Task Fortschritt" Command="{Binding Command_NavigatePage}" CommandParameter="MultiThreading.pgeThreadingTaskProgress"/>
             <Button Height="22" Content="Übung Fortschritt und Abbruch (DualThread)" Command="{Binding Command_NavigatePage}" CommandParameter="MultiThreading.pgeThreadingProgressCancel"/>
             <Button Height="22" Content="Übung Fortschritt und Abbruch (MultiThread)" Command="{Binding Command_NavigatePage}" CommandParameter="MultiThreading.pgeThreadingProgressCancelV2"/>
+            <Button Height="22" Content="Arbeitspakete und feste Threadanzahl" Command="{Binding Command_NavigatePage}" CommandParameter="MultiThreading.pgeThreadingWorkQueue"/>
         </StackPanel>
         <Frame x:Name="frmContent" NavigationUIVisibility="Hidden" Grid.Column="1"/>
     </Grid>
