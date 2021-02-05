@@ -39,8 +39,9 @@ namespace MultiThreading
         private async void btnStart_Click(object sender, RoutedEventArgs e)
         {
             Message = "Starte";
+            wpProgress.Children.Clear();
             // vorbereitungen
-            byte[] arrayToWorkOn = new byte[500_000_000];
+            byte[] arrayToWorkOn = new byte[1_000_000_000];
 
             // arbeit in pakete aufteilen
             Queue<WorkPackage> packages = new();
@@ -61,11 +62,12 @@ namespace MultiThreading
                 {
                     // tasks erstellen
                     WorkPackage myPackage = packages.Dequeue(); // package aus der Queue holen
-                    taskList.AddLast(Task.Run(() => {
+                    taskList.AddLast(Task.Run(() =>
+                    {
                         Random rnd = new Random();
                         for (int counter = 0; counter < myPackage.Segment.Count; counter++)
-                            myPackage.Segment[counter] = (byte)rnd.Next(256);
-                        }));
+                            myPackage.Segment[counter] = 1;// (byte)rnd.Next(256);
+                    }));
                 }
                 else
                 {
@@ -79,13 +81,79 @@ namespace MultiThreading
             await Task.WhenAll(taskList);
 
             // ergebnisse anzeigen
-            Message = "bin fertig";
+            Message = "bin fertig mit Array füllen";
             Message += Environment.NewLine;
             foreach (var item in arrayToWorkOn[..10])
-                Message += " " +item.ToString("D3");
+                Message += " " + item.ToString("D3");
             Message += Environment.NewLine;
             foreach (var item in arrayToWorkOn[^10..])
-                Message += " "+ item.ToString("D3");
+                Message += " " + item.ToString("D3");
+
+            // Bereich Summe ziehen
+
+            taskList.Clear();
+            List<WorkPackage<long, byte>> sumPackages = new(WorkPackageNumber);
+
+            sumPackages.Add(new WorkPackage<long, byte>(new ArraySegment<byte>(arrayToWorkOn, 0, segmentLengthRemainder)));
+            for (int counter = 0; counter < WorkPackageNumber - 1; counter++)
+                sumPackages.Add(new WorkPackage<long, byte>(new ArraySegment<byte>(arrayToWorkOn, segmentLengthRemainder + counter * segmentLength, segmentLength)));
+
+            foreach (var item in sumPackages)
+                wpProgress.Children.Add(item.ProgressBar);
+
+            int packageID = 0;
+            LinkedList<Task<(long, WorkPackage<long, byte>)>> taskSumList = new();
+
+            while (packageID < sumPackages.Count)
+            {
+                if (taskSumList.Count < Environment.ProcessorCount - 1)
+                {
+                    // tasks erstellen
+                    var myPackage = sumPackages[packageID++]; // package aus der Queue holen
+                    taskSumList.AddLast(Task<(long, WorkPackage<long, byte>)>.Run(() =>
+                    {
+                        long sum = 0;
+                        int reportinterval = myPackage.Segment.Count / 100;
+                        byte currentProgress = 0;
+                        for (int counter = 0; counter < myPackage.Segment.Count; counter++)
+                        {
+                            sum += myPackage.Segment[counter];
+                            if (counter % reportinterval == 0)
+                            {
+                                currentProgress++;
+                                myPackage.Progress.Report(currentProgress);
+                            }
+                        }
+                        return (sum, myPackage);
+                    }));
+                }
+                else
+                {
+                    var finishedTask = await Task<(long, WorkPackage<long, byte>)>.WhenAny(taskSumList);
+                    long sum;
+                    WorkPackage<long, byte> package;
+                    (sum, package) = finishedTask.Result;
+
+                    sumPackages.Find(x => x == package).Result = sum;
+                    // warten bis einer fertig ist und dann recyclen
+                    taskSumList.Remove(finishedTask);
+                }
+            }
+
+            // abwarten bis alle tasks fertig sind
+            await Task.WhenAll(taskSumList);
+
+            foreach (var item in taskSumList)
+            {
+                long sum;
+                WorkPackage<long, byte> package;
+                (sum, package) = item.Result;
+                sumPackages.Find(x => x == package).Result = sum;
+            }
+
+            long gesamtSumme = 0;
+            foreach (var item in sumPackages) gesamtSumme += item.Result;
+            Message += Environment.NewLine + $"Summe aller Arrayzellen: {gesamtSumme:#,0}";
         }
     }
 
@@ -97,5 +165,23 @@ namespace MultiThreading
         }
 
         public ArraySegment<byte> Segment;
+    }
+    class WorkPackage<ReturnType, ArrayType>
+    {
+        public ReturnType Result;
+        public ProgressBar ProgressBar;
+        public IProgress<byte> Progress;
+        public ArraySegment<ArrayType> Segment;
+        public WorkPackage(ArraySegment<ArrayType> arraySegments)
+        {
+            Segment = arraySegments;
+            ProgressBar = new ProgressBar();
+            Progress = new Progress<byte>(report);
+        }
+
+        private void report(byte NewValue)
+        {
+            ProgressBar.Value = NewValue;
+        }
     }
 }

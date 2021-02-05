@@ -7,11 +7,18 @@
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="pgeThreadingWorkQueue">
-
+    <Page.Resources>
+        <Style TargetType="ProgressBar">
+            <Setter Property="Margin" Value="1"/>
+            <Setter Property="Width" Value="50" />
+            <Setter Property="Height" Value="50" />
+        </Style>
+    </Page.Resources>
     <StackPanel>
         <Button Content="Start" Click="btnStart_Click" />
         <Label Content="_Anzahl der Aufgaben" Target="{Binding ElementName=tbWorkPackageNumber}" />
         <TextBox x:Name="tbWorkPackageNumber" Text="{Binding WorkPackageNumber, Mode=OneWayToSource}" />
         <TextBlock Text="{Binding Message, Mode=OneWay}" />
+        <WrapPanel x:Name="wpProgress" />
     </StackPanel>
 </Page>
