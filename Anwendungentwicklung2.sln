@@ -46,9 +46,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AddressBookLogic", "Address
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AddressBookGUI", "AddressBookGUI\AddressBookGUI.csproj", "{1045AF01-6461-495C-B974-DB24FB048116}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiThreading", "MultiThreading\MultiThreading.csproj", "{4A6A00A7-1594-4561-8007-EE8A7264E964}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MultiThreading", "MultiThreading\MultiThreading.csproj", "{4A6A00A7-1594-4561-8007-EE8A7264E964}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThreadingConsole", "ThreadingConsole\ThreadingConsole.csproj", "{873A96E7-EF6F-40C7-A552-3AAF61BA75B0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThreadingConsole", "ThreadingConsole\ThreadingConsole.csproj", "{873A96E7-EF6F-40C7-A552-3AAF61BA75B0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetServer", "NetServer\NetServer.csproj", "{6FA18D69-2838-45BF-AED4-94199AFE99DB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetClient", "NetClient\NetClient.csproj", "{5EBBA387-25E7-46E5-9984-B6BF83C7479E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -140,6 +144,14 @@ Global
 		{873A96E7-EF6F-40C7-A552-3AAF61BA75B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{873A96E7-EF6F-40C7-A552-3AAF61BA75B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{873A96E7-EF6F-40C7-A552-3AAF61BA75B0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6FA18D69-2838-45BF-AED4-94199AFE99DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6FA18D69-2838-45BF-AED4-94199AFE99DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6FA18D69-2838-45BF-AED4-94199AFE99DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6FA18D69-2838-45BF-AED4-94199AFE99DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5EBBA387-25E7-46E5-9984-B6BF83C7479E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5EBBA387-25E7-46E5-9984-B6BF83C7479E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5EBBA387-25E7-46E5-9984-B6BF83C7479E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5EBBA387-25E7-46E5-9984-B6BF83C7479E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
