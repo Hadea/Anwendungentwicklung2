@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace MultiThreading
 {
@@ -16,10 +18,14 @@ namespace MultiThreading
         {
             InitializeComponent();
             DataContext = this;
+            ProgressBars = new();
+            Command_Start = new StartWorkQueueCommand(calculate);
+
         }
 
         public int WorkPackageNumber { get; set; }
         public event PropertyChangedEventHandler PropertyChanged;
+        public ICommand Command_Start { get; init; }
 
         public string Message
         {
@@ -36,10 +42,15 @@ namespace MultiThreading
         private string _message;
 
 
-        private async void btnStart_Click(object sender, RoutedEventArgs e)
+        public ObservableCollection<ProgressBar> ProgressBars { get; set; }
+
+
+        private async void calculate()
         {
+            DateTime startTime = DateTime.Now;
             Message = "Starte";
-            wpProgress.Children.Clear();
+            //wpProgress.Children.Clear();
+            ProgressBars.Clear();
             // vorbereitungen
             byte[] arrayToWorkOn = new byte[1_000_000_000];
 
@@ -98,11 +109,13 @@ namespace MultiThreading
             for (int counter = 0; counter < WorkPackageNumber - 1; counter++)
                 sumPackages.Add(new WorkPackage<ulong, byte>(new ArraySegment<byte>(arrayToWorkOn, segmentLengthRemainder + counter * segmentLength, segmentLength)));
 
+
             foreach (var item in sumPackages)
-                wpProgress.Children.Add(item.ProgressBar);
+                ProgressBars.Add(item.ProgressBar);
+            //    wpProgress.Children.Add(item.ProgressBar);
 
             int packageID = 0;
-            LinkedList<Task<(ulong, WorkPackage<ulong, byte>)>> taskSumList = new();
+            LinkedList<Task<WorkPackage<ulong, byte>>> taskSumList = new();
 
             while (packageID < sumPackages.Count)
             {
@@ -124,17 +137,14 @@ namespace MultiThreading
                                 myPackage.Progress.Report(currentProgress);
                             }
                         }
-                        return (sum, myPackage);
+                        myPackage.Result = sum;
+                        return myPackage;
                     }));
                 }
                 else
                 {
-                    var finishedTask = await Task<(ulong, WorkPackage<ulong, byte>)>.WhenAny(taskSumList);
-                    ulong sum;
-                    WorkPackage<ulong, byte> package;
-                    (sum, package) = finishedTask.Result;
-
-                    package.Result = sum;
+                    var finishedTask = await Task<WorkPackage<ulong, byte>>.WhenAny(taskSumList);
+                    WorkPackage<ulong, byte> package = finishedTask.Result;
                     // warten bis einer fertig ist und dann recyclen
                     taskSumList.Remove(finishedTask);
                 }
@@ -143,17 +153,10 @@ namespace MultiThreading
             // abwarten bis alle tasks fertig sind
             await Task.WhenAll(taskSumList);
 
-            foreach (var item in taskSumList)
-            {
-                ulong sum;
-                WorkPackage<ulong, byte> package;
-                (sum, package) = item.Result;
-                package.Result = sum;
-            }
-
             ulong gesamtSumme = 0;
             foreach (var item in sumPackages) gesamtSumme += item.Result;
             Message += Environment.NewLine + $"Summe aller Arrayzellen: {gesamtSumme:#,0}";
+            Message += Environment.NewLine + "Vergangene Zeit : " + (DateTime.Now - startTime).TotalSeconds.ToString("0.000");
         }
     }
 
@@ -184,4 +187,20 @@ namespace MultiThreading
             ProgressBar.Value = NewValue;
         }
     }
+
+    class StartWorkQueueCommand : ICommand
+    {
+        public event EventHandler CanExecuteChanged;
+        public Action MethodToStart;
+
+        public StartWorkQueueCommand(Action MethodToStart)
+        {
+            this.MethodToStart = MethodToStart;
+        }
+
+        public bool CanExecute(object parameter) => true;
+        public void Execute(object parameter) => MethodToStart?.Invoke();
+        public void RaiseCanExecuteChanged() => CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+    }
+
 }

@@ -15,10 +15,16 @@
         </Style>
     </Page.Resources>
     <StackPanel>
-        <Button Content="Start" Click="btnStart_Click" />
+        <Button Content="Start" Command="{Binding Command_Start}" />
         <Label Content="_Anzahl der Aufgaben" Target="{Binding ElementName=tbWorkPackageNumber}" />
         <TextBox x:Name="tbWorkPackageNumber" Text="{Binding WorkPackageNumber, Mode=OneWayToSource}" />
         <TextBlock Text="{Binding Message, Mode=OneWay}" />
-        <WrapPanel x:Name="wpProgress" />
+        <ItemsControl ItemsSource="{Binding ProgressBars}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel IsItemsHost="True" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+        </ItemsControl>
     </StackPanel>
 </Page>
