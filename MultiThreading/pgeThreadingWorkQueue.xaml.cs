@@ -66,7 +66,7 @@ namespace MultiThreading
                     {
                         Random rnd = new Random();
                         for (int counter = 0; counter < myPackage.Segment.Count; counter++)
-                            myPackage.Segment[counter] = 1;// (byte)rnd.Next(256);
+                            myPackage.Segment[counter] = (byte)rnd.Next(256);
                     }));
                 }
                 else
@@ -92,17 +92,17 @@ namespace MultiThreading
             // Bereich Summe ziehen
 
             taskList.Clear();
-            List<WorkPackage<long, byte>> sumPackages = new(WorkPackageNumber);
+            List<WorkPackage<ulong, byte>> sumPackages = new(WorkPackageNumber);
 
-            sumPackages.Add(new WorkPackage<long, byte>(new ArraySegment<byte>(arrayToWorkOn, 0, segmentLengthRemainder)));
+            sumPackages.Add(new WorkPackage<ulong, byte>(new ArraySegment<byte>(arrayToWorkOn, 0, segmentLengthRemainder)));
             for (int counter = 0; counter < WorkPackageNumber - 1; counter++)
-                sumPackages.Add(new WorkPackage<long, byte>(new ArraySegment<byte>(arrayToWorkOn, segmentLengthRemainder + counter * segmentLength, segmentLength)));
+                sumPackages.Add(new WorkPackage<ulong, byte>(new ArraySegment<byte>(arrayToWorkOn, segmentLengthRemainder + counter * segmentLength, segmentLength)));
 
             foreach (var item in sumPackages)
                 wpProgress.Children.Add(item.ProgressBar);
 
             int packageID = 0;
-            LinkedList<Task<(long, WorkPackage<long, byte>)>> taskSumList = new();
+            LinkedList<Task<(ulong, WorkPackage<ulong, byte>)>> taskSumList = new();
 
             while (packageID < sumPackages.Count)
             {
@@ -110,9 +110,9 @@ namespace MultiThreading
                 {
                     // tasks erstellen
                     var myPackage = sumPackages[packageID++]; // package aus der Queue holen
-                    taskSumList.AddLast(Task<(long, WorkPackage<long, byte>)>.Run(() =>
+                    taskSumList.AddLast(Task.Run(() =>
                     {
-                        long sum = 0;
+                        ulong sum = 0;
                         int reportinterval = myPackage.Segment.Count / 100;
                         byte currentProgress = 0;
                         for (int counter = 0; counter < myPackage.Segment.Count; counter++)
@@ -129,12 +129,12 @@ namespace MultiThreading
                 }
                 else
                 {
-                    var finishedTask = await Task<(long, WorkPackage<long, byte>)>.WhenAny(taskSumList);
-                    long sum;
-                    WorkPackage<long, byte> package;
+                    var finishedTask = await Task<(ulong, WorkPackage<ulong, byte>)>.WhenAny(taskSumList);
+                    ulong sum;
+                    WorkPackage<ulong, byte> package;
                     (sum, package) = finishedTask.Result;
 
-                    sumPackages.Find(x => x == package).Result = sum;
+                    package.Result = sum;
                     // warten bis einer fertig ist und dann recyclen
                     taskSumList.Remove(finishedTask);
                 }
@@ -145,13 +145,13 @@ namespace MultiThreading
 
             foreach (var item in taskSumList)
             {
-                long sum;
-                WorkPackage<long, byte> package;
+                ulong sum;
+                WorkPackage<ulong, byte> package;
                 (sum, package) = item.Result;
-                sumPackages.Find(x => x == package).Result = sum;
+                package.Result = sum;
             }
 
-            long gesamtSumme = 0;
+            ulong gesamtSumme = 0;
             foreach (var item in sumPackages) gesamtSumme += item.Result;
             Message += Environment.NewLine + $"Summe aller Arrayzellen: {gesamtSumme:#,0}";
         }

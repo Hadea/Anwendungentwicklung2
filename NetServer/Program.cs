@@ -22,10 +22,11 @@ namespace NetServer
             byte[] data = new byte[1024];
             while ((recievedBytes = stream.Read(data, 0 , data.Length)) != 0)
             {
-                string message = Encoding.ASCII.GetString(data);
+                string message = Encoding.ASCII.GetString(data,0,recievedBytes);
+
                 Console.WriteLine("Nachricht vom Client : {0}",message);
             }
-
+            Console.WriteLine("Server ist wech");
             stream.Close();
             connection.Close();
             listener.Stop();
