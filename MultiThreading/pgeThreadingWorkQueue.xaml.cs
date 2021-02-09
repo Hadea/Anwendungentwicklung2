@@ -42,14 +42,13 @@ namespace MultiThreading
         private string _message;
 
 
-        public ObservableCollection<ProgressBar> ProgressBars { get; set; }
+        public ObservableCollection<ProgressBar> ProgressBars { get; init; }
 
 
         private async void calculate()
         {
             DateTime startTime = DateTime.Now;
             Message = "Starte";
-            //wpProgress.Children.Clear();
             ProgressBars.Clear();
             // vorbereitungen
             byte[] arrayToWorkOn = new byte[1_000_000_000];
@@ -112,7 +111,6 @@ namespace MultiThreading
 
             foreach (var item in sumPackages)
                 ProgressBars.Add(item.ProgressBar);
-            //    wpProgress.Children.Add(item.ProgressBar);
 
             int packageID = 0;
             LinkedList<Task<WorkPackage<ulong, byte>>> taskSumList = new();
