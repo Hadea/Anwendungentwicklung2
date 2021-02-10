@@ -5,18 +5,27 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ChatClientGUI"
         mc:Ignorable="d"
-        Title="MainWindow" Height="150" Width="200">
+        Title="Chat Client" Height="250" Width="300">
     <Window.DataContext>
         <local:ChatViewModel />
     </Window.DataContext>
-    <StackPanel>
-        <StackPanel Orientation="Horizontal">
-            <Button Content="(dis)Connect" Command="{Binding Command_Connect}" />
-            <Rectangle Width="20" Height="20" Fill="{Binding ConnectionColor}"/>
-        </StackPanel>
-        <StackPanel Orientation="Horizontal">
-            <Button Content="Send" Command="{Binding Command_Send}" CommandParameter="{Binding ElementName=tbMessage, Path=Text}" />
-            <TextBox x:Name="tbMessage" Width="150" IsEnabled="{Binding IsConnected}"/>
-        </StackPanel>
-    </StackPanel>
+    <Grid Margin="5">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="40"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="25"/>
+        </Grid.RowDefinitions>
+        <Button Grid.Column="0" Grid.Row="0" Content="(dis)Connect" Command="{Binding Command_Connect}" />
+        <Rectangle Grid.Column="1" Grid.Row="0" Width="20" Height="20" Fill="{Binding ConnectionColor}"/>
+        <Button Grid.Column="1" Grid.Row="2" IsDefault="True" Content="Send" Command="{Binding Command_Send}" />
+        <TextBox Grid.Column="0" Grid.Row="2" Text="{Binding NewMessage, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsConnected}"/>
+        <ScrollViewer x:Name="scroller" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2">
+            <TextBlock Text="{Binding Messages}"/>
+        </ScrollViewer>
+
+    </Grid>
 </Window>

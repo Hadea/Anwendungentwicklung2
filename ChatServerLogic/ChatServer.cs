@@ -54,6 +54,14 @@ namespace ChatServerLogic
             connection.Close();
         }
 
+        public void SendMessage(string Message)
+        {
+            if (connection == null || !connection.Connected) return;
+            byte[] data;
+            data = Encoding.ASCII.GetBytes(Message);
+            connection.GetStream().Write(data, 0, data.Length);
+        }
+
         private async void receive()
         {
             string message;

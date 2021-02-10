@@ -11,13 +11,18 @@ namespace ChatServerGUI
             Console.WriteLine("   /start    startet den Server und wartet auf Verbindungen");
             Console.WriteLine("   /stop     trennt alle verbindungen und fährt den server herunter");
             Console.WriteLine("   /status   gibt den Verbindungsstatus zurück");
+            Console.WriteLine("   /send <Message>  sendet eine Nachricht an den Client");
 
             ChatServerLogic.ChatServer chatServer = new((x) => Console.WriteLine("Empfangen: {0}", x));
 
+            string input;
             string command;
             while (true)
             {
-                command = Console.ReadLine();
+                input = Console.ReadLine();
+                int spaceID = input.IndexOf(" ");
+                command = input.Substring(0, (spaceID > 0 ? spaceID : input.Length));
+
                 switch (command)
                 {
                     case "/start":
@@ -36,6 +41,9 @@ namespace ChatServerGUI
                             Console.WriteLine("Client ist Verbunden");
                         else
                             Console.WriteLine("keine Verbindung");
+                        break;
+                    case "/send":
+                        chatServer.SendMessage(input[6..]);
                         break;
                     default:
                         Console.WriteLine("unbekanntes Kommando : {0}", command);
