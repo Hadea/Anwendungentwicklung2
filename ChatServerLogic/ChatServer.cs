@@ -33,10 +33,11 @@ namespace ChatServerLogic
             listener = new(System.Net.IPAddress.Any, 1337);
         }
 
-        public async Task StartAsync()
+        public async void StartAsync()
         {
             listener.Start();
-            connection = await Task<TcpClient>.Run(() => listener.AcceptTcpClient());
+            connection = await Task.Run(() => listener.AcceptTcpClient());
+            onMessageReceived.Invoke("Client verbindet sich, stoppe Listener");
             listener.Stop();
             cts = new();
             _ = Task.Run(receive, cts.Token);
@@ -45,7 +46,7 @@ namespace ChatServerLogic
         {
             listener.Start();
             connection = listener.AcceptTcpClient();
-            onMessageReceived.Invoke("Client verbindet sich");
+            onMessageReceived.Invoke("Client verbindet sich, stoppe Listener");
             listener.Stop();
             cts = new();
             _ = Task.Run(receive, cts.Token);
@@ -62,32 +63,33 @@ namespace ChatServerLogic
         {
             string message;
             byte[] data = new byte[1024];
-            int recievedBytes =0;
-            var dataStream = connection.GetStream();
+            int recievedBytes = 0;
 
             while (true)
             {
 
                 try
                 {
-                    recievedBytes = await dataStream.ReadAsync(data.AsMemory(0, data.Length), cts.Token);
+                    recievedBytes = await connection.GetStream().ReadAsync(data.AsMemory(0, data.Length), cts.Token);
+                    message = Encoding.ASCII.GetString(data, 0, recievedBytes);
+                    onMessageReceived.Invoke(message);
                 }
                 catch (Exception)
                 {
                     onMessageReceived.Invoke("Cancel Token wurde ausgelöst");
-                    break;
+                    onMessageReceived.Invoke("Beende reciever");
+                    return;
                 }
                 if (recievedBytes < 1)
                 {
                     onMessageReceived.Invoke("Weniger als 1 byte empfangen, beende verbindung");
-                    break;
+                    connection.Close();
+                    onMessageReceived.Invoke("Warte auf neue Verbindung vom Client");
+                    listener.Start();
+                    connection = listener.AcceptTcpClient();
+                    onMessageReceived.Invoke("Client wieder verbunden");
                 }
-                message = Encoding.ASCII.GetString(data, 0, recievedBytes);
-                onMessageReceived.Invoke(message);
-                Thread.Sleep(100);
             }
-            onMessageReceived.Invoke("Beende reciever");
-            dataStream.Close();
         }
     }
 }

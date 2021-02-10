@@ -24,7 +24,7 @@ namespace ChatServerGUI
                         if (chatServer.IsConnected)
                             Console.WriteLine("Client ist bereits verbunden");
                         else
-                            chatServer.Start();
+                            chatServer.StartAsync();
                         break;
                     case "/stop":
                         Console.WriteLine("Beende Server");
