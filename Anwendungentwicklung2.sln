@@ -50,9 +50,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MultiThreading", "MultiThre
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThreadingConsole", "ThreadingConsole\ThreadingConsole.csproj", "{873A96E7-EF6F-40C7-A552-3AAF61BA75B0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetServer", "NetServer\NetServer.csproj", "{6FA18D69-2838-45BF-AED4-94199AFE99DB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetServer", "NetServer\NetServer.csproj", "{6FA18D69-2838-45BF-AED4-94199AFE99DB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetClient", "NetClient\NetClient.csproj", "{5EBBA387-25E7-46E5-9984-B6BF83C7479E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetClient", "NetClient\NetClient.csproj", "{5EBBA387-25E7-46E5-9984-B6BF83C7479E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatClientLogic", "ChatClientLogic\ChatClientLogic.csproj", "{BF9C32FB-8A73-4CE0-85EC-BF92596EDD9F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatClientGUI", "ChatClientGUI\ChatClientGUI.csproj", "{19C99E40-3F20-4515-8C30-9CA91C3FC5C7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatServerLogic", "ChatServerLogic\ChatServerLogic.csproj", "{DD9C0A68-86E9-4BB1-B27E-4335972375B2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatServerGUI", "ChatServerGUI\ChatServerGUI.csproj", "{6E044852-B02B-4F1F-861C-6BA990E201A9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -152,6 +160,22 @@ Global
 		{5EBBA387-25E7-46E5-9984-B6BF83C7479E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5EBBA387-25E7-46E5-9984-B6BF83C7479E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5EBBA387-25E7-46E5-9984-B6BF83C7479E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF9C32FB-8A73-4CE0-85EC-BF92596EDD9F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF9C32FB-8A73-4CE0-85EC-BF92596EDD9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF9C32FB-8A73-4CE0-85EC-BF92596EDD9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF9C32FB-8A73-4CE0-85EC-BF92596EDD9F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{19C99E40-3F20-4515-8C30-9CA91C3FC5C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{19C99E40-3F20-4515-8C30-9CA91C3FC5C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{19C99E40-3F20-4515-8C30-9CA91C3FC5C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{19C99E40-3F20-4515-8C30-9CA91C3FC5C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD9C0A68-86E9-4BB1-B27E-4335972375B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD9C0A68-86E9-4BB1-B27E-4335972375B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD9C0A68-86E9-4BB1-B27E-4335972375B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD9C0A68-86E9-4BB1-B27E-4335972375B2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E044852-B02B-4F1F-861C-6BA990E201A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E044852-B02B-4F1F-861C-6BA990E201A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E044852-B02B-4F1F-861C-6BA990E201A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E044852-B02B-4F1F-861C-6BA990E201A9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
