@@ -53,26 +53,37 @@ namespace ChatServerLogic
 
         public void Stop()
         {
+            onMessageReceived.Invoke("Server wird beendet");
             cts.Cancel();
             connection.Close();
-            onMessageReceived.Invoke("Server beendet");
         }
 
-        private void receive()
+        private async void receive()
         {
             string message;
             byte[] data = new byte[1024];
-            int recievedBytes;
+            int recievedBytes =0;
             var dataStream = connection.GetStream();
 
-            while (!cts.IsCancellationRequested && connection.Connected)
+            while (true)
             {
-                if (dataStream.Socket.Available > 0) //TODO: verhindert leider das auslesen eines paketes der länge 0 (verbindung trennen)
+
+                try
                 {
-                    recievedBytes = dataStream.Read(data, 0, data.Length);
-                    message = Encoding.ASCII.GetString(data, 0, recievedBytes);
-                    onMessageReceived.Invoke(message);
+                    recievedBytes = await dataStream.ReadAsync(data.AsMemory(0, data.Length), cts.Token);
                 }
+                catch (Exception)
+                {
+                    onMessageReceived.Invoke("Cancel Token wurde ausgelöst");
+                    break;
+                }
+                if (recievedBytes < 1)
+                {
+                    onMessageReceived.Invoke("Weniger als 1 byte empfangen, beende verbindung");
+                    break;
+                }
+                message = Encoding.ASCII.GetString(data, 0, recievedBytes);
+                onMessageReceived.Invoke(message);
                 Thread.Sleep(100);
             }
             onMessageReceived.Invoke("Beende reciever");
