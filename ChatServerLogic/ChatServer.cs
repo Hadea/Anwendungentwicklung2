@@ -10,12 +10,7 @@ namespace ChatServerLogic
     {
         private readonly TcpListener listener;
         private TcpClient connection;
-        /*
-         Action          <= ohne parameter und ohne rückgabe
-         Action<bool>    <= mit bool parameter und ohne rückgabe
-         Func<bool>      <= ohne parameter mit bool rückgabe
-         
-         */
+        
 
         private readonly Action<string> onMessageReceived;
         CancellationTokenSource cts;
@@ -77,7 +72,7 @@ namespace ChatServerLogic
                 catch (Exception)
                 {
                     onMessageReceived.Invoke("Cancel Token wurde ausgelöst");
-                    onMessageReceived.Invoke("Beende reciever");
+                    onMessageReceived.Invoke("Beende receiver");
                     return;
                 }
                 if (recievedBytes < 1)
