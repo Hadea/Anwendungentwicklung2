@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
@@ -72,7 +69,7 @@ namespace ChatClientGUI
         private void displayRecievedMessage(string ReceivedMessage)
         {
             Messages += Environment.NewLine + "Other> " + ReceivedMessage;
-            UIDispatcher.Invoke( () => ScrollDownMethod?.Invoke());
+            UIDispatcher.Invoke(ScrollDownMethod);
         }
         private void connect()
         {

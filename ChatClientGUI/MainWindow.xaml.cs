@@ -12,7 +12,7 @@ namespace ChatClientGUI
             InitializeComponent();
             ChatViewModel vm = new();
             vm.ScrollDownMethod = svMessages.ScrollToBottom;
-            vm.UIDispatcher =  this.Dispatcher;
+            vm.UIDispatcher =  Dispatcher;
             DataContext = vm;
         }
     }
