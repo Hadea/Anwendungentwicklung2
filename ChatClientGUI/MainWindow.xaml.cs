@@ -10,6 +10,10 @@ namespace ChatClientGUI
         public MainWindow()
         {
             InitializeComponent();
+            ChatViewModel vm = new();
+            vm.ScrollDownMethod = svMessages.ScrollToBottom;
+            vm.UIDispatcher =  this.Dispatcher;
+            DataContext = vm;
         }
     }
 }

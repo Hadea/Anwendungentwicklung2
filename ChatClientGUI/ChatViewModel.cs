@@ -46,23 +46,33 @@ namespace ChatClientGUI
             }
         }
         private string _newMessage;
-
+        public Action ScrollDownMethod;
         private readonly ChatClientLogic.ClientLogic logic;
 
         public bool IsConnected { get => logic.IsConnected; }
+        public Dispatcher UIDispatcher { get; internal set; }
 
         public ChatViewModel()
         {
             Command_Connect = new GenericCommand(connect);
-            Command_Send = new GenericCommand(() => { logic.SendMessage(_newMessage); Messages += Environment.NewLine + "You  > " + _newMessage; NewMessage = String.Empty; }, () => IsConnected);
+            Command_Send = new GenericCommand(sendNewMessage, () => IsConnected);
             logic = new(displayRecievedMessage);
             Messages = string.Empty;
             NewMessage = string.Empty;
         }
 
-        private void displayRecievedMessage(string NewMessage)
+        private void sendNewMessage()
         {
-            Messages += Environment.NewLine + "Other> " + NewMessage;
+            logic.SendMessage(_newMessage);
+            Messages += Environment.NewLine + "You  > " + _newMessage;
+            NewMessage = string.Empty;
+            ScrollDownMethod?.Invoke();
+        }
+
+        private void displayRecievedMessage(string ReceivedMessage)
+        {
+            Messages += Environment.NewLine + "Other> " + ReceivedMessage;
+            UIDispatcher.Invoke( () => ScrollDownMethod?.Invoke());
         }
         private void connect()
         {

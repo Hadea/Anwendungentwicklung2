@@ -80,6 +80,7 @@ namespace ChatClientLogic
                 {
                     // server hat verbindung regulär getrennt
                     connection.Close();
+                    return;
                 }
                 else
                 {

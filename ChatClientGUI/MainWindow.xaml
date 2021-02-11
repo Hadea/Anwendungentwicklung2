@@ -6,9 +6,6 @@
         xmlns:local="clr-namespace:ChatClientGUI"
         mc:Ignorable="d"
         Title="Chat Client" Height="250" Width="300">
-    <Window.DataContext>
-        <local:ChatViewModel />
-    </Window.DataContext>
     <Grid Margin="5">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -23,8 +20,8 @@
         <Rectangle Grid.Column="1" Grid.Row="0" Width="20" Height="20" Fill="{Binding ConnectionColor}"/>
         <Button Grid.Column="1" Grid.Row="2" IsDefault="True" Content="Send" Command="{Binding Command_Send}" />
         <TextBox Grid.Column="0" Grid.Row="2" Text="{Binding NewMessage, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsConnected}"/>
-        <ScrollViewer x:Name="scroller" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2">
-            <TextBlock Text="{Binding Messages}"/>
+        <ScrollViewer x:Name="svMessages" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2">
+            <TextBlock Text="{Binding Messages}" TextWrapping="Wrap"/>
         </ScrollViewer>
 
     </Grid>
