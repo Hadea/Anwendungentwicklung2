@@ -53,22 +53,29 @@ namespace ChatClientGUI
         {
             Command_Connect = new GenericCommand(connect);
             Command_Send = new GenericCommand(sendNewMessage, () => IsConnected);
-            logic = new(displayRecievedMessage);
+            logic = new(displayReceivedMessage);
+            logic.OnConnectionStatusChanged = connectionStatusChange;
             Messages = string.Empty;
             NewMessage = string.Empty;
+        }
+
+        private void connectionStatusChange()
+        {
+            PropertyChanged(this, new PropertyChangedEventArgs(nameof(IsConnected)));
+            PropertyChanged(this, new PropertyChangedEventArgs(nameof(ConnectionColor)));
+            UIDispatcher.Invoke( (Command_Send as GenericCommand).RaiseCanExecuteChanged);
         }
 
         private void sendNewMessage()
         {
             logic.SendMessage(_newMessage);
-            Messages += Environment.NewLine + "You  > " + _newMessage;
             NewMessage = string.Empty;
             ScrollDownMethod?.Invoke();
         }
 
-        private void displayRecievedMessage(string ReceivedMessage)
+        private void displayReceivedMessage(string ReceivedMessage)
         {
-            Messages += Environment.NewLine + "Other> " + ReceivedMessage;
+            Messages += Environment.NewLine + ReceivedMessage;
             UIDispatcher.Invoke(ScrollDownMethod);
         }
         private void connect()

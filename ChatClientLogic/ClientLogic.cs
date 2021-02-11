@@ -11,6 +11,7 @@ namespace ChatClientLogic
         private TcpClient connection;
         private readonly Action<string> onNewMessage;
         CancellationTokenSource cts;
+        public Action OnConnectionStatusChanged;
         public bool IsConnected
         {
             get
@@ -73,14 +74,12 @@ namespace ChatClientLogic
                 catch (Exception)
                 {
                     // wenn fehler bei der übertragung stattfinden (server down, netzwerk down)
-                    connection.Close();
-                    return;
+                    break; ;
                 }
                 if (receivedBytes < 1)
                 {
                     // server hat verbindung regulär getrennt
-                    connection.Close();
-                    return;
+                    break;
                 }
                 else
                 {
@@ -89,6 +88,8 @@ namespace ChatClientLogic
                     onNewMessage.Invoke(message);
                 }
             }
+            connection.Close();
+            OnConnectionStatusChanged?.Invoke();
         }
     }
 }
