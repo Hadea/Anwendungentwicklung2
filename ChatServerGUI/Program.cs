@@ -13,7 +13,6 @@ namespace ChatServerGUI
             Console.WriteLine("   /stop             stopt den listener");
             Console.WriteLine("   /status           gibt den Serverstatus zurück");
             Console.WriteLine("   /send <Message>   sendet eine Nachricht an alle Clients");
-            Console.WriteLine("   /send <Message>   sendet eine Nachricht an alle Clients");
             Console.WriteLine("   /shutdown         stoppt den listener, trennt alle verbindungen und beendet das Programm");
 
             ChatServerLogic.ChatServer chatServer = new((x) => Console.WriteLine("Empfangen: {0}", x));
@@ -40,12 +39,12 @@ namespace ChatServerGUI
                         foreach (var item in status) Console.WriteLine(item);
                         break;
                     case "/send":
-                        chatServer.SendMessage(input[6..]);
+                        chatServer.BroadcastMessage(input[6..]);
                         break;
                     case "/shutdown":
                         Console.WriteLine("Beende anwendung");
                         chatServer.StopListener();
-                        chatServer.Kick();
+                        chatServer.StopReader();
                         return;
                     default:
                         Console.WriteLine("unbekanntes Kommando : {0}", command);

@@ -56,11 +56,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetClient", "NetClient\NetC
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatClientLogic", "ChatClientLogic\ChatClientLogic.csproj", "{BF9C32FB-8A73-4CE0-85EC-BF92596EDD9F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatClientGUI", "ChatClientGUI\ChatClientGUI.csproj", "{19C99E40-3F20-4515-8C30-9CA91C3FC5C7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatClientGUI", "ChatClientGUI\ChatClientGUI.csproj", "{19C99E40-3F20-4515-8C30-9CA91C3FC5C7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatServerLogic", "ChatServerLogic\ChatServerLogic.csproj", "{DD9C0A68-86E9-4BB1-B27E-4335972375B2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatServerLogic", "ChatServerLogic\ChatServerLogic.csproj", "{DD9C0A68-86E9-4BB1-B27E-4335972375B2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatServerGUI", "ChatServerGUI\ChatServerGUI.csproj", "{6E044852-B02B-4F1F-861C-6BA990E201A9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatServerGUI", "ChatServerGUI\ChatServerGUI.csproj", "{6E044852-B02B-4F1F-861C-6BA990E201A9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatMessages", "ChatMessages\ChatMessages.csproj", "{D5FD8E08-BFC4-4897-A5EF-AFE760595B17}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatTests", "ChatTests\ChatTests.csproj", "{2EED2F50-289C-47DE-8C2D-472FAC8CA412}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -176,6 +180,14 @@ Global
 		{6E044852-B02B-4F1F-861C-6BA990E201A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6E044852-B02B-4F1F-861C-6BA990E201A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6E044852-B02B-4F1F-861C-6BA990E201A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D5FD8E08-BFC4-4897-A5EF-AFE760595B17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D5FD8E08-BFC4-4897-A5EF-AFE760595B17}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D5FD8E08-BFC4-4897-A5EF-AFE760595B17}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D5FD8E08-BFC4-4897-A5EF-AFE760595B17}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2EED2F50-289C-47DE-8C2D-472FAC8CA412}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2EED2F50-289C-47DE-8C2D-472FAC8CA412}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2EED2F50-289C-47DE-8C2D-472FAC8CA412}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2EED2F50-289C-47DE-8C2D-472FAC8CA412}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

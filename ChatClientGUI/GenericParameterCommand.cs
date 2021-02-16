@@ -7,15 +7,15 @@ namespace ChatClientGUI
     {
         public event EventHandler CanExecuteChanged;
         private readonly Action<object> _executeAction;
-        private readonly Func<bool> _canExecuteAction;
+        private readonly Func<object,bool> _canExecuteAction;
 
         public bool CanExecute(object parameter)//TODO: pass parameter
         {
             if (_canExecuteAction == null) return true;
-            return _canExecuteAction.Invoke();
+            return _canExecuteAction(parameter);
         }
 
-        public GenericParameterCommand(Action<object> Execute, Func<bool> CanExecute = null)
+        public GenericParameterCommand(Action<object> Execute, Func<object,bool> CanExecute = null)
         {
             _executeAction = Execute;
             if (CanExecute != null)
