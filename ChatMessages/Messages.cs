@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace ChatMessages
 {
+#pragma warning disable CA1051 // Do not declare visible instance fields
     public abstract class Message
     {
         public MessageTypes MessageType;
@@ -11,7 +12,7 @@ namespace ChatMessages
 
     public class MessageLogin : Message
     {
-        const int passwordLength = 16;
+        const int passwordLength = 32;
         public MessageLogin()
         {
             MessageType = MessageTypes.Login;
@@ -19,14 +20,11 @@ namespace ChatMessages
         public byte[] Password;
         public string UserName;
 
-        public int GetSize()
-        {
-            return 1 + passwordLength + UserName.Length;
-        }
+        private int Size => 1 + passwordLength + UserName.Length;
 
         public override byte[] ToArray()
         {
-            byte[] data = new byte[GetSize()];
+            byte[] data = new byte[Size];
             Array.Copy(Password, 0, data, 1, passwordLength);
             var NameArray = UserName.ConvertToArray();
             Array.Copy(NameArray, 0, data, 1 + passwordLength, NameArray.Length);
@@ -35,7 +33,7 @@ namespace ChatMessages
 
         public MessageLogin(byte[] Data)
         {
-            if (Data == null || Data.Length < 1 + passwordLength) throw new ArgumentException();
+            if (Data == null || Data.Length < 1 + passwordLength) throw new ArgumentException("Datenpaket ungültig");
             MessageType = MessageTypes.Login;
             Password = Data[1..(passwordLength + 1)];
             UserName = Data[(1 + passwordLength)..].ConvertToString();
@@ -55,13 +53,8 @@ namespace ChatMessages
 
         public MessageLoginSuccessful(byte[] Data)
         {
-            if (Data == null || Data.Length != 1) throw new ArgumentException();
+            if (Data == null || Data.Length != 1) throw new ArgumentException("Datenpaket ungültig");
             MessageType = (MessageTypes)Data[0];
-        }
-
-        public int GetSize()
-        {
-            return 1;
         }
 
         public override byte[] ToArray()
@@ -82,13 +75,9 @@ namespace ChatMessages
 
         public MessageLoginFail(byte[] Data)
         {
+            if (Data == null || Data.Length != 2) throw new ArgumentException("Datenpaket ungültig");
             MessageType = MessageTypes.LoginFail;
             Reason = (LoginFailReason)Data[1];
-        }
-
-        public int GetSize()
-        {
-            return 2;
         }
 
         public override byte[] ToArray()
@@ -105,11 +94,6 @@ namespace ChatMessages
         public MessageLogout()
         {
             MessageType = MessageTypes.Logout;
-        }
-
-        public int GetSize()
-        {
-            return 1;
         }
 
         public override byte[] ToArray()
@@ -131,29 +115,27 @@ namespace ChatMessages
         }
         public MessageDirect(byte[] Data)
         {
+            if (Data == null || Data.Length < 4) throw new ArgumentException("Datenpaket ungültig");
             MessageType = MessageTypes.DirectMessage;
             ContentType = (DataType)Data[1];
-            SourceName = Data[4..(Data[2]+4)].ConvertToString();
-            DestinationName = Data[(4+ SourceName.Length)..(4+SourceName.Length + Data[3])].ConvertToString();
+            SourceName = Data[4..(Data[2] + 4)].ConvertToString();
+            DestinationName = Data[(4 + SourceName.Length)..(4 + SourceName.Length + Data[3])].ConvertToString();
             Content = Data[(4 + SourceName.Length + Data[3])..];
         }
 
-        public int GetSize()
-        {
-            return 4 + DestinationName.Length + SourceName.Length + Content.Length;
-        }
+        public int Size => 4 + DestinationName.Length + SourceName.Length + Content.Length;
 
         public override byte[] ToArray()
         {
-            byte[] data = new byte[GetSize()] ;
+            byte[] data = new byte[Size];
             data[1] = (byte)ContentType;
             data[2] = (byte)SourceName.Length;
             data[3] = (byte)DestinationName.Length;
             var buffer = SourceName.ConvertToArray();
             Array.Copy(buffer, 0, data, 4, buffer.Length);
             buffer = DestinationName.ConvertToArray();
-            Array.Copy(buffer, 0, data, 4+SourceName.Length, buffer.Length);
-            Array.Copy(Content, 0, data, 4+SourceName.Length+DestinationName.Length, Content.Length);
+            Array.Copy(buffer, 0, data, 4 + SourceName.Length, buffer.Length);
+            Array.Copy(Content, 0, data, 4 + SourceName.Length + DestinationName.Length, Content.Length);
             return data;
         }
     }
@@ -173,21 +155,19 @@ namespace ChatMessages
         }
         public MessageRoom(byte[] Data)
         {
+            if (Data == null || Data.Length < 4) throw new ArgumentException("Datenpaket ungültig");
             MessageType = MessageTypes.RoomMessage;
             ContentType = (DataType)Data[1];
-            RoomID = Data[4..(4+Data[2])].ConvertToString();
-            SourceName = Data[(4+RoomID.Length)..(4+RoomID.Length+Data[3])].ConvertToString();
-            Content = Data[(4+RoomID.Length+SourceName.Length)..];
+            RoomID = Data[4..(4 + Data[2])].ConvertToString();
+            SourceName = Data[(4 + RoomID.Length)..(4 + RoomID.Length + Data[3])].ConvertToString();
+            Content = Data[(4 + RoomID.Length + SourceName.Length)..];
         }
 
-        public int GetSize()
-        {
-            return 4 + RoomID.Length + SourceName.Length + Content.Length;
-        }
+        public int Size => 4 + RoomID.Length + SourceName.Length + Content.Length;
 
         public override byte[] ToArray()
         {
-            byte[] data = new byte[GetSize()];
+            byte[] data = new byte[Size];
             data[0] = (byte)MessageType;
             data[1] = (byte)ContentType;
             data[2] = (byte)RoomID.Length;
@@ -195,8 +175,8 @@ namespace ChatMessages
             byte[] buffer = RoomID.ConvertToArray();
             Array.Copy(buffer, 0, data, 4, buffer.Length);
             buffer = SourceName.ConvertToArray();
-            Array.Copy(buffer, 0, data, 4+RoomID.Length, buffer.Length);
-            Array.Copy(Content, 0, data, 4+RoomID.Length + buffer.Length, Content.Length);
+            Array.Copy(buffer, 0, data, 4 + RoomID.Length, buffer.Length);
+            Array.Copy(Content, 0, data, 4 + RoomID.Length + buffer.Length, Content.Length);
             return data;
         }
     }
@@ -212,15 +192,13 @@ namespace ChatMessages
         }
         public MessageBroadcast(byte[] Data)
         {
+            if (Data == null || Data.Length < 2) throw new ArgumentException("Datenpaket ungültig");
             MessageType = MessageTypes.Broadcast;
             ContentType = (DataType)Data[1];
             Content = Data[2..];
         }
 
-        public int GetSize()
-        {
-            return 2 + Content.Length;
-        }
+        private int Size => 2 + Content.Length;
 
         /// <summary>
         /// Never used
@@ -228,7 +206,7 @@ namespace ChatMessages
         /// <returns></returns>
         public override byte[] ToArray()
         {
-            byte[] data = new byte[GetSize()];
+            byte[] data = new byte[Size];
             data[1] = (byte)ContentType;
             Array.Copy(Content, 0, data, 2, Content.Length);
             return data;
@@ -264,22 +242,24 @@ namespace ChatMessages
 
     public class MessageUserList : Message
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1002:Do not expose generic lists", Justification = "Must be generic list because of index operations")]
         public List<string> UserList;
 
         public MessageUserList()
         {
             MessageType = MessageTypes.RoomUserList;
-            UserList = new();
+            UserList = new List<string>();
         }
 
         public MessageUserList(byte[] Data)
         {
+            if (Data == null || Data.Length < 4) throw new ArgumentException("Datenpaket ungültig");
             MessageType = MessageTypes.RoomUserList;
-            UserList = new( Data[1..^1].ConvertToString().Split(';'));
+            UserList = new List<string>(Data[1..^1].ConvertToString().Split(';'));
         }
         public override byte[] ToArray()
         {
-            byte[] data = new byte[GetSize()];
+            byte[] data = new byte[Size];
             data[0] = (byte)MessageType;
             int writePos = 1;
             for (int counter = 0; counter < UserList.Count; counter++)
@@ -293,12 +273,16 @@ namespace ChatMessages
             return data;
         }
 
-        private int GetSize()
+        private int Size
         {
-            int sum = 1;
-            foreach (var name in UserList)
-                sum += name.Length +1;
-            return sum;
+            get
+            {
+                int sum = 1;
+                foreach (var name in UserList)
+                    sum += name.Length + 1;
+                return sum;
+            }
         }
     }
+#pragma warning restore CA1051 // Do not declare visible instance fields
 }

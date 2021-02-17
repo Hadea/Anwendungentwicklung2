@@ -2,20 +2,18 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Sockets;
-using System.Security.Cryptography;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace ChatClientLogic
 {
-    public class ClientLogic
+    public sealed class ClientLogic : IDisposable
     {
         private TcpClient connection;
         private readonly Action<string> onNewMessage;
         private readonly Action<List<string>> onNewUserList;
-        CancellationTokenSource cts;
-        public Action OnConnectionStatusChanged;
+        private readonly Action onConnectionStatusChanged;
+        private CancellationTokenSource cts;
         public bool IsConnected
         {
             get
@@ -33,13 +31,14 @@ namespace ChatClientLogic
             private set;
         }
 
-        public ClientLogic(Action<string> OnNewMessage, Action<List<string>> OnNewUserList)
+        public ClientLogic(Action<string> OnNewMessage, Action<List<string>> OnNewUserList, Action OnConnectionStatusChanged)
         {
             onNewMessage = OnNewMessage;
             onNewUserList = OnNewUserList;
+            onConnectionStatusChanged = OnConnectionStatusChanged;
         }
 
-        public bool Start(string UserName, string Password)
+        public bool Start(string UserName, byte[] Password)
         {
             connection = new TcpClient();
 
@@ -47,7 +46,7 @@ namespace ChatClientLogic
             {
                 connection.Connect("127.0.0.1", 1337);
             }
-            catch (Exception)
+            catch (SocketException)
             {
                 return false;
             }
@@ -55,11 +54,7 @@ namespace ChatClientLogic
             _ = Task.Run(recieve, cts.Token);
             MessageLogin ml = new();
 
-            using (MD5 hash = MD5.Create())
-            {
-                ml.Password = hash.ComputeHash(Password.ConvertToArray());
-            }
-
+            ml.Password = Password;
             ml.UserName = UserName;
             connection.GetStream().Write(ml.ToArray());
             return true;
@@ -89,9 +84,9 @@ namespace ChatClientLogic
             {
                 try
                 {
-                    receivedBytes = await connection.GetStream().ReadAsync(data.AsMemory(0, data.Length), cts.Token);
+                    receivedBytes = await connection.GetStream().ReadAsync(data.AsMemory(0, data.Length), cts.Token).ConfigureAwait(true); //todo false könnte genügen
                 }
-                catch (Exception)
+                catch (InvalidOperationException)
                 {
                     // wenn fehler bei der übertragung stattfinden (server down, netzwerk down)
                     connection.Close();
@@ -165,13 +160,20 @@ namespace ChatClientLogic
                     }
                 }
             }
-            OnConnectionStatusChanged?.Invoke();
+            onConnectionStatusChanged();
         }
 
         public void RequestUserRefresh()
         {
             MessageRequestUserList m = new();
             connection.GetStream().Write(m.ToArray());
+        }
+
+        public void Dispose()
+        {
+            connection.Dispose();
+            cts.Dispose();
+
         }
     }
 }

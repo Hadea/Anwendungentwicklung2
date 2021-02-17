@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Security.Cryptography;
+using System.Text;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -78,8 +80,7 @@ namespace ChatClientGUI
             Command_Connect = new GenericParameterCommand((x) => connect((PasswordBox)x), (x) => canConnect((PasswordBox)x));
             Command_Send = new GenericCommand(sendNewMessage, () => IsConnected);
             Command_Refresh = new GenericCommand(() => logic.RequestUserRefresh(), () => true);
-            logic = new(displayReceivedMessage, displayUserList);
-            logic.OnConnectionStatusChanged = connectionStatusChange;
+            logic = new(displayReceivedMessage, displayUserList, connectionStatusChange);
             Messages = string.Empty;
             NewMessage = string.Empty;
             UserName = string.Empty;
@@ -123,9 +124,8 @@ namespace ChatClientGUI
             if (IsConnected)
                 logic.Stop();
             else
-            {
-                logic.Start(UserName, passwordBox.Password);
-            }
+                using (SHA256 hash = SHA256.Create())
+                    logic.Start(UserName, hash.ComputeHash(Encoding.ASCII.GetBytes(passwordBox.Password)));
 
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsConnected)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ConnectionColor)));

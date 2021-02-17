@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace ChatServerLogic
 {
-    public class ChatServer
+    public sealed class ChatServer
     {
         private readonly TcpListener listener;
         private readonly LinkedList<ClientConnectionData> connections;
         private readonly Action<string> LogOutput;
-        CancellationTokenSource ctsReader;
-        CancellationTokenSource ctsListener;
+        private CancellationTokenSource ctsReader;
+        private CancellationTokenSource ctsListener;
 
         public bool IsListenerRunning
         {
@@ -26,19 +26,20 @@ namespace ChatServerLogic
             LogOutput = LogMethod;
             listener = new(System.Net.IPAddress.Any, 1337);
             ctsReader = new();
-            ctsListener = new();
             connections = new();
         }
 
         public async void StartListenerAsync()
         {
             if (IsListenerRunning) return;
+            ctsListener = new();
+            if (ctsReader == null) ctsReader = new();
             IsListenerRunning = true;
             LogOutput("Starte Listener, neue Verbindungen erlaubt");
             listener.Start();
             while (!ctsListener.IsCancellationRequested)
             {
-                TcpClient newClient = await Task.Run(() => listener.AcceptTcpClient(), ctsListener.Token);
+                TcpClient newClient = await Task.Run(() => listener.AcceptTcpClient(), ctsListener.Token).ConfigureAwait(true);//TODO: false müsste genügen
                 ClientConnectionData ccd = new();
                 ccd.UserName = null;
                 ccd.Reader = Task.Run(() => receive(ccd), ctsReader.Token);
@@ -68,6 +69,7 @@ namespace ChatServerLogic
             }
             connections.Clear();
             LogOutput("Alle Reader und Clients getrennt");
+            ctsReader = null;
         }
 
         public void BroadcastMessage(string Message)
@@ -81,7 +83,7 @@ namespace ChatServerLogic
                     client.Connection.GetStream().Write(mb.ToArray());
         }
 
-        public List<string> GetConnectionStatus()
+        public IReadOnlyCollection<string> GetConnectionStatus()
         {
             List<string> resultList = new();
             resultList.Add("Status des Servers");
@@ -103,7 +105,7 @@ namespace ChatServerLogic
             {
                 try
                 {
-                    recievedBytes = await Client.Connection.GetStream().ReadAsync(data.AsMemory(0, data.Length), ctsReader.Token);
+                    recievedBytes = await Client.Connection.GetStream().ReadAsync(data.AsMemory(0, data.Length), ctsReader.Token).ConfigureAwait(true); //TODO false müsste genügen
                     switch ((MessageTypes)data[0])
                     {
                         case MessageTypes.Login:
@@ -188,7 +190,7 @@ namespace ChatServerLogic
 
                     }
                 }
-                catch (Exception)
+                catch (InvalidOperationException)
                 {
                     LogOutput("Exeption ausgelöst, beende reader");
                     break;
