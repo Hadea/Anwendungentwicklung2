@@ -64,5 +64,10 @@ namespace Controls
         {
             frmContent.Navigate(new pgeListFilter());
         }
+
+        private void btnTreeView_Click(object sender, RoutedEventArgs e)
+        {
+            frmContent.Navigate(new pgeTreeView());
+        }
     }
 }
