@@ -105,16 +105,16 @@ namespace ChatClientLogic
                     {
                         case MessageTypes.LoginSuccessful:
                             IsLoggedIn = true;
-                            onNewMessage.Invoke("Server: Login erfolgreich");
+                            onNewMessage("Server: Login erfolgreich");
                             break;
                         case MessageTypes.LoginFail:
                             IsLoggedIn = false;
-                            onNewMessage.Invoke("Server: Login abgelehnt"); //todo grund angeben
+                            onNewMessage("Server: Login abgelehnt"); //todo grund angeben
                             break;
                         case MessageTypes.KickFromServer:
                             IsLoggedIn = false;
                             connection.Close();
-                            onNewMessage.Invoke("Server: Sie wurden vom Server getrennt");
+                            onNewMessage("Server: Sie wurden vom Server getrennt");
                             break;
                         case MessageTypes.ServerShutdown:
                             IsLoggedIn = false;
@@ -148,7 +148,7 @@ namespace ChatClientLogic
                         case MessageTypes.BanFromServer:
                             IsLoggedIn = false;
                             connection.Close();
-                            onNewMessage.Invoke("Server: Sie wurden vom Server verbannt");
+                            onNewMessage("Server: Sie wurden vom Server verbannt");
                             break;
                         case MessageTypes.RoomUserList:
                             MessageUserList mul = new(data[..receivedBytes]);
