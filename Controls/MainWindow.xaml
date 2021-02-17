@@ -24,6 +24,7 @@
             <Button Content="Listen" Click="btnList_Click" />
             <Button Content="Listen und Filter v2" Click="btnListFilter_Click" />
             <Button Content="TreeView" Click="btnTreeView_Click" />
+            <Button Content="Bedingte Styles" Click="btnConditionalStyles_Click" />
         </StackPanel>
         
         <Frame x:Name="frmContent"

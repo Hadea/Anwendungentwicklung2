@@ -69,5 +69,10 @@ namespace Controls
         {
             frmContent.Navigate(new pgeTreeView());
         }
+
+        private void btnConditionalStyles_Click(object sender, RoutedEventArgs e)
+        {
+            frmContent.Navigate(new pgeConditionalStyles());
+        }
     }
 }
