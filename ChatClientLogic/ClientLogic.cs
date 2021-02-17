@@ -163,7 +163,7 @@ namespace ChatClientLogic
             onConnectionStatusChanged();
         }
 
-        public void RequestUserRefresh()
+        public void RequestRoomRefresh()
         {
             MessageRequestUserList m = new();
             connection.GetStream().Write(m.ToArray());

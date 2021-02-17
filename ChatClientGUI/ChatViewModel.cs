@@ -19,7 +19,7 @@ namespace ChatClientGUI
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public ObservableCollection<string> UserList { get; init; }
+        public ObservableCollection<RoomViewModel> RoomList { get; } = new();
         public string SelectedTarget { get; set; }
         public Brush ConnectionColor
         {
@@ -77,14 +77,13 @@ namespace ChatClientGUI
 
         public ChatViewModel()
         {
-            Command_Connect = new GenericParameterCommand((x) => connect((PasswordBox)x), (x) => canConnect((PasswordBox)x));
+            Command_Connect = new GenericParameterCommand(connect,canConnect);
             Command_Send = new GenericCommand(sendNewMessage, () => IsConnected);
-            Command_Refresh = new GenericCommand(() => logic.RequestUserRefresh(), () => true);
+            Command_Refresh = new GenericCommand(logic.RequestRoomRefresh, () => true);
             logic = new(displayReceivedMessage, displayUserList, connectionStatusChange);
             Messages = string.Empty;
             NewMessage = string.Empty;
             UserName = string.Empty;
-            UserList = new();
         }
 
         private void connectionStatusChange()
@@ -100,7 +99,6 @@ namespace ChatClientGUI
         {
             logic.SendMessage(_newMessage);
             NewMessage = string.Empty;
-            ScrollDownMethod?.Invoke();
         }
 
         private void displayReceivedMessage(string ReceivedMessage)
@@ -113,14 +111,15 @@ namespace ChatClientGUI
         {
             UIDispatcher.Invoke(() =>
             {
-                UserList.Clear();
+                RoomList.Clear();
                 foreach (var user in RecievedUserList)
-                    UserList.Add(user);
+                    RoomList.Add(user);
             });
 
         }
-        private void connect(PasswordBox passwordBox)
+        private void connect(object param)
         {
+            PasswordBox passwordBox = (PasswordBox)param;
             if (IsConnected)
                 logic.Stop();
             else
@@ -132,8 +131,9 @@ namespace ChatClientGUI
             (Command_Send as GenericCommand).RaiseCanExecuteChanged();
         }
 
-        private bool canConnect(PasswordBox passwordBox)
+        private bool canConnect(object param)
         {
+            PasswordBox passwordBox = (PasswordBox)param;
             if (IsConnected)
                 return true;
 

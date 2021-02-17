@@ -11,9 +11,11 @@ namespace ChatServerLogic
     {
         private readonly TcpListener listener;
         private readonly LinkedList<ClientConnectionData> connections;
+        private readonly LinkedList<ChatRoom> rooms;
         private readonly Action<string> LogOutput;
         private CancellationTokenSource ctsReader;
         private CancellationTokenSource ctsListener;
+        private readonly ChatRoom lobby = new();
 
         public bool IsListenerRunning
         {
@@ -27,6 +29,10 @@ namespace ChatServerLogic
             listener = new(System.Net.IPAddress.Any, 1337);
             ctsReader = new();
             connections = new();
+            rooms = new();
+
+            lobby.RoomID = "Eingang";
+            rooms.AddFirst(lobby);
         }
 
         public async void StartListenerAsync()
@@ -127,6 +133,9 @@ namespace ChatServerLogic
                                 Client.UserName = message.UserName;
                                 MessageLoginSuccessful m = new();
                                 Client.Connection.GetStream().Write(m.ToArray());
+
+                                Client.ConnectedRoom = lobby;
+                                //TODO: auslagern der MessageUserList erstellung (login und explizite anforderung brauchen so ein paket)
                                 MessageUserList mulLogin = new();
                                 foreach (var client in connections)
                                     mulLogin.UserList.Add(client.UserName);
@@ -160,6 +169,9 @@ namespace ChatServerLogic
                             break;
 
                         case MessageTypes.RoomUserList: // client möchte seine nutzerliste aktualisieren
+                            // 133 5 RaumA 5RaumB 4Hans0 6Mül1er1 5Meier0 7Schulze1
+                            // 133 5 RaumA 2 4Hans 5Meier 5RaumB 2 6Mül1er 7Schulze
+
                             MessageUserList mul = new();
                             foreach (var client in connections)
                                 mul.UserList.Add(client.UserName);

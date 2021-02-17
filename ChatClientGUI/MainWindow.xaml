@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:ChatClientGUI"
+        xmlns:local="clr-namespace:ChatClientGUI" d:DataContext="{d:DesignInstance Type=local:ChatViewModel}"
         mc:Ignorable="d"
         Title="Chat Client" Height="250" Width="400">
     <Grid Margin="5">
@@ -20,7 +20,23 @@
             <RowDefinition Height="25"/>
         </Grid.RowDefinitions>
         <Button Grid.Row="2" Content="Refresh" Command="{Binding Command_Refresh}" />
-        <ListView Grid.Row="3" ItemsSource="{Binding UserList}" SelectedItem="{Binding SelectedTarget}" SelectionMode="Single" />
+        <!--<ListView Grid.Row="3" ItemsSource="{Binding UserList}" SelectedItem="{Binding SelectedTarget}" SelectionMode="Single" />-->
+        <TreeView ItemsSource="{Binding RoomList}">
+            <TreeView.Resources>
+                <HierarchicalDataTemplate DataType="{x:Type local:RoomViewModel}" ItemsSource="{Binding UserList}">
+                    <StackPanel Orientation="Horizontal">
+                        <!--<Image />-->
+                        <TextBlock Text="{Binding Name}" />
+                    </StackPanel>
+                </HierarchicalDataTemplate>
+                <DataTemplate DataType="{x:Type local:UserViewModel}">
+                    <StackPanel Orientation="Horizontal">
+                        <!--<Image />-->
+                        <TextBlock Text="{Binding Name}"/>
+                    </StackPanel>
+                </DataTemplate>
+            </TreeView.Resources>
+        </TreeView>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Column="1" >
             <Label Content="_Benutzername" Target="{Binding ElementName=tbUserName}" />
             <TextBox x:Name="tbUserName" Text="{Binding UserName, UpdateSourceTrigger=PropertyChanged}" Width="150" IsEnabled="{Binding IsNotConnected}" />

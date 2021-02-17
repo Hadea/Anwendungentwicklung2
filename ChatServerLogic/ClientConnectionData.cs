@@ -1,4 +1,5 @@
-﻿using System.Net.Sockets;
+﻿using ChatMessages;
+using System.Net.Sockets;
 using System.Threading.Tasks;
 
 namespace ChatServerLogic
@@ -7,6 +8,7 @@ namespace ChatServerLogic
     {
         public TcpClient Connection;
         public string UserName;
+        public ChatRoom ConnectedRoom;
         public Task Reader;
     }
 }
