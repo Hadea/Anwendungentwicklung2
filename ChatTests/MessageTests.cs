@@ -11,7 +11,7 @@ namespace ChatTests
         public void Login()
         {
             MessageLogin ml = new();
-            using (MD5 hash = MD5.Create())
+            using (SHA256 hash = SHA256.Create())
                 ml.Password = hash.ComputeHash("1234567890".ConvertToArray());
             ml.UserName = "abcdefghij";
 
